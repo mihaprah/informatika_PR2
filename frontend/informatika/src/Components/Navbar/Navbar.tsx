@@ -19,7 +19,6 @@ import HistoryIcon from '@mui/icons-material/History';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import History from '../History/History';
 import Home from '../Home/Home';
-import './navbar.css';
 
 const drawerWidth = 240;
 
@@ -120,14 +119,18 @@ export default function Navbar() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open} id='backgroundcolor'>
+      <Drawer variant="permanent" open={open} PaperProps={{
+          sx: {
+              backgroundColor: "#023E8A"
+          }
+      }}>
         <DrawerHeader >
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
           
-            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Domov")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Domov")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -150,7 +153,7 @@ export default function Navbar() {
             
             </ListItem>
             
-            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Zgodovina")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Zgodovina")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -171,7 +174,7 @@ export default function Navbar() {
               </ListItemButton>
             </ListItem>
           
-            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Primerjava")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Primerjava")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
