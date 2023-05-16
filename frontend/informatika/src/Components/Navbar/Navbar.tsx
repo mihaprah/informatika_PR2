@@ -127,7 +127,7 @@ export default function Navbar() {
           </IconButton>
         </DrawerHeader>
           
-            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Domov")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Domov")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -150,7 +150,7 @@ export default function Navbar() {
             
             </ListItem>
             
-            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Zgodovina")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Zgodovina")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -171,7 +171,7 @@ export default function Navbar() {
               </ListItemButton>
             </ListItem>
           
-            <ListItem disablePadding sx={{ display: 'block', color: 'white'}} onClick={()=> setMenudata("Primerjava")}>
+            <ListItem disablePadding sx={{ display: 'block', color: 'white',  backgroundColor: '#023E8A'}} onClick={()=> setMenudata("Primerjava")}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
