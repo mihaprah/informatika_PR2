@@ -8,15 +8,20 @@ body {
 :root {
   /* fonts */
   --subheading-style: Inter;
+  --font-roboto: Roboto;
 
   /* font sizes */
   --subheading-style-size: 20px;
   --text-style-size: 16px;
+  --heading-style-size: 28px;
 
   /* Colors */
   --white: #fff;
   --primary-color: #023e8a;
   --color-black: #000;
+  --heading-color: #000;
+  --login-signup-bg: #f5f5f5;
+  --windows-colors: #eaeaea;
 
   /* Gaps */
   --gap-xs: 12px;
@@ -24,4 +29,13 @@ body {
   --gap-683xl: 702px;
   --gap-456xl: 475px;
   --gap-sm: 14px;
+  --gap-3xl: 22px;
+  --gap-8xs: 5px;
+
+  /* border radiuses */
+  --br-3xs: 10px;
+
+  /* Effects */
+  --googleshadow1: 0px 0px 1px rgba(0, 0, 0, 0.08),
+  0px 1px 1px rgba(0, 0, 0, 0.17);
 }
