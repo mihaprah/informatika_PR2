@@ -1,0 +1,98 @@
+.background1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--primary-color);
+  width: 196px;
+  height: 42px;
+}
+.clip-path-group {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.primerjava {
+  margin: 0;
+}
+.content {
+  position: absolute;
+  top: 12px;
+  left: 31px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-7xs);
+}
+.comparison {
+  position: absolute;
+  top: 98px;
+  left: 0;
+  width: 196px;
+  height: 42px;
+  cursor: pointer;
+}
+.vector-icon,
+.zgodovina {
+  position: relative;
+  width: 14px;
+  height: 13.57px;
+}
+.zgodovina {
+  font-weight: 600;
+  display: inline-block;
+  width: 108px;
+  height: 21px;
+  flex-shrink: 0;
+}
+.content1 {
+  position: absolute;
+  top: 12px;
+  left: 31px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-xs);
+}
+.background3,
+.history {
+  position: absolute;
+  left: 0;
+  width: 196px;
+  height: 42px;
+}
+.history {
+  top: 54px;
+  cursor: pointer;
+}
+.background3 {
+  top: 0;
+  background-color: var(--primary-color);
+}
+.vector-icon1 {
+  position: relative;
+  width: 15px;
+  height: 15px;
+}
+.home {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 196px;
+  height: 42px;
+  cursor: pointer;
+  color: var(--white);
+}
+.sidebardefault {
+  position: relative;
+  background-color: var(--primary-color);
+  width: 196px;
+  height: 92vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  text-align: left;
+  font-size: var(--subheading-style-size);
+  color: var(--white);
+  font-family: var(--subheading-style);
+}
