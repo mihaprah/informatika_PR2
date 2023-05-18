@@ -1,21 +1,12 @@
 import { FunctionComponent, useCallback } from "react";
 import "../../styles/Sidebar.css";
+import { useNavigate } from "react-router";
 const Sidebar: FunctionComponent = () => {
-  const onComparisonContainerClick = useCallback(() => {
-    // Please sync "Comparison" to the project
-  }, []);
-
-  const onHistoryContainerClick = useCallback(() => {
-    // Please sync "History" to the project
-  }, []);
-
-  const onHomeContainerClick = useCallback(() => {
-    // Please sync "Home - day" to the project
-  }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="sidebardefault">
-      <div className="comparison" onClick={onComparisonContainerClick}>
+      <div className="comparison" onClick={() => navigate("/comparison")}>
         <div className="background1" />
         <div className="content">
           <img className="clip-path-group" alt="" src="/clip-path-group.svg" />
@@ -24,14 +15,14 @@ const Sidebar: FunctionComponent = () => {
           </div>
         </div>
       </div>
-      <div className="history" onClick={onHistoryContainerClick}>
+      <div className="history" onClick={() => navigate("/history")}>
         <div className="background1" />
         <div className="content1">
           <img className="vector-icon" alt="" src="/vector.svg" />
           <div className="zgodovina">Zgodovina</div>
         </div>
       </div>
-      <div className="home" onClick={onHomeContainerClick}>
+      <div className="home" onClick={() => navigate("/home-day")}>
         <div className="background3" />
         <div className="content1">
           <img className="vector-icon1" alt="" src="/vector1.svg" />
