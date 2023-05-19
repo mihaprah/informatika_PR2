@@ -4,5 +4,5 @@ import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
 import org.springframework.data.repository.CrudRepository;
 
-public interface MeasurementDataRepository extends CrudRepository<MeasurementData, Long> {
+public interface CabinetRepository extends CrudRepository<Cabinet, String> {
 }

@@ -1,30 +1,31 @@
 package com.example.informatika.models;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//@Entity
+@Entity
 @Data
 public class MeasurementData {
-
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private LocalDateTime TimeStamp;
-    private String identMM;
-    private int dis;
-    private long aPlus;
-    private long aMinus;
-    private String statusAplus;
-    private String statusAminus;
-    private String tovStevStevca;
+    private LocalDate date;
+    private double usage;
+    private String register; //A+ A- R+ R-
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cabinetId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    Cabinet cabinet;
 
 
 }
