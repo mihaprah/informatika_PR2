@@ -7,8 +7,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 @Component
 public class ReadData {
@@ -23,18 +25,124 @@ public class ReadData {
     CabinetRepository cabinetDao;
 
     public void readMerilniPodatki() {
-        try {
-            String query = "SELECT * FROM merilni_podatki";
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
+//        Dynamic List of cabinet IDs
+        Iterable<Cabinet> cabinets = cabinetDao.findAll();
+        long numberOfCabinets = StreamSupport.stream(cabinets.spliterator(), false).count();
+        int lengthOfArray = (int) numberOfCabinets;
+        String [] cabinetIds = new String[lengthOfArray];
+        int i = 0;
+//        Get the Cabinets Ids and put them inside an array
+        for (Cabinet cabinet : cabinets){
+            cabinetIds[i] = cabinet.getCabinetId();
+            i++;
+        }
+//        To sort the array so the Cabinet Ids are in ascending order
+        Arrays.sort(cabinetIds, Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
 
-            int count = 0;
-            for (Map<String, Object> row : rows) {
-                String enotniIdent = (String) row.get("enotni_ident_mm");
-                System.out.println("enotni_ident_mm: " + enotniIdent);
-                count++;
+        try {
+//            List of all result for getting the daily sum of the 15 min interval for each of the cabinets
+            List<Map<String, Object>> intervalSumRows = new ArrayList<>();
+
+//            List of all result for getting the daily usage with subtraction ([next day] - [current day]) for each of the cabinets
+            List<Map<String, Object>> dailyUsageRows = new ArrayList<>();
+
+            for (String cabinetId : cabinetIds){
+//            Query for getting the sum of all 15 minute intervals for every day for individual cabinet
+                String sumOfIntervalData = "SELECT" +
+                    "    mp.enotni_ident_mm," +
+                    "    DATE(mp.casovna_znacka) AS date," +
+                    "    SUM(mp.a_plus) - COALESCE(vam.a_plus, 0) AS result" +
+                    " FROM" +
+                    "    merilni_podatki mp" +
+                    " LEFT JOIN (" +
+                    "    SELECT mp.casovna_znacka, mp.a_plus" +
+                    "    FROM merilni_podatki mp" +
+                    "    WHERE mp.enotni_ident_mm::text = '" + cabinetId +"'::text" +
+                    "    AND date_trunc('day'::text, mp.casovna_znacka) = mp.casovna_znacka" +
+                    "    ORDER BY mp.casovna_znacka" +
+                    ") vam ON DATE(mp.casovna_znacka) = vam.casovna_znacka" +
+                    " WHERE" +
+                    "    mp.enotni_ident_mm = '" + cabinetId +"'" +
+                    " GROUP BY" +
+                    "    mp.enotni_ident_mm," +
+                    "    DATE(mp.casovna_znacka)," +
+                    "    vam.a_plus" +
+                    " ORDER BY" +
+                    "    DATE(mp.casovna_znacka);";
+
+
+                List<Map<String, Object>> resultOne = jdbcTemplate.queryForList(sumOfIntervalData);
+                intervalSumRows.addAll(resultOne);
+
+//              Query for getting the daily usage with subtraction ([next day] - [current day]) every day for individual cabinet
+                String dailyUsageData = "SELECT " +
+                        "  t1.enotni_ident_mm AS cabinet_id, " +
+                        "  DATE(t1.casovna_znacka) AS current_date," +
+                        "  t1.a_plus_et AS current_value," +
+                        "  t1.a_plus_et_24 AS current_value_24," +
+                        "  DATE(t2.casovna_znacka) AS next_date," +
+                        "  t2.a_plus_et AS next_value," +
+                        "  t2.a_plus_et_24 AS next_value_24," +
+                        "  t2.a_plus_et - t1.a_plus_et AS subtraction," +
+                        "  t2.a_plus_et_24 - t1.a_plus_et_24 AS subtraction_24" +
+                        " FROM " +
+                        "  (" +
+                        "     SELECT " +
+                        "      casovna_znacka," +
+                        "      a_plus_et," +
+                        "      a_plus_et_24," +
+                        "      enotni_ident_mm," +
+                        "      LAG(a_plus_et) OVER (ORDER BY casovna_znacka) AS prev_a_plus_et" +
+                        "     FROM merilni_podatki_stanja" +
+                        "     WHERE enotni_ident_mm = '" + cabinetId + "'" +
+                        "      AND casovna_znacka = DATE(casovna_znacka)" +
+                        "  ) t1" +
+                        " JOIN " +
+                        "  (" +
+                        "     SELECT " +
+                        "      casovna_znacka," +
+                        "      a_plus_et," +
+                        "      a_plus_et_24" +
+                        "     FROM merilni_podatki_stanja" +
+                        "     WHERE enotni_ident_mm = '" + cabinetId + "'" +
+                        "      AND casovna_znacka = DATE(casovna_znacka)" +
+                        "  ) t2 ON t1.casovna_znacka = t2.casovna_znacka - INTERVAL '1 day'" +
+                        " ORDER BY t1.casovna_znacka;";
+
+                List<Map<String, Object>> resultTwo = jdbcTemplate.queryForList(dailyUsageData);
+                dailyUsageRows.addAll(resultTwo);
             }
 
-            System.out.println("Count: " + count);
+
+
+            int intervalSumCount = 0;
+            int dailyUsageCount = 0;
+            for (Map<String, Object> row : intervalSumRows) {
+                String enotniIdent = (String) row.get("enotni_ident_mm");
+                Date date = (Date) row.get("date");
+                BigDecimal result = (BigDecimal) row.get("result");
+//                System.out.println("Enotni_ident_mm: " + enotniIdent + ", DATE: " + date + ", RESULT: " + result);
+                intervalSumCount++;
+            }
+
+            for (Map<String, Object> row : dailyUsageRows){
+                String cabinet_id = (String) row.get("cabinet_id");
+                Date current_date = (Date) row.get("current_date");
+                BigDecimal current_value = (BigDecimal) row.get("current_value");
+                BigDecimal current_value_24 = (BigDecimal) row.get("current_value_24");
+                Date next_date = (Date) row.get("next_date");
+                BigDecimal next_value = (BigDecimal) row.get("next_value");
+                BigDecimal next_value_24 = (BigDecimal) row.get("next_value_24");
+                BigDecimal subtraction = (BigDecimal) row.get("subtraction");
+                BigDecimal subtraction_24 = (BigDecimal) row.get("subtraction_24");
+//                System.out.println("CABINET ID: " + cabinet_id + ", CURR DATE: " + current_date + ", CURR VAL: " +
+//                        current_value + ", CURR VAL 24: " + current_value_24 + ", NEXT DATE: " + next_date + ", NEXT VAL: " + next_value +
+//                        ", NEXT VAL 24: " + next_value_24 + ", SUBTRA: " + subtraction + ", SUBTRA 24: " + subtraction_24);
+                dailyUsageCount++;
+            }
+
+            System.out.println("Interval sum count: " + intervalSumCount);
+            System.out.println("Daily usage sum: " + dailyUsageCount);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,6 +16,7 @@ public class InformatikaApplication {
 
         // Call the read() method
         readData.readCabinet();
+        readData.readMerilniPodatki();
 
         // Close the application context
         context.close();
