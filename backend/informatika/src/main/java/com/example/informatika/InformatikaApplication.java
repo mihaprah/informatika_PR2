@@ -19,6 +19,6 @@ public class InformatikaApplication {
         readData.readMerilniPodatki();
 
         // Close the application context
-        context.close();
+        //context.close();
     }
 }
