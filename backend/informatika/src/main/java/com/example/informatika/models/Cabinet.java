@@ -32,7 +32,7 @@ public class Cabinet {
     private int numberOfPhases;
     private int consumerGroup; //2-5
 
-    //@OneToMany(mappedBy = "cabinet", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    //Collection<MeasurementData> measurementDataCollection;
+    @OneToMany(mappedBy = "cabinet", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    Collection<MeasurementData> measurementDataCollection;
 
 }

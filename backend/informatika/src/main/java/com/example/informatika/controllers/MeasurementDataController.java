@@ -1,8 +1,6 @@
 package com.example.informatika.controllers;
 
 
-import com.example.informatika.dao.MeasurementDataRepository;
-import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
 import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;

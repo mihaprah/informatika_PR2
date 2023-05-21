@@ -8,13 +8,14 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
 public class MeasurementData {
     public MeasurementData() {
     }
-    public MeasurementData(LocalDate date, double usage, Cabinet cabinet) {
+    public MeasurementData(Date date, double usage, Cabinet cabinet) {
         this.date = date;
         this.usage = usage;
         this.cabinet = cabinet;
@@ -24,7 +25,7 @@ public class MeasurementData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private LocalDate date;
+    private Date date;
     private double usage; // possibly needs to be BigDecimal type and not double
     private String register; //A+ A- R+ R-
     private boolean filledWithZeros = false; // CASE 1: difference < 2% --> mankajoce dni se zadomesti z 0

@@ -1,7 +1,9 @@
 package com.example.informatika.services;
 
 import com.example.informatika.dao.CabinetRepository;
+import com.example.informatika.dao.MeasurementDataRepository;
 import com.example.informatika.models.Cabinet;
+import com.example.informatika.models.MeasurementData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -23,6 +26,8 @@ public class ReadData {
 
     @Autowired
     CabinetRepository cabinetDao;
+    @Autowired
+    MeasurementDataRepository measurementDataDao;
 
     public void readMerilniPodatki() {
 //        Dynamic List of cabinet IDs
@@ -60,6 +65,7 @@ public class ReadData {
                     "    WHERE mp.enotni_ident_mm::text = '" + cabinetId +"'::text" +
                     "    AND date_trunc('day'::text, mp.casovna_znacka) = mp.casovna_znacka" +
                     "    ORDER BY mp.casovna_znacka" +
+                    "    LIMIT 424" +
                     ") vam ON DATE(mp.casovna_znacka) = vam.casovna_znacka" +
                     " WHERE" +
                     "    mp.enotni_ident_mm = '" + cabinetId +"'" +
@@ -68,7 +74,8 @@ public class ReadData {
                     "    DATE(mp.casovna_znacka)," +
                     "    vam.a_plus" +
                     " ORDER BY" +
-                    "    DATE(mp.casovna_znacka);";
+                    "    DATE(mp.casovna_znacka)" +
+                    " LIMIT 424;";
 
 
                 List<Map<String, Object>> resultOne = jdbcTemplate.queryForList(sumOfIntervalData);
@@ -117,32 +124,107 @@ public class ReadData {
 
             int intervalSumCount = 0;
             int dailyUsageCount = 0;
-            for (Map<String, Object> row : intervalSumRows) {
-                String enotniIdent = (String) row.get("enotni_ident_mm");
-                Date date = (Date) row.get("date");
-                BigDecimal result = (BigDecimal) row.get("result");
+            int case1Count = 0;
+            int case2Count = 0;
+//            for (Map<String, Object> row : intervalSumRows) {
+//                String enotniIdent = (String) row.get("enotni_ident_mm");
+//                Date date = (Date) row.get("date");
+//                BigDecimal result = (BigDecimal) row.get("result");
 //                System.out.println("Enotni_ident_mm: " + enotniIdent + ", DATE: " + date + ", RESULT: " + result);
-                intervalSumCount++;
-            }
+//                intervalSumCount++;
+//            }
+//
+//            for (Map<String, Object> row : dailyUsageRows){
+//                String cabinet_id = (String) row.get("cabinet_id");
+//                Date current_date = (Date) row.get("current_date");
+//                BigDecimal current_value = (BigDecimal) row.get("current_value");
+//                BigDecimal current_value_24 = (BigDecimal) row.get("current_value_24");
+//                Date next_date = (Date) row.get("next_date");
+//                BigDecimal next_value = (BigDecimal) row.get("next_value");
+//                BigDecimal next_value_24 = (BigDecimal) row.get("next_value_24");
+//                BigDecimal subtraction = (BigDecimal) row.get("subtraction");
+//                BigDecimal subtraction_24 = (BigDecimal) row.get("subtraction_24");
+////                System.out.println("CABINET ID: " + cabinet_id + ", CURR DATE: " + current_date + ", CURR VAL: " +
+////                        current_value + ", CURR VAL 24: " + current_value_24 + ", NEXT DATE: " + next_date + ", NEXT VAL: " + next_value +
+////                        ", NEXT VAL 24: " + next_value_24 + ", SUBTRA: " + subtraction + ", SUBTRA 24: " + subtraction_24);
+//                dailyUsageCount++;
+//            }
 
-            for (Map<String, Object> row : dailyUsageRows){
-                String cabinet_id = (String) row.get("cabinet_id");
-                Date current_date = (Date) row.get("current_date");
-                BigDecimal current_value = (BigDecimal) row.get("current_value");
-                BigDecimal current_value_24 = (BigDecimal) row.get("current_value_24");
-                Date next_date = (Date) row.get("next_date");
-                BigDecimal next_value = (BigDecimal) row.get("next_value");
-                BigDecimal next_value_24 = (BigDecimal) row.get("next_value_24");
-                BigDecimal subtraction = (BigDecimal) row.get("subtraction");
-                BigDecimal subtraction_24 = (BigDecimal) row.get("subtraction_24");
-//                System.out.println("CABINET ID: " + cabinet_id + ", CURR DATE: " + current_date + ", CURR VAL: " +
-//                        current_value + ", CURR VAL 24: " + current_value_24 + ", NEXT DATE: " + next_date + ", NEXT VAL: " + next_value +
-//                        ", NEXT VAL 24: " + next_value_24 + ", SUBTRA: " + subtraction + ", SUBTRA 24: " + subtraction_24);
-                dailyUsageCount++;
+            for(int j = 0; j < intervalSumRows.size(); j++){
+                Map<String, Object> intervalRow = intervalSumRows.get(j);
+                String enotniIdent = (String) intervalRow.get("enotni_ident_mm");
+                Date date = (Date) intervalRow.get("date");
+                BigDecimal result = (BigDecimal) intervalRow.get("result");
+
+                Map<String, Object> dailyRow = dailyUsageRows.get(j);
+                String cabinet_id = (String) dailyRow.get("cabinet_id");
+                Date current_date = (Date) dailyRow.get("current_date");
+                BigDecimal current_value = (BigDecimal) dailyRow.get("current_value");
+                BigDecimal current_value_24 = (BigDecimal) dailyRow.get("current_value_24");
+                Date next_date = (Date) dailyRow.get("next_date");
+                BigDecimal next_value = (BigDecimal) dailyRow.get("next_value");
+                BigDecimal next_value_24 = (BigDecimal) dailyRow.get("next_value_24");
+                BigDecimal subtraction = (BigDecimal) dailyRow.get("subtraction");
+                BigDecimal subtraction_24 = (BigDecimal) dailyRow.get("subtraction_24");
+
+//                Check if the cabinet numbers (ID) are the same
+                if (Objects.equals(enotniIdent, cabinet_id)){
+//                    Check if the dates are the same
+                    if (date.equals(current_date)){
+        //                Checking if we need to take the a_plus_et or a_plus_et_24. Always only one of them
+                        BigDecimal dailyValue;
+                        if (subtraction != null){
+                            dailyValue = subtraction;
+                        } else {
+                            dailyValue = subtraction_24;
+                        }
+        //                Checking which number is the bigger one, that is required for the division
+                        double biggerNumber;
+                        double smallerNumber;
+
+                        int comparisonResult = result.compareTo(dailyValue);
+                        if(comparisonResult > 0){
+                            biggerNumber =  result.doubleValue();
+                            smallerNumber = dailyValue.doubleValue();
+                        } else {
+                            biggerNumber = dailyValue.doubleValue();
+                            smallerNumber = result.doubleValue();
+                        }
+        //                Formula for the getting the percentage difference between the interval values and daily values
+                        double divisionResult = (((smallerNumber / biggerNumber)*100) - 100);
+                        double absoluteResult = Math.abs(divisionResult);
+
+                        if (absoluteResult <= 2){
+        //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
+//                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
+                            Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+
+                            MeasurementData measurementData = new MeasurementData(date, dailyValue.doubleValue(), cabinet);
+                            measurementData.setFilledWithZeros(true);
+
+                            measurementDataDao.save(measurementData);
+                            case1Count++;
+                        } else {
+        //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
+//                            System.out.println("CASE 2 -> Date: " + date + " , Cabinet ID: " + cabinet_id + ", Division res: " + absoluteResult);
+                            case2Count++;
+                        }
+
+                        intervalSumCount++;
+                        dailyUsageCount++;
+                    } else {
+//                        TODO -> write some way to handle exception
+                    }
+                } else {
+//                    TODO -> write some way to handle exception
+                }
+
             }
 
             System.out.println("Interval sum count: " + intervalSumCount);
             System.out.println("Daily usage sum: " + dailyUsageCount);
+            System.out.println("CASE 1: " + case1Count);
+            System.out.println("CASE 2: " + case2Count);
         } catch (Exception e) {
             e.printStackTrace();
         }
