@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @CrossOrigin
 @RestController
 @AllArgsConstructor
-@RequestMapping("/data")
+@RequestMapping("/measurement")
 public class MeasurementDataController {
     private MeasurementDataService measurementDataService;
 
@@ -20,8 +20,8 @@ public class MeasurementDataController {
         return measurementDataService.getAll();
     }
 
-    @GetMapping("/{date}/{cabinetId}")
-    public MeasurementData getByDate(@PathVariable("date")LocalDate date, @PathVariable("cabinetId") String cabinetId){
+    @GetMapping("/{date}/{cabinet_id}")
+    public MeasurementData getByDate(@PathVariable("date")LocalDate date, @PathVariable("cabinet_id") String cabinetId){
         return measurementDataService.getByDate(date, cabinetId);
     }
 
@@ -35,8 +35,8 @@ public class MeasurementDataController {
         measurementDataService.updateMeasurementData(data);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteMeasurementData(@PathVariable("id") Long id){
+    @DeleteMapping("/{measurement_id}")
+    public void deleteMeasurementData(@PathVariable("measurement_id") Long id){
         measurementDataService.deleteMeasurementData(id);
     }
 }
