@@ -5,7 +5,7 @@ import com.example.informatika.models.MeasurementData;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Service
 @AllArgsConstructor
@@ -15,8 +15,7 @@ public class MeasurementDataService {
     public Iterable<MeasurementData> getAll(){
         return measurementDataDao.findAll();
     }
-
-    public MeasurementData getByDate(LocalDate date, String cabinetId){
+    public MeasurementData getByDate(Date date, String cabinetId){
         Iterable<MeasurementData> allData = getAll();
         for (MeasurementData data: allData) {
             if(data.getDate().equals(date) && data.getCabinet().getCabinetId().equals(cabinetId)) {
@@ -25,11 +24,12 @@ public class MeasurementDataService {
         }
         return null;
     }
-
+    public Iterable<MeasurementData> getAllByCabinet(String cabinetId){
+        return measurementDataDao.findByCabinet(cabinetId);
+    }
     public void addMeasurementData(MeasurementData newMeasurementData){
         measurementDataDao.save(newMeasurementData);
     }
-
     public void updateMeasurementData(MeasurementData measurementData){
         MeasurementData updatedData = measurementDataDao.findById(measurementData.getId()).orElseThrow(() -> new IllegalCallerException("Cabinet does not exist"));
 
@@ -40,10 +40,8 @@ public class MeasurementDataService {
 
         measurementDataDao.save(updatedData);
     }
-
     public void deleteMeasurementData(Long id){
         measurementDataDao.deleteById(id);
     }
-
 
 }

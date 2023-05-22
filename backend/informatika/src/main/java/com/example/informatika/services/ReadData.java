@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -91,7 +89,9 @@ public class ReadData {
                         "  t2.a_plus_et AS next_value," +
                         "  t2.a_plus_et_24 AS next_value_24," +
                         "  t2.a_plus_et - t1.a_plus_et AS subtraction," +
-                        "  t2.a_plus_et_24 - t1.a_plus_et_24 AS subtraction_24" +
+                        "  t2.a_plus_et_24 - t1.a_plus_et_24 AS subtraction_24," +
+                        "  t2.a_plus_vt - t1.a_plus_vt AS visokaPoraba," +
+                        "  t2.a_plus_mt - t1.a_plus_mt AS nizkaPoraba" +
                         " FROM " +
                         "  (" +
                         "     SELECT " +
@@ -99,6 +99,8 @@ public class ReadData {
                         "      a_plus_et," +
                         "      a_plus_et_24," +
                         "      enotni_ident_mm," +
+                        "      a_plus_vt," +
+                        "      a_plus_mt," +
                         "      LAG(a_plus_et) OVER (ORDER BY casovna_znacka) AS prev_a_plus_et" +
                         "     FROM merilni_podatki_stanja" +
                         "     WHERE enotni_ident_mm = '" + cabinetId + "'" +
@@ -109,7 +111,9 @@ public class ReadData {
                         "     SELECT " +
                         "      casovna_znacka," +
                         "      a_plus_et," +
-                        "      a_plus_et_24" +
+                        "      a_plus_et_24," +
+                        "      a_plus_vt," +
+                        "      a_plus_mt" +
                         "     FROM merilni_podatki_stanja" +
                         "     WHERE enotni_ident_mm = '" + cabinetId + "'" +
                         "      AND casovna_znacka = DATE(casovna_znacka)" +
@@ -167,6 +171,8 @@ public class ReadData {
                 BigDecimal next_value_24 = (BigDecimal) dailyRow.get("next_value_24");
                 BigDecimal subtraction = (BigDecimal) dailyRow.get("subtraction");
                 BigDecimal subtraction_24 = (BigDecimal) dailyRow.get("subtraction_24");
+                BigDecimal visokaPoraba = (BigDecimal) dailyRow.get("visokaPoraba");
+                BigDecimal nizkaPoraba = (BigDecimal) dailyRow.get("nizkaPoraba");
 
 //                Create cabinet for any of the scenarios
                 Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
@@ -181,18 +187,6 @@ public class ReadData {
                         } else {
                             dailyValue = subtraction_24;
                         }
-        //                Checking which number is the bigger one, that is required for the division
-//                        double biggerNumber;
-//                        double smallerNumber;
-//
-//                        int comparisonResult = result.compareTo(dailyValue);
-//                        if(comparisonResult > 0){
-//                            biggerNumber =  result.doubleValue();
-//                            smallerNumber = dailyValue.doubleValue();
-//                        } else {
-//                            biggerNumber = dailyValue.doubleValue();
-//                            smallerNumber = result.doubleValue();
-//                        }
         //                Formula for the getting the percentage difference between the interval values and daily values
                         double checkDivison = result.doubleValue()/dailyValue.doubleValue();
                         if (checkDivison > 1){
@@ -214,6 +208,12 @@ public class ReadData {
 
                                 MeasurementData measurementData = new MeasurementData(date, dailyValue.doubleValue(), cabinet);
                                 measurementData.setFilledWithZeros(true);
+                                if (visokaPoraba != null){
+                                    measurementData.setHighUsage(visokaPoraba.doubleValue());
+                                }
+                                if (nizkaPoraba != null){
+                                    measurementData.setLowUsage(nizkaPoraba.doubleValue());
+                                }
 
                                 measurementDataDao.save(measurementData);
                                 case1Count++;

@@ -6,8 +6,6 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -32,6 +30,8 @@ public class MeasurementData {
     private boolean modifiedWithEvenDatesStrategy = false; // CASE 2: difference > 2% --> pravilo soleznih dni
     private boolean invalidFlag = false; // Sum of interval data > daily value
     private double measuredValue; // Number of interval sum
+    private double highUsage = 0; // Amount used in HIGH zone
+    private double lowUsage = 0; // Amount used in LOW zone
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cabinetId")
