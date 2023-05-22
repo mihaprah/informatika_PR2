@@ -119,9 +119,17 @@ Pridobivanje podatkov o dnevnih meritvah za vse omarice.
   "modifiedWithEvenDatesStrategy": "{boolean}",
   "measuredValue": "{double}",
   "register": "{String}",
-  "cabinetId": "{String}"
+  "cabinetId": "{String}",
+  "highUsage": "{double}",
+  "lowUsage": "{double}"
 }
 ```
+#### Request GET ALL BY CABINET ID
+`GET /measurement/{cabinet_id}/`
+- Primer {cabinet_id} je npr. "5-001"
+#### Response
+- Vrne seznam vseh meritev ene omarice
+
 #### Request POST
 `POST /measurement/`
 - V request body gre naslednji `JSON`
@@ -134,7 +142,9 @@ Pridobivanje podatkov o dnevnih meritvah za vse omarice.
   "modifiedWithEvenDatesStrategy": "{boolean}",
   "measuredValue": "{double}",
   "register": "{String}",
-  "cabinetId": "{String}"
+  "cabinetId": "{String}",
+  "highUsage": "{double}",
+  "lowUsage": "{double}"
 }
 ```
 #### Response
@@ -152,7 +162,9 @@ Pridobivanje podatkov o dnevnih meritvah za vse omarice.
   "modifiedWithEvenDatesStrategy": "{boolean}",
   "measuredValue": "{double}",
   "register": "{String}",
-  "cabinetId": "{String}"
+  "cabinetId": "{String}",
+  "highUsage": "{double}",
+  "lowUsage": "{double}"
 }
 ```
 #### Response
