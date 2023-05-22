@@ -30,6 +30,8 @@ public class MeasurementData {
     private String register; //A+ A- R+ R-
     private boolean filledWithZeros = false; // CASE 1: difference < 2% --> mankajoce dni se zadomesti z 0
     private boolean modifiedWithEvenDatesStrategy = false; // CASE 2: difference > 2% --> pravilo soleznih dni
+    private boolean invalidFlag = false; // Sum of interval data > daily value
+    private double measuredValue; // Number of interval sum
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cabinetId")

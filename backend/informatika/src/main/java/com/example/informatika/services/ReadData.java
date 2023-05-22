@@ -126,6 +126,7 @@ public class ReadData {
             int dailyUsageCount = 0;
             int case1Count = 0;
             int case2Count = 0;
+            int case1CountInvalid = 0;
 //            for (Map<String, Object> row : intervalSumRows) {
 //                String enotniIdent = (String) row.get("enotni_ident_mm");
 //                Date date = (Date) row.get("date");
@@ -167,6 +168,8 @@ public class ReadData {
                 BigDecimal subtraction = (BigDecimal) dailyRow.get("subtraction");
                 BigDecimal subtraction_24 = (BigDecimal) dailyRow.get("subtraction_24");
 
+//                Create cabinet for any of the scenarios
+                Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
 //                Check if the cabinet numbers (ID) are the same
                 if (Objects.equals(enotniIdent, cabinet_id)){
 //                    Check if the dates are the same
@@ -179,39 +182,50 @@ public class ReadData {
                             dailyValue = subtraction_24;
                         }
         //                Checking which number is the bigger one, that is required for the division
-                        double biggerNumber;
-                        double smallerNumber;
-
-                        int comparisonResult = result.compareTo(dailyValue);
-                        if(comparisonResult > 0){
-                            biggerNumber =  result.doubleValue();
-                            smallerNumber = dailyValue.doubleValue();
-                        } else {
-                            biggerNumber = dailyValue.doubleValue();
-                            smallerNumber = result.doubleValue();
-                        }
+//                        double biggerNumber;
+//                        double smallerNumber;
+//
+//                        int comparisonResult = result.compareTo(dailyValue);
+//                        if(comparisonResult > 0){
+//                            biggerNumber =  result.doubleValue();
+//                            smallerNumber = dailyValue.doubleValue();
+//                        } else {
+//                            biggerNumber = dailyValue.doubleValue();
+//                            smallerNumber = result.doubleValue();
+//                        }
         //                Formula for the getting the percentage difference between the interval values and daily values
-                        double divisionResult = (((smallerNumber / biggerNumber)*100) - 100);
-                        double absoluteResult = Math.abs(divisionResult);
+                        double checkDivison = result.doubleValue()/dailyValue.doubleValue();
+                        if (checkDivison > 1){
+//                            CASE 1 -> sum of interval is bigger then the daily value. Add flag invalid
 
-                        if (absoluteResult <= 2){
-        //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
-//                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
-                            Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
-
-                            MeasurementData measurementData = new MeasurementData(date, dailyValue.doubleValue(), cabinet);
-                            measurementData.setFilledWithZeros(true);
+                            MeasurementData measurementData = new MeasurementData(date, 0.0, cabinet);
+                            measurementData.setInvalidFlag(true);
+                            measurementData.setMeasuredValue(result.doubleValue());
 
                             measurementDataDao.save(measurementData);
-                            case1Count++;
+                            case1CountInvalid++;
                         } else {
-        //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
-//                            System.out.println("CASE 2 -> Date: " + date + " , Cabinet ID: " + cabinet_id + ", Division res: " + absoluteResult);
-                            case2Count++;
-                        }
+                            double divisionResult = (((result.doubleValue() / dailyValue.doubleValue())*100) - 100);
+                            double absoluteResult = Math.abs(divisionResult);
 
-                        intervalSumCount++;
-                        dailyUsageCount++;
+                            if (absoluteResult <= 2){
+            //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
+    //                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
+
+                                MeasurementData measurementData = new MeasurementData(date, dailyValue.doubleValue(), cabinet);
+                                measurementData.setFilledWithZeros(true);
+
+                                measurementDataDao.save(measurementData);
+                                case1Count++;
+                            } else {
+            //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
+    //                            System.out.println("CASE 2 -> Date: " + date + " , Cabinet ID: " + cabinet_id + ", Division res: " + absoluteResult);
+                                case2Count++;
+                            }
+
+                            intervalSumCount++;
+                            dailyUsageCount++;
+                        }
                     } else {
 //                        TODO -> write some way to handle exception
                     }
@@ -225,6 +239,7 @@ public class ReadData {
             System.out.println("Daily usage sum: " + dailyUsageCount);
             System.out.println("CASE 1: " + case1Count);
             System.out.println("CASE 2: " + case2Count);
+            System.out.println("CASE 1 INVALID: " + case1CountInvalid);
         } catch (Exception e) {
             e.printStackTrace();
         }
