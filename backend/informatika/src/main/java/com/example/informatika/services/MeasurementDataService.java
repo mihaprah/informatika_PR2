@@ -40,6 +40,7 @@ public class MeasurementDataService {
 
         measurementDataDao.save(updatedData);
     }
+
     public void deleteMeasurementData(Long id){
         measurementDataDao.deleteById(id);
     }
