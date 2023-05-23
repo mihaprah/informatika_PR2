@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "../global.css";
 
 const Login: FunctionComponent = () => {
+
   return (
     <>
       <div className="navbar">
