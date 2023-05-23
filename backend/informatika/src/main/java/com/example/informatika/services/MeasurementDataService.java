@@ -1,6 +1,7 @@
 package com.example.informatika.services;
 
 import com.example.informatika.dao.MeasurementDataRepository;
+import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class MeasurementDataService {
         }
         return null;
     }
-    public Iterable<MeasurementData> getAllByCabinet(String cabinetId){
+    public Iterable<MeasurementData> getAllByCabinet(Cabinet cabinetId){
         return measurementDataDao.findByCabinet(cabinetId);
     }
     public void addMeasurementData(MeasurementData newMeasurementData){

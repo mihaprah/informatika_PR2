@@ -1,7 +1,9 @@
 package com.example.informatika.controllers;
 
 
+import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
+import com.example.informatika.services.CabinetService;
 import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.Date;
 @RequestMapping("/measurement")
 public class MeasurementDataController {
     private MeasurementDataService measurementDataService;
+    private CabinetService cabinetService;
 
     @GetMapping
     public Iterable<MeasurementData> getAll(){
@@ -26,7 +29,8 @@ public class MeasurementDataController {
     }
     @GetMapping("/{cabinet_id}")
     public Iterable<MeasurementData> getByCabinet(@PathVariable("cabinet_id") String cabinetId){
-        return measurementDataService.getAllByCabinet(cabinetId);
+        Cabinet cabinet = cabinetService.getById(cabinetId);
+        return measurementDataService.getAllByCabinet(cabinet);
     }
 
     @PostMapping
