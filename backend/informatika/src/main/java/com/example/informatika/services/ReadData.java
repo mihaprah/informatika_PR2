@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -131,29 +133,9 @@ public class ReadData {
             int case1Count = 0;
             int case2Count = 0;
             int case1CountInvalid = 0;
-//            for (Map<String, Object> row : intervalSumRows) {
-//                String enotniIdent = (String) row.get("enotni_ident_mm");
-//                Date date = (Date) row.get("date");
-//                BigDecimal result = (BigDecimal) row.get("result");
-//                System.out.println("Enotni_ident_mm: " + enotniIdent + ", DATE: " + date + ", RESULT: " + result);
-//                intervalSumCount++;
-//            }
-//
-//            for (Map<String, Object> row : dailyUsageRows){
-//                String cabinet_id = (String) row.get("cabinet_id");
-//                Date current_date = (Date) row.get("current_date");
-//                BigDecimal current_value = (BigDecimal) row.get("current_value");
-//                BigDecimal current_value_24 = (BigDecimal) row.get("current_value_24");
-//                Date next_date = (Date) row.get("next_date");
-//                BigDecimal next_value = (BigDecimal) row.get("next_value");
-//                BigDecimal next_value_24 = (BigDecimal) row.get("next_value_24");
-//                BigDecimal subtraction = (BigDecimal) row.get("subtraction");
-//                BigDecimal subtraction_24 = (BigDecimal) row.get("subtraction_24");
-////                System.out.println("CABINET ID: " + cabinet_id + ", CURR DATE: " + current_date + ", CURR VAL: " +
-////                        current_value + ", CURR VAL 24: " + current_value_24 + ", NEXT DATE: " + next_date + ", NEXT VAL: " + next_value +
-////                        ", NEXT VAL 24: " + next_value_24 + ", SUBTRA: " + subtraction + ", SUBTRA 24: " + subtraction_24);
-//                dailyUsageCount++;
-//            }
+            int numberOfHolidaysSaturdaysSundays = 0;
+            int numberOfWeekDays = 0;
+            int invalidPastWeekValue = 0;
 
             for(int j = 0; j < intervalSumRows.size(); j++){
                 Map<String, Object> intervalRow = intervalSumRows.get(j);
@@ -176,6 +158,8 @@ public class ReadData {
 
 //                Create cabinet for any of the scenarios
                 Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+//                Change the date format
+                LocalDate currentDate = LocalDate.parse(date.toString());
 //                Check if the cabinet numbers (ID) are the same
                 if (Objects.equals(enotniIdent, cabinet_id)){
 //                    Check if the dates are the same
@@ -192,7 +176,7 @@ public class ReadData {
                         if (checkDivison > 1){
 //                            CASE 1 -> sum of interval is bigger then the daily value. Add flag invalid
 
-                            MeasurementData measurementData = new MeasurementData(date, 0.0, cabinet);
+                            MeasurementData measurementData = new MeasurementData(currentDate, 0.0, cabinet);
                             measurementData.setInvalidFlag(true);
                             measurementData.setMeasuredValue(result.doubleValue());
 
@@ -206,7 +190,7 @@ public class ReadData {
             //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
     //                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
 
-                                MeasurementData measurementData = new MeasurementData(date, dailyValue.doubleValue(), cabinet);
+                                MeasurementData measurementData = new MeasurementData(currentDate, dailyValue.doubleValue(), cabinet);
                                 measurementData.setFilledWithZeros(true);
                                 if (visokaPoraba != null){
                                     measurementData.setHighUsage(visokaPoraba.doubleValue());
@@ -220,6 +204,108 @@ public class ReadData {
                             } else {
             //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
     //                            System.out.println("CASE 2 -> Date: " + date + " , Cabinet ID: " + cabinet_id + ", Division res: " + absoluteResult);
+                                DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+                                String [] holidays = {"2022-01-01", "2022-01-02", "2022-02-08", "2022-04-18", "2022-04-27", "2022-05-01", "2022-05-02", "2022-06-25",
+                                        "2022-08-15", "2022-10-31", "2022-10-01", "2022-12-25", "2022-12-26", "2023-01-01", "2023-01-02", "2023-02-08"};
+
+                                LocalDate oneWeekBefore = currentDate.minusWeeks(1);
+                                LocalDate twoWeeksBefore = currentDate.minusWeeks(2);
+                                LocalDate threeWeeksBefore = currentDate.minusWeeks(3);
+                                LocalDate [] weeks = {oneWeekBefore, twoWeeksBefore, threeWeeksBefore};
+                                String checkSimilarDates = "";
+
+                                boolean isHoliday = false;
+                                for (String holiday : holidays){
+                                    if (holiday.equals(currentDate.toString())) {
+                                        isHoliday = true;
+                                        break;
+                                    }
+                                }
+                                double nextTrueValue = 0;
+                                if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY || isHoliday){
+//                                    Date is Saturday OR Sunday OR a Holiday
+                                    for(LocalDate week : weeks){
+                                        if (week.isBefore(LocalDate.parse("2022-01-01"))){
+                                            continue;
+                                        }
+                                        checkSimilarDates = " SELECT casovna_znacka, enotni_ident_mm, a_plus_et, a_plus_et_24" +
+                                                " FROM merilni_podatki_stanja" +
+                                                " WHERE casovna_znacka = '" + week + "'" +
+                                                " AND enotni_ident_mm = '" + cabinet_id + "'" +
+                                                " ORDER BY casovna_znacka;";
+
+                                        Map<String, Object> oneValueResult = jdbcTemplate.queryForMap(checkSimilarDates);
+                                        BigDecimal a_plus_et = (BigDecimal) oneValueResult.get("a_plus_et");
+                                        BigDecimal a_plus_et_24 = (BigDecimal) oneValueResult.get("a_plus_et_24");
+
+                                        if (a_plus_et == null){
+                                            if (a_plus_et_24 == null){
+                                                continue;
+                                            } else {
+                                                nextTrueValue = a_plus_et_24.doubleValue();
+                                            }
+                                        } else {
+                                            nextTrueValue = a_plus_et.doubleValue();
+                                        }
+                                    }
+                                    MeasurementData data = new MeasurementData(currentDate, nextTrueValue, cabinet);
+                                    if (nextTrueValue == 0){
+                                        data.setInvalidFlag(true);
+                                        invalidPastWeekValue++;
+                                    } else {
+                                        data.setModifiedWithEvenDatesStrategy(true);
+                                    }
+                                    measurementDataDao.save(data);
+                                    numberOfHolidaysSaturdaysSundays++;
+                                } else {
+//                                    Date is a work day
+                                    for(LocalDate week : weeks){
+                                        if (week.isBefore(LocalDate.parse("2022-01-01"))){
+                                            continue;
+                                        }
+//                                        Check if earlier date is a holiday
+                                        boolean earlierIsHoliday = false;
+                                        for(String holiday : holidays){
+                                            if (week.toString().equals(holiday)){
+                                                earlierIsHoliday = true;
+                                                break;
+                                            }
+                                        }
+//                                        If earlier date is holiday, continue to next
+                                        if (earlierIsHoliday){
+                                            continue;
+                                        }
+                                        checkSimilarDates = " SELECT casovna_znacka, enotni_ident_mm, a_plus_et, a_plus_et_24" +
+                                                " FROM merilni_podatki_stanja" +
+                                                " WHERE casovna_znacka = '" + week + "'" +
+                                                " AND enotni_ident_mm = '" + cabinet_id + "'" +
+                                                " ORDER BY casovna_znacka;";
+
+                                        Map<String, Object> oneValueResult = jdbcTemplate.queryForMap(checkSimilarDates);
+                                        BigDecimal a_plus_et = (BigDecimal) oneValueResult.get("a_plus_et");
+                                        BigDecimal a_plus_et_24 = (BigDecimal) oneValueResult.get("a_plus_et_24");
+
+                                        if (a_plus_et == null){
+                                            if (a_plus_et_24 == null){
+                                                continue;
+                                            } else {
+                                                nextTrueValue = a_plus_et_24.doubleValue();
+                                            }
+                                        } else {
+                                            nextTrueValue = a_plus_et.doubleValue();
+                                        }
+                                    }
+                                    MeasurementData data = new MeasurementData(currentDate, nextTrueValue, cabinet);
+                                    if (nextTrueValue == 0){
+                                        data.setInvalidFlag(true);
+                                        invalidPastWeekValue++;
+                                    } else {
+                                        data.setModifiedWithEvenDatesStrategy(true);
+                                    }
+                                    measurementDataDao.save(data);
+                                    numberOfWeekDays++;
+                                }
+
                                 case2Count++;
                             }
 
@@ -240,6 +326,9 @@ public class ReadData {
             System.out.println("CASE 1: " + case1Count);
             System.out.println("CASE 2: " + case2Count);
             System.out.println("CASE 1 INVALID: " + case1CountInvalid);
+            System.out.println("Number of Holidays, Sundays and Saturdays: " + numberOfHolidaysSaturdaysSundays);
+            System.out.println("Number of week days: " + numberOfWeekDays);
+            System.out.println("Invalid past weeks values: " + invalidPastWeekValue);
         } catch (Exception e) {
             e.printStackTrace();
         }

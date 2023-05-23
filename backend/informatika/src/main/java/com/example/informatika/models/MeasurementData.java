@@ -6,14 +6,14 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
 public class MeasurementData {
     public MeasurementData() {
     }
-    public MeasurementData(Date date, double usage, Cabinet cabinet) {
+    public MeasurementData(LocalDate date, double usage, Cabinet cabinet) {
         this.date = date;
         this.usage = usage;
         this.cabinet = cabinet;
@@ -23,7 +23,7 @@ public class MeasurementData {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Date date;
+    private LocalDate date;
     private double usage; // possibly needs to be BigDecimal type and not double
     private String register; //A+ A- R+ R-
     private boolean filledWithZeros = false; // CASE 1: difference < 2% --> mankajoce dni se zadomesti z 0
@@ -36,8 +36,6 @@ public class MeasurementData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cabinetId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     Cabinet cabinet;
-
 
 }
