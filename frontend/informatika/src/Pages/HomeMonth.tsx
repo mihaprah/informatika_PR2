@@ -43,7 +43,7 @@ export default function HomeMonth() {
 
     </div>
     <div>
-      <div style={{ display: 'flex', gap: '5%', marginTop: '6%', justifyContent: 'center', }}>
+      <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center', }}>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Skupna poraba</Typography>
           <Typography level="h2" >
@@ -69,7 +69,7 @@ export default function HomeMonth() {
           </Typography>
         </Card>
       </div>
-      <div style={{ display: 'flex', gap: '5%', marginTop: '2%', justifyContent: 'center', }}>
+      <div style={{ display: 'flex', gap: '4vh', marginTop: '4vh', justifyContent: 'center', }}>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba</Typography>
           <Typography level="h2" >

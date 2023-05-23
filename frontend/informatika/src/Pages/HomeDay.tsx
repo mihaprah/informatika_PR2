@@ -5,8 +5,24 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/joy/Typography';
 import { useNavigate } from "react-router";
 import Card from '@mui/joy/Card';
+import api from "../Service/api";
+import { useEffect } from "react";
 
 export default function HomeDay() {
+    useEffect(() => {
+        const test = async () => {
+            try {
+                const rest = await api.get("/cabinet");
+                const cabinet = rest.data;
+                console.log(rest.data)
+            } catch (error) {
+                console.log(error)
+            }
+        } 
+        test();
+    },[])
+
+
     const navigate = useNavigate();
     const [alignment, setAlignment] = React.useState('day');
     const handleChange = (
@@ -15,6 +31,7 @@ export default function HomeDay() {
     ) => {
         setAlignment(newAlignment);
     };
+
 
     const changeURL = (object: any) => {
         if (object.value === "day") {
@@ -42,7 +59,7 @@ export default function HomeDay() {
             </ToggleButtonGroup>
         </div>
         <div>
-            <div style={{ display: 'flex', gap: '5%', marginTop: '6%', justifyContent: 'center', }}>
+            <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center', }}>
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
                     <Typography level="body1" sx={{ fontSize: '18px' }}>Skupna poraba</Typography>
                     <Typography level="h2" >
@@ -68,7 +85,7 @@ export default function HomeDay() {
                     </Typography>
                 </Card>
             </div>
-            <div style={{ display: 'flex', gap: '5%', marginTop: '2%', justifyContent: 'center', }}>
+            <div style={{ display: 'flex', gap: '4vh', marginTop: '4vh', justifyContent: 'center', }}>
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
                     <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba</Typography>
                     <Typography level="h2" >
