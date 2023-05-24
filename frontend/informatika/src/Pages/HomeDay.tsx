@@ -6,20 +6,22 @@ import Typography from '@mui/joy/Typography';
 import { useNavigate } from "react-router";
 import Card from '@mui/joy/Card';
 import api from "../Service/api";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 
 export default function HomeDay() {
+    const [data, setData] = useState<Measurement>();
+
     useEffect(() => {
-        const test = async () => {
+        const getCabinetData = async () => {
             try {
-                const rest = await api.get("/cabinet");
-                const cabinet = rest.data;
-                console.log(rest.data)
+                const res = await api.get("/measurement/2022-01-01/5-001"); //hardcoded
+                const cabinet = res.data;
+                setData(cabinet);
             } catch (error) {
                 console.log(error)
             }
-        } 
-        test();
+        }
+        getCabinetData();
     },[])
 
 
@@ -63,51 +65,25 @@ export default function HomeDay() {
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
                     <Typography level="body1" sx={{ fontSize: '18px' }}>Skupna poraba</Typography>
                     <Typography level="h2" >
-                        <b>100kWh</b>
+                        <b>{data?.usage} kWh</b>
                     </Typography>
                 </Card>
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Št. spremenjenih podatkov</Typography>
+                    <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba (10 dni)</Typography>
                     <Typography level="h2" >
-                        <b>3</b>
-                    </Typography>
-                </Card>
-                <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Št. anomalij</Typography>
-                    <Typography level="h2" >
-                        <b>5</b>
-                    </Typography>
-                </Card>
-                <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Nepravilne meritve</Typography>
-                    <Typography level="h2" >
-                        <b>11%</b>
-                    </Typography>
-                </Card>
-            </div>
-            <div style={{ display: 'flex', gap: '4vh', marginTop: '4vh', justifyContent: 'center', }}>
-                <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba</Typography>
-                    <Typography level="h2" >
-                        <b>8kWh/h</b>
+                        <b></b>
                     </Typography>
                 </Card>
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
                     <Typography level="body1" sx={{ fontSize: '18px' }}>Št. prekoračitev</Typography>
                     <Typography level="h2" >
-                        <b>2</b>
+                        <b>0</b>
                     </Typography>
                 </Card>
                 <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Največja poraba</Typography>
+                    <Typography level="body1" sx={{ fontSize: '18px' }}>Status meritve</Typography>
                     <Typography level="h2" >
-                        <b>10:00-13:00</b>
-                    </Typography>
-                </Card>
-                <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <Typography level="body1" sx={{ fontSize: '18px' }}>Najmanjša poraba</Typography>
-                    <Typography level="h2" >
-                        <b>1:00-4:00</b>
+                        <b>{data?.invalidFlag ? "Napačna" : data?.filledWithZeros ? "Pravilna" : "Popravljena" }</b>
                     </Typography>
                 </Card>
             </div>
