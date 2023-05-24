@@ -1,14 +1,10 @@
 package com.example.informatika.controllers;
 
 
-import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
-import com.example.informatika.services.CabinetService;
 import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @CrossOrigin
 @RestController
@@ -16,7 +12,6 @@ import java.util.Date;
 @RequestMapping("/measurement")
 public class MeasurementDataController {
     private MeasurementDataService measurementDataService;
-    private CabinetService cabinetService;
 
     @GetMapping
     public Iterable<MeasurementData> getAll(){
@@ -24,13 +19,18 @@ public class MeasurementDataController {
     }
 
     @GetMapping("/{date}/{cabinet_id}")
-    public MeasurementData getByDate(@PathVariable("date") Date date, @PathVariable("cabinet_id") String cabinetId){
+    public MeasurementData getByDate(@PathVariable("date") String date, @PathVariable("cabinet_id") String cabinetId){
         return measurementDataService.getByDate(date, cabinetId);
     }
     @GetMapping("/{cabinet_id}")
     public Iterable<MeasurementData> getByCabinet(@PathVariable("cabinet_id") String cabinetId){
-        Cabinet cabinet = cabinetService.getById(cabinetId);
-        return measurementDataService.getAllByCabinet(cabinet);
+        System.out.println(cabinetId);
+        return measurementDataService.getAllByCabinet(cabinetId);
+    }
+
+    @GetMapping("/month/{cabinet_id}/{month}")
+    public Iterable<MeasurementData> getByCabinetByMonth(@PathVariable("cabinet_id") String cabinetId, @PathVariable("month") String month){
+        return measurementDataService.getAllByCabinetByMonth(cabinetId, month);
     }
 
     @PostMapping

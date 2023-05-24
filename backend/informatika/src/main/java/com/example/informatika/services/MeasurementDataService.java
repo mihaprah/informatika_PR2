@@ -1,32 +1,43 @@
 package com.example.informatika.services;
 
+import com.example.informatika.dao.CabinetRepository;
 import com.example.informatika.dao.MeasurementDataRepository;
 import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Service
 @AllArgsConstructor
 public class MeasurementDataService {
     private MeasurementDataRepository measurementDataDao;
+    private CabinetRepository cabinetDao;
 
     public Iterable<MeasurementData> getAll(){
         return measurementDataDao.findAll();
     }
-    public MeasurementData getByDate(Date date, String cabinetId){
+    public MeasurementData getByDate(String date, String cabinetId){
+        LocalDate localDate = LocalDate.parse(date);
         Iterable<MeasurementData> allData = getAll();
         for (MeasurementData data: allData) {
-            if(data.getDate().equals(date) && data.getCabinet().getCabinetId().equals(cabinetId)) {
+            if(data.getDate().equals(localDate) && data.getCabinet().getCabinetId().equals(cabinetId)) {
                 return data;
             }
         }
         return null;
     }
-    public Iterable<MeasurementData> getAllByCabinet(Cabinet cabinetId){
-        return measurementDataDao.findByCabinet(cabinetId);
+    public Iterable<MeasurementData> getAllByCabinet(String cabinetId){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        return measurementDataDao.findByCabinet(cabinet);
+    }
+
+    public Iterable<MeasurementData> getAllByCabinetByMonth(String cabinetId, String month){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        LocalDate startDate = LocalDate.parse(month);
+        LocalDate endDate = startDate.plusMonths(1);
+        return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
     }
     public void addMeasurementData(MeasurementData newMeasurementData){
         measurementDataDao.save(newMeasurementData);

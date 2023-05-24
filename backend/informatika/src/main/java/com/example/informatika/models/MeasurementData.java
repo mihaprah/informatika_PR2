@@ -36,6 +36,7 @@ public class MeasurementData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cabinetId")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     Cabinet cabinet;
 
 }
