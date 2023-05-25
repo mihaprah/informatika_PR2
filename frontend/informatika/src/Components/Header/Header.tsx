@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent } from "react";
 import "../../styles/Header.css";
 import { useNavigate } from "react-router";
 
