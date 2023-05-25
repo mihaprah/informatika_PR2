@@ -18,14 +18,15 @@ public class MeasurementDataController {
         return measurementDataService.getAll();
     }
 
-    @GetMapping("/{date}/{cabinet_id}")
-    public MeasurementData getByDate(@PathVariable("date") String date, @PathVariable("cabinet_id") String cabinetId){
-        return measurementDataService.getByDate(date, cabinetId);
-    }
     @GetMapping("/{cabinet_id}")
     public Iterable<MeasurementData> getByCabinet(@PathVariable("cabinet_id") String cabinetId){
         System.out.println(cabinetId);
         return measurementDataService.getAllByCabinet(cabinetId);
+    }
+
+    @GetMapping("/day/{cabinet_id}/{day}")
+    public Iterable<MeasurementData> getByDate(@PathVariable("day") String day, @PathVariable("cabinet_id") String cabinetId){
+        return measurementDataService.getAllByCabinetByDay(cabinetId, day);
     }
 
     @GetMapping("/month/{cabinet_id}/{month}")
