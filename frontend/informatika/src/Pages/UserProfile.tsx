@@ -13,6 +13,7 @@ export default function UserProfile() {
                     height: 270,
                     backgroundColor: "background.level2",
                     alignItems: "left",
+                    mr:3
                 }}
             >
                 <Typography level="h1" sx={{ fontSize: "22px" }}>
