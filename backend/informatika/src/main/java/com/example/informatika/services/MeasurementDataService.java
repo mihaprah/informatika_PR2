@@ -36,7 +36,14 @@ public class MeasurementDataService {
     public Iterable<MeasurementData> getAllByCabinetByMonth(String cabinetId, String month){
         Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
         LocalDate startDate = LocalDate.parse(month);
-        LocalDate endDate = startDate.plusMonths(1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+        return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
+    }
+
+    public Iterable<MeasurementData> getAllByCabinetByYear(String cabinetId, String year){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        LocalDate startDate = LocalDate.parse(year);
+        LocalDate endDate = startDate.plusYears(1).minusDays(1);
         return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
     }
     public void addMeasurementData(MeasurementData newMeasurementData){

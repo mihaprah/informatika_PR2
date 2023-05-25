@@ -32,6 +32,10 @@ public class MeasurementDataController {
     public Iterable<MeasurementData> getByCabinetByMonth(@PathVariable("cabinet_id") String cabinetId, @PathVariable("month") String month){
         return measurementDataService.getAllByCabinetByMonth(cabinetId, month);
     }
+    @GetMapping("/year/{cabinet_id}/{year}")
+    public Iterable<MeasurementData> getByCabinetByYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("year") String year){
+        return measurementDataService.getAllByCabinetByYear(cabinetId, year);
+    }
 
     @PostMapping
     public void saveMeasurementData(@RequestBody MeasurementData data){
