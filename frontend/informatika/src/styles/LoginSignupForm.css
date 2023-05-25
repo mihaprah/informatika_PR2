@@ -117,7 +117,7 @@ input {
   font-size: var(--text-style-size);
 }
 
-button {
+.button {
   margin-top: 2vh;
   width: 360px;
   border-radius: var(--br-3xs);

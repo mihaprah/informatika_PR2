@@ -94,9 +94,9 @@ export default function HomeYear() {
                 onChange={handleChange}
                 style={{width: '300px'}}
             >
-                <ToggleButton value="day" onClick={() => changeURL(event?.target)}>DAN</ToggleButton>
-                <ToggleButton value="month" onClick={() => changeURL(event?.target)}>MESEC</ToggleButton>
-                <ToggleButton value="year" onClick={() => changeURL(event?.target)}>LETO</ToggleButton>
+                <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>DAN</ToggleButton>
+                <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>MESEC</ToggleButton>
+                <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>LETO</ToggleButton>
             </ToggleButtonGroup>
             </div>
         </div>
@@ -111,7 +111,7 @@ export default function HomeYear() {
             </Card>
             <Card variant="outlined"
                   sx={{width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center'}}>
-                <Typography level="body1" sx={{fontSize: '18px'}}>Povprečna poraba na dan</Typography>
+                <Typography level="body1" sx={{fontSize: '18px'}}>Povprečna poraba (dan)</Typography>
                 <Typography level="h2">
                     <b>{Math.round((usage / 1000) / data?.length)} MWh</b>
                 </Typography>

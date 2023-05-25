@@ -153,9 +153,9 @@ export default function HomeMonth() {
                     onChange={handleChange}
                     style={{width: '300px', float: 'right'}}
                 >
-                    <ToggleButton value="day" onClick={() => changeURL(event?.target)}>DAN</ToggleButton>
-                    <ToggleButton value="month" onClick={() => changeURL(event?.target)}>MESEC</ToggleButton>
-                    <ToggleButton value="year" onClick={() => changeURL(event?.target)}>LETO</ToggleButton>
+                    <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>DAN</ToggleButton>
+                    <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>MESEC</ToggleButton>
+                    <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>LETO</ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </div>
