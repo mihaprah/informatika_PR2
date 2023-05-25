@@ -5,63 +5,75 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useNavigate } from "react-router";
 import Typography from '@mui/joy/Typography';
 import Card from '@mui/joy/Card';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import api from "../Service/api";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 export default function HomeMonth() {
   //TODO št anomalij dinamicno, št. prekoračitev in da poisce datum in avtomatsko geta za ta mesec podatke oz za ta mesec leta 2022
+  //dodaj si v backend vrstio za tabele create drop
+  const [data, setData] = useState<Measurement[]>();
 
-  const [data, setData] = useState<Measurement>();
   let usage = 0;
   let avgUsage = 0;
   let modified = 0;
   let maxDate = "";
   let minDate = "";
   let invalidData = 0;
+  let anomalije = 0;
 
   useEffect(() => {
-      const getCabinetData = async () => {
-          try {
-              const res = await api.get("/measurement/month/5-001/2022-01-01"); //hardcoded
-              const cabinet = res.data;
-              setData(cabinet);
-             
-          } catch (error) {
-              console.log(error)
-          }
-      }
-      getCabinetData();
-  },[])
+    const getCabinetData = async () => {
+      try {
+        const res = await api.get("/measurement/month/5-001/2022-01-01"); //hardcoded
+        const cabinet = res.data;
+        setData(cabinet);
 
-  if (data){
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getCabinetData();
+  }, [])
+
+  //console.log(data)
+
+  if (data) {
     let max = 0;
-    let min = 100;
+    let min = 10000000;
     data.forEach(day => {
       usage += day.usage;
-      usage = Math.round(usage * 100) / 100
 
-      if(day.modifiedWithEvenDatesStrategy){
-        modified ++;
+      if (day.modifiedWithEvenDatesStrategy) {
+        modified++;
       }
-      if(day.invalidFlag){
-        invalidData ++;
+      if (day.invalidFlag) {
+        invalidData++;
       }
 
-      if(max < day.usage){
+      if (max < day.usage) {
         max = day.usage;
         maxDate = day.date;
       }
-      if(min > day.usage){
+      if (min > day.usage) {
         min = day.usage;
         minDate = day.date;
       }
     });
 
-    avgUsage = Math.round(usage/data.length * 100) / 100
-    invalidData = invalidData/data.length * 100;
+    usage = Math.round(usage / 1000 * 100) / 100 //from kWh to MWh
+    avgUsage = Math.round(usage / data.length * 100) / 100;
+    anomalije = invalidData + modified; //spremenjeni + napačni
+    invalidData = Math.round((invalidData / data.length * 100) * 100) / 100;
   }
 
-  
+  const minDateDate = (new Date(minDate)).toLocaleDateString("SI");
+  const maxDateDate = (new Date(maxDate)).toLocaleDateString("SI");
+
   const navigate = useNavigate();
   const [alignment, setAlignment] = React.useState('month');
   const handleChange = (
@@ -84,6 +96,8 @@ export default function HomeMonth() {
   return <>
     <div>
       <b>Pregled meritev - št. merilne omarice: 5-001</b>
+      
+      
       <ToggleButtonGroup
         color="primary"
         value={alignment}
@@ -97,12 +111,25 @@ export default function HomeMonth() {
       </ToggleButtonGroup>
 
     </div>
+
+
+
+    <div  style={{ display: 'flex', justifyContent: 'left'}}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DatePicker label={'"month" and "year"'} views={['month', 'year']} />
+      </DemoContainer>
+    </LocalizationProvider>
+      </div>
+
+
+
     <div>
       <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center', }}>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Skupna poraba</Typography>
           <Typography level="h2" >
-            <b>{usage}kWh</b>
+            <b>{usage}MWh</b>
           </Typography>
         </Card>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
@@ -114,7 +141,7 @@ export default function HomeMonth() {
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Št. anomalij</Typography>
           <Typography level="h2" >
-            <b>52</b>
+            <b>{anomalije}</b>
           </Typography>
         </Card>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
@@ -126,27 +153,27 @@ export default function HomeMonth() {
       </div>
       <div style={{ display: 'flex', gap: '4vh', marginTop: '4vh', justifyContent: 'center', }}>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
-          <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba</Typography>
+          <Typography level="body1" sx={{ fontSize: '18px' }}>Povprečna poraba (dan)</Typography>
           <Typography level="h2" >
-            <b>{avgUsage}kWh/h</b>
+            <b>{avgUsage}MWh</b>
           </Typography>
         </Card>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Št. prekoračitev</Typography>
           <Typography level="h2" >
-            <b>66</b>
+            <b>0</b>
           </Typography>
         </Card>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Največja poraba</Typography>
           <Typography level="h2" >
-            <b>{maxDate}</b>
+            <b>{maxDateDate}</b>
           </Typography>
         </Card>
         <Card variant="outlined" sx={{ width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center' }}>
           <Typography level="body1" sx={{ fontSize: '18px' }}>Najmanjša poraba</Typography>
           <Typography level="h2" >
-            <b>{minDate}</b>
+            <b>{minDateDate}</b>
           </Typography>
         </Card>
       </div>
