@@ -45,7 +45,7 @@ export default function HomeMonth(props: Props) {
     //console.log(data)
 
     if (data) {
-        let max = 0;
+        let max = -1;
         let min = 10000000;
         data.forEach(day => {
             usage += day.usage;

@@ -58,6 +58,7 @@ export default function CabinetHistory(props: Props) {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Datum</TableCell>
+                                    <TableCell align="right">Meritev</TableCell>
                                     <TableCell align="right">Poraba (kWh)</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -70,6 +71,7 @@ export default function CabinetHistory(props: Props) {
                                         <TableCell component="th" scope="row">
                                             {(new Date(row.date)).toLocaleDateString("en-GB")}
                                         </TableCell>
+                                        <TableCell align="right">{row.filledWithZeros === true ? "Pravilna" : row.invalidFlag === true ? "Napačna" : "Popravljena"}</TableCell>
                                         <TableCell align="right">{row.usage}</TableCell>
                                     </TableRow>
                                 ))}
