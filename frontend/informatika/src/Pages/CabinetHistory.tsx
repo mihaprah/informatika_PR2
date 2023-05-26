@@ -1,94 +1,99 @@
-import Card from '@mui/joy/Card';
-import { useEffect, useState } from "react";
+import Card from "@mui/joy/Card";
+import { SetStateAction, useEffect, useState } from "react";
 import api from "../Service/api.tsx";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
 
 interface Props {
-    cabinetID: string;
+  cabinetID: string;
 }
 export default function CabinetHistory(props: Props) {
-    const [data, setData] = useState<Measurement[]>([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [data, setData] = useState<Measurement[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    useEffect(() => {
-        const getCabinetData = async () => {
-            try {
-                const res = await api.get("/measurement/" + props.cabinetID);
-                const cabinet = res.data;
-                setData(cabinet);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        getCabinetData();
-    }, []);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+  useEffect(() => {
+    const getCabinetData = async () => {
+      try {
+        const res = await api.get("/measurement/" + props.cabinetID);
+        const cabinet = res.data;
+        setData(cabinet);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    getCabinetData();
+  }, []);
 
-    const rowsToDisplay = data.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-    );
+  const handleChangePage = (event: any, newPage: SetStateAction<number>) => {
+    setPage(newPage);
+  };
 
-    return (
-        <>
-            <div>
-                <b>Zgodovina meritev - št. merilne omarice: {props.cabinetID}</b>
-            </div>
-            <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center' }}>
-                <Card variant="outlined" sx={{ width: 1165, height: 650, backgroundColor: 'background.level2', alignItems: 'center' }}>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Datum</TableCell>
-                                    <TableCell align="right">Meritev</TableCell>
-                                    <TableCell align="right">Poraba (kWh)</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rowsToDisplay.map((row) => (
-                                    <TableRow
-                                        key={row.date}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {(new Date(row.date)).toLocaleDateString("en-GB")}
-                                        </TableCell>
-                                        <TableCell align="right">{row.filledWithZeros === true ? "Pravilna" : row.invalidFlag === true ? "Napačna" : "Popravljena"}</TableCell>
-                                        <TableCell align="right">{row.usage}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10]}
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Card>
-            </div>
-        </>
-    );
+  const handleChangeRowsPerPage = (event: { target: { value: string } }) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const rowsToDisplay = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  return (
+    <>
+      <div>
+        <b>Zgodovina meritev - št. merilne omarice: {props.cabinetID}</b>
+      </div>
+      <div style={{ display: "flex", gap: "4vh", marginTop: "6vh", justifyContent: "center" }}>
+        <Card
+          variant="outlined"
+          sx={{ width: 1165, height: 650, backgroundColor: "background.level2", alignItems: "center" }}
+        >
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <b>Datum</b>
+                  </TableCell>
+                  <TableCell align="right">
+                    <b>Meritev</b>
+                  </TableCell>
+                  <TableCell align="right">
+                    <b>Poraba (kWh)</b>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rowsToDisplay.map((row) => (
+                  <TableRow key={row.date} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                    <TableCell component="th" scope="row">
+                      {new Date(row.date).toLocaleDateString("en-GB")}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.filledWithZeros === true ? "Pravilna" : row.invalidFlag === true ? "Napačna" : "Popravljena"}
+                    </TableCell>
+                    <TableCell align="right">{row.usage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+      </div>
+    </>
+  );
 }

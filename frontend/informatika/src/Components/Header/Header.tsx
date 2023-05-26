@@ -9,8 +9,8 @@ const Header: FunctionComponent = () => {
       <div className="logo-parent">
         <img className="logo-icon" alt="" src="/logo.png" />
         <div className="user-info" onClick={() => navigate("/user-profile")}>
-          <div className="name-surename">Janez Novak</div>
-          <img className="user-profile-icon" alt="" src="/user-profile.svg" />
+          <div className="name-surename">Nastavitve</div>
+          <img className="user-profile-icon" alt="" src="/settings-icon.svg" />
         </div>
       </div>
     </div>
