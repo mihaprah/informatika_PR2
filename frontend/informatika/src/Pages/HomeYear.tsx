@@ -12,8 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+interface Props {
+    cabinetID: string;
+}
 
-export default function HomeYear() {
+export default function HomeYear(props: Props) {
     const navigate = useNavigate();
     const [alignment, setAlignment] = React.useState('year');
     const [data, setData] = useState<Measurement[]>([]);
@@ -25,7 +28,7 @@ export default function HomeYear() {
     useEffect(() => {
         const getCabinetData = async () => {
             try {
-                const res = await api.get("/measurement/year/5-001/" + year + "-01-01"); //hardcoded
+                const res = await api.get("/measurement/year/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
                 const cabinet = res.data;
                 setData(cabinet);
             } catch (error) {
@@ -67,7 +70,7 @@ export default function HomeYear() {
 
     return <>
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <b>Pregled meritev - št. merilne omarice: 5-001</b>
+            <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
             <div style={{display: "flex"}}>
             <Box sx={{minWidth: 120}}>
                 <FormControl>

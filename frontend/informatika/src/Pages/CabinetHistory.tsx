@@ -10,7 +10,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 
-export default function CabinetHistory() {
+interface Props {
+    cabinetID: string;
+}
+export default function CabinetHistory(props: Props) {
     const [data, setData] = useState<Measurement[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -18,7 +21,7 @@ export default function CabinetHistory() {
     useEffect(() => {
         const getCabinetData = async () => {
             try {
-                const res = await api.get("/measurement/5-001"); // hardcoded
+                const res = await api.get("/measurement/" + props.cabinetID);
                 const cabinet = res.data;
                 setData(cabinet);
             } catch (error) {
@@ -46,7 +49,7 @@ export default function CabinetHistory() {
     return (
         <>
             <div>
-                <b>Zgodovina meritev - št. merilne omarice: 5-001</b>
+                <b>Zgodovina meritev - št. merilne omarice: {props.cabinetID}</b>
             </div>
             <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center' }}>
                 <Card variant="outlined" sx={{ width: 1165, height: 650, backgroundColor: 'background.level2', alignItems: 'center' }}>

@@ -1,7 +1,10 @@
 import Typography from '@mui/joy/Typography';
 import Card from '@mui/joy/Card';
 
-export default function Comparison() {
+interface Props {
+    cabinetID: string;
+}
+export default function Comparison(props: Props) {
   return (
     <>
       <div style={{ display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center' }}>

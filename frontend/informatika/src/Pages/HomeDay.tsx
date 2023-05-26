@@ -11,7 +11,10 @@ import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import * as dayjs from "dayjs";
 
-export default function HomeDay() {
+interface Props {
+    cabinetID: string;
+}
+export default function HomeDay(props: Props) {
     const [data, setData] = useState<Measurement[]>([]);
     let dayUsage = 0;
     let pastDays: Measurement[] = [];
@@ -22,7 +25,7 @@ export default function HomeDay() {
     useEffect(() => {
         const getCabinetData = async () => {
             try {
-                const res = await api.get("/measurement/day/5-001/" + selectedDate); //hardcoded
+                const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
                 const cabinet = res.data;
                 setData(cabinet);
             } catch (error) {
@@ -79,7 +82,7 @@ export default function HomeDay() {
 
     return <>
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <b>Pregled meritev - št. merilne omarice: 5-001</b>
+            <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker label="Datum" defaultValue={dayjs('2023-02-28')}

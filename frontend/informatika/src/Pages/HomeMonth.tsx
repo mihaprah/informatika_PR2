@@ -12,10 +12,10 @@ import {Box, InputLabel} from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-
-export default function HomeMonth() {
-    //TODO št anomalij dinamicno, št. prekoračitev in da poisce datum in avtomatsko geta za ta mesec podatke oz za ta mesec leta 2022
-    //dodaj si v backend vrstio za tabele create drop
+interface Props {
+    cabinetID: string;
+}
+export default function HomeMonth(props: Props) {
     const [data, setData] = useState<Measurement[]>();
     const [year, setYear] = useState(2023);
     const [month, setMonth] = useState("02");
@@ -31,7 +31,7 @@ export default function HomeMonth() {
     useEffect(() => {
         const getCabinetData = async () => {
             try {
-                const res = await api.get("/measurement/month/5-001/"+ year + "-" + month + "-01"); //hardcoded
+                const res = await api.get("/measurement/month/" + props.cabinetID + "/"+ year + "-" + month + "-01");
                 const cabinet = res.data;
                 setData(cabinet);
 
@@ -97,7 +97,7 @@ export default function HomeMonth() {
 
     return <>
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <b>Pregled meritev - št. merilne omarice: 5-001</b>
+            <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
             <div style={{display: "flex"}}>
                 <Box sx={{minWidth: 120}}>
                     <FormControl>
