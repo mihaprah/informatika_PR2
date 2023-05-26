@@ -3,6 +3,7 @@ package com.example.informatika.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -31,8 +32,5 @@ public class Cabinet {
     private String connectionPower; //kW
     private int numberOfPhases;
     private int consumerGroup; //2-5
-
-    @OneToMany(mappedBy = "cabinet", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    Collection<MeasurementData> measurementDataCollection;
 
 }
