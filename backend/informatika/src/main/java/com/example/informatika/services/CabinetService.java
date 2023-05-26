@@ -6,13 +6,27 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.StreamSupport;
+
 @Service
 @AllArgsConstructor
 public class CabinetService {
 
     private CabinetRepository cabinetDao;
-    public Iterable<Cabinet> getAll(){
-        return cabinetDao.findAll();
+    public Iterable<Cabinet> getAll() {
+        Iterable<Cabinet> cabinets = cabinetDao.findAll();
+        Cabinet[] cabinetArray = StreamSupport.stream(cabinets.spliterator(), false)
+                .toArray(Cabinet[]::new);
+
+        Arrays.sort(cabinetArray, Comparator.comparingInt(cabinet -> {
+            String[] parts = cabinet.getCabinetId().split("-");
+            return Integer.parseInt(parts[1]);
+        }));
+
+        return Arrays.asList(cabinetArray);
     }
     public Cabinet getById(String id){
         return cabinetDao.findById(id).orElseThrow(() -> new IllegalCallerException("Cabient does not exist"));
