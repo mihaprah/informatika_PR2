@@ -61,10 +61,16 @@ export default function CabinetHistory(props: Props) {
                     <b>Datum</b>
                   </TableCell>
                   <TableCell align="right">
-                    <b>Meritev</b>
+                    <b>Status meritve</b>
                   </TableCell>
                   <TableCell align="right">
                     <b>Poraba (kWh)</b>
+                  </TableCell>
+                  <TableCell align="right">
+                    <b>Visoka Poraba (kWh)</b>
+                  </TableCell>
+                  <TableCell align="right">
+                    <b>Nizka Poraba (kWh)</b>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -75,9 +81,22 @@ export default function CabinetHistory(props: Props) {
                       {new Date(row.date).toLocaleDateString("en-GB")}
                     </TableCell>
                     <TableCell align="right">
-                      {row.filledWithZeros === true ? "Pravilna" : row.invalidFlag === true ? "Napačna" : "Popravljena"}
+                      {row.filledWithZeros === true ? (
+                        <span style={{ color: "green" }}>Pravilna</span>
+                      ) : row.invalidFlag === true ? (
+                        <span style={{ color: "red" }}>Napačna</span>
+                      ) : (
+                        <span style={{ color: "#FFCC00" }}>Popravljena</span>
+                      )}
                     </TableCell>
+
                     <TableCell align="right">{row.usage}</TableCell>
+                    <TableCell align="right">
+                      {row.highUsage != 0 ? row.highUsage : row.lowUsage != 0 ? row.highUsage : "Podatek ni na voljo"}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.lowUsage != 0 ? row.lowUsage : row.highUsage != 0 ? row.lowUsage : "Podatek ni na voljo"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -92,6 +111,36 @@ export default function CabinetHistory(props: Props) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+        </Card>
+      </div>
+      <div style={{ display: "flex", gap: "4vh", marginTop: "6vh", justifyContent: "center" }}>
+        <Card variant="outlined" sx={{ width: 1165, height: 280, backgroundColor: "background.level2" }}>
+          <h3 style={{ marginBottom: "0" }}>Razlaga pojmov</h3>
+          <div style={{ paddingLeft: "1vh" }}>
+            <h4>Status meritve:</h4>
+            <ul>
+              <li>
+                <span style={{ color: "green" }}>Pravilna</span> - podatki iz 15 minutnih meritev se ujemajo z dnevnimi
+                podatki.
+              </li>
+              <li>
+                <span style={{ color: "#FFCC00" }}>Popravljena</span> - podatki iz 15 minutnih meritev se ne ujemajo z
+                dnevnimi podatki, zato je meritev namoščena z metodo soležnih dni.
+              </li>
+              <li>
+                <span style={{ color: "red" }}>Napačna</span> - podatki iz 15 minutnih meritev se ne ujemajo z dnevnimi
+                podatki, prav tako podatka ni bilo mogoče nadomestiti z metodo soležnih dni. Na voljo je podatek iz 15
+                minutnih meritev, ki pa ni preverjen.
+              </li>
+            </ul>
+            <h4>Visoka in Nizka poraba</h4>
+            <ul>
+              <li>
+                <b>Podatek ni na voljo</b> - podatek manjka, saj med uporabo metode soležnih dni, prejšnji dnevi tega
+                podatka niso imeli.
+              </li>
+            </ul>
+          </div>
         </Card>
       </div>
     </>
