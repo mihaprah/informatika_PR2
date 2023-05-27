@@ -105,30 +105,44 @@ Pridobivanje podatkov o dnevnih meritvah za vse omarice.
 - Vrne seznam vseh dnevnih meritev za vse omarice
 
 #### Request GET ONE
-`GET /measurement/{/date}/{cabinet_id}/`
+`GET /measurement/day/{date}/{cabinet_id}/`
 - Primer {date} je npr. "2022-01-01"
 - Primer {cabinet_id} je npr. "5-001"
 #### Response
-- `JSON` objekt naslednje oblike
-```json
-{
-  "id": "{Long}",
-  "date": "{Date}",
-  "filledWithZeros": "{boolean}",
-  "invalidFlag": "{boolean}",
-  "modifiedWithEvenDatesStrategy": "{boolean}",
-  "measuredValue": "{double}",
-  "register": "{String}",
-  "cabinetId": "{String}",
-  "highUsage": "{double}",
-  "lowUsage": "{double}"
-}
-```
+- Vrne seznam dnevnih meritev za določen datum in meritve prejšnjih 10ih dni
+
 #### Request GET ALL BY CABINET ID
 `GET /measurement/{cabinet_id}/`
 - Primer {cabinet_id} je npr. "5-001"
 #### Response
 - Vrne seznam vseh meritev ene omarice
+
+#### Request GET ALL BY CABINET ID FOR ONE MONTH
+`GET /measurement/month/{cabinet_id}/{month}/`
+- Primer {cabinet_id} je npr. "5-001"
+- Primer {month} je npr. "2022-01-01" za mesec januar leta 2022
+
+#### Response
+- Vrne seznam vseh dnevnih meritev določene omarice za določen mesec v nekem letu
+
+#### Request GET ALL BY CABINET ID FOR ONE YEAR
+`GET /measurement/year/{cabinet_id}/{year}/`
+- Primer {cabinet_id} je npr. "5-001"
+- Primer {month} je npr. "2022-01-01" za leta 2022
+
+#### Response
+- Vrne seznam vseh dnevnih meritev določene omarice za določeno leto
+
+#### Request
+`GET /measurement/usage/{cabinet_id}/{date}/`
+- Primer {cabinet_id} je npr. "5-001"
+- Primer {month} je npr. "2022-01-01" za leta 2022
+
+#### Response
+- Vrne število porabljene energije za eno merilno omarico za določeno leto
+```
+usage {Double}
+```
 
 #### Request POST
 `POST /measurement/`
