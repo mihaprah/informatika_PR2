@@ -29,6 +29,7 @@ public class MeasurementData {
     private boolean filledWithZeros = false; // CASE 1: difference < 2% --> mankajoce dni se zadomesti z 0
     private boolean modifiedWithEvenDatesStrategy = false; // CASE 2: difference > 2% --> pravilo soleznih dni
     private boolean invalidFlag = false; // Sum of interval data > daily value
+    private boolean onlyMeasuredValue = false; // When the only value that is available is measured value but it cannot be verified
     private double measuredValue; // Number of interval sum
     private double highUsage = 0; // Amount used in HIGH zone
     private double lowUsage = 0; // Amount used in LOW zone

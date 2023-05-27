@@ -176,11 +176,14 @@ public class ReadData {
                         if (checkDivison > 1){
 //                            CASE 1 -> sum of interval is bigger then the daily value. Add flag invalid
 
-                            MeasurementData measurementData = new MeasurementData(currentDate, 0.0, cabinet);
-                            measurementData.setInvalidFlag(true);
-                            measurementData.setMeasuredValue(result.doubleValue());
-
-                            measurementDataDao.save(measurementData);
+                            MeasurementData data = new MeasurementData(currentDate, 0.0, cabinet);
+                            data.setInvalidFlag(true);
+                            data.setMeasuredValue(result.doubleValue());
+                            if (data.getUsage() == 0){
+                                data.setUsage(result.doubleValue());
+                                data.setOnlyMeasuredValue(true);
+                            }
+                            measurementDataDao.save(data);
                             case1CountInvalid++;
                         } else {
                             double divisionResult = (((result.doubleValue() / dailyValue.doubleValue())*100) - 100);
@@ -190,16 +193,20 @@ public class ReadData {
             //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
     //                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
 
-                                MeasurementData measurementData = new MeasurementData(currentDate, dailyValue.doubleValue(), cabinet);
-                                measurementData.setFilledWithZeros(true);
+                                MeasurementData data = new MeasurementData(currentDate, dailyValue.doubleValue(), cabinet);
+                                data.setFilledWithZeros(true);
                                 if (visokaPoraba != null){
-                                    measurementData.setHighUsage(visokaPoraba.doubleValue());
+                                    data.setHighUsage(visokaPoraba.doubleValue());
                                 }
                                 if (nizkaPoraba != null){
-                                    measurementData.setLowUsage(nizkaPoraba.doubleValue());
+                                    data.setLowUsage(nizkaPoraba.doubleValue());
                                 }
-
-                                measurementDataDao.save(measurementData);
+                                data.setMeasuredValue(result.doubleValue());
+                                if (data.getUsage() == 0){
+                                    data.setUsage(result.doubleValue());
+                                    data.setOnlyMeasuredValue(true);
+                                }
+                                measurementDataDao.save(data);
                                 case1Count++;
                             } else {
             //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
@@ -222,44 +229,65 @@ public class ReadData {
                                     }
                                 }
                                 double nextTrueValue = 0;
+                                double nextLowUsage = 0;
+                                double nextHighUsage = 0;
                                 if(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY || isHoliday){
 //                                    Date is Saturday OR Sunday OR a Holiday
                                     for(LocalDate week : weeks){
+                                        if (nextTrueValue != 0){
+                                            break;
+                                        }
                                         if (week.isBefore(LocalDate.parse("2022-01-01"))){
                                             continue;
                                         }
-                                        checkSimilarDates = " SELECT casovna_znacka, enotni_ident_mm, a_plus_et, a_plus_et_24" +
-                                                " FROM merilni_podatki_stanja" +
-                                                " WHERE casovna_znacka = '" + week + "'" +
-                                                " AND enotni_ident_mm = '" + cabinet_id + "'" +
-                                                " ORDER BY casovna_znacka;";
+                                        checkSimilarDates = " SELECT md.low_usage, md.high_usage, md.usage " +
+                                                " FROM measurement_data md" +
+                                                " WHERE md.date = '" + week + "'" +
+                                                " AND md.cabinet_id = '" + cabinet_id + "';";
 
                                         Map<String, Object> oneValueResult = jdbcTemplate.queryForMap(checkSimilarDates);
-                                        BigDecimal a_plus_et = (BigDecimal) oneValueResult.get("a_plus_et");
-                                        BigDecimal a_plus_et_24 = (BigDecimal) oneValueResult.get("a_plus_et_24");
+                                        Double usage = (Double) oneValueResult.get("usage");
+                                        Double low_usage = (Double) oneValueResult.get("low_usage");
+                                        Double high_usage = (Double) oneValueResult.get("high_usage");
 
-                                        if (a_plus_et == null){
-                                            if (a_plus_et_24 == null){
-                                                continue;
-                                            } else {
-                                                nextTrueValue = a_plus_et_24.doubleValue();
+                                        if (usage != null){
+                                            nextTrueValue = usage;
+                                            if (low_usage != 0){
+                                                nextLowUsage = low_usage;
                                             }
-                                        } else {
-                                            nextTrueValue = a_plus_et.doubleValue();
+                                            if (high_usage != 0){
+                                                nextHighUsage = high_usage;
+                                            }
                                         }
                                     }
+
                                     MeasurementData data = new MeasurementData(currentDate, nextTrueValue, cabinet);
+
                                     if (nextTrueValue == 0){
                                         data.setInvalidFlag(true);
                                         invalidPastWeekValue++;
                                     } else {
                                         data.setModifiedWithEvenDatesStrategy(true);
                                     }
+                                    if (nextLowUsage != 0){
+                                        data.setLowUsage(nextLowUsage);
+                                    }
+                                    if (nextHighUsage != 0){
+                                        data.setHighUsage(nextHighUsage);
+                                    }
+                                    data.setMeasuredValue(result.doubleValue());
+                                    if (data.getUsage() == 0){
+                                        data.setUsage(result.doubleValue());
+                                        data.setOnlyMeasuredValue(true);
+                                    }
                                     measurementDataDao.save(data);
                                     numberOfHolidaysSaturdaysSundays++;
                                 } else {
 //                                    Date is a work day
                                     for(LocalDate week : weeks){
+                                        if (nextTrueValue != 0){
+                                            break;
+                                        }
                                         if (week.isBefore(LocalDate.parse("2022-01-01"))){
                                             continue;
                                         }
@@ -275,24 +303,24 @@ public class ReadData {
                                         if (earlierIsHoliday){
                                             continue;
                                         }
-                                        checkSimilarDates = " SELECT casovna_znacka, enotni_ident_mm, a_plus_et, a_plus_et_24" +
-                                                " FROM merilni_podatki_stanja" +
-                                                " WHERE casovna_znacka = '" + week + "'" +
-                                                " AND enotni_ident_mm = '" + cabinet_id + "'" +
-                                                " ORDER BY casovna_znacka;";
+                                        checkSimilarDates = " SELECT md.low_usage, md.high_usage, md.usage " +
+                                                " FROM measurement_data md" +
+                                                " WHERE md.date = '" + week + "'" +
+                                                " AND md.cabinet_id = '" + cabinet_id + "';";
 
                                         Map<String, Object> oneValueResult = jdbcTemplate.queryForMap(checkSimilarDates);
-                                        BigDecimal a_plus_et = (BigDecimal) oneValueResult.get("a_plus_et");
-                                        BigDecimal a_plus_et_24 = (BigDecimal) oneValueResult.get("a_plus_et_24");
+                                        Double usage = (Double) oneValueResult.get("usage");
+                                        Double low_usage = (Double) oneValueResult.get("low_usage");
+                                        Double high_usage = (Double) oneValueResult.get("high_usage");
 
-                                        if (a_plus_et == null){
-                                            if (a_plus_et_24 == null){
-                                                continue;
-                                            } else {
-                                                nextTrueValue = a_plus_et_24.doubleValue();
+                                        if (usage != null){
+                                            nextTrueValue = usage;
+                                            if (low_usage != 0){
+                                                nextLowUsage = low_usage;
                                             }
-                                        } else {
-                                            nextTrueValue = a_plus_et.doubleValue();
+                                            if (high_usage != 0){
+                                                nextHighUsage = high_usage;
+                                            }
                                         }
                                     }
                                     MeasurementData data = new MeasurementData(currentDate, nextTrueValue, cabinet);
@@ -301,6 +329,17 @@ public class ReadData {
                                         invalidPastWeekValue++;
                                     } else {
                                         data.setModifiedWithEvenDatesStrategy(true);
+                                    }
+                                    if (nextLowUsage != 0){
+                                        data.setLowUsage(nextLowUsage);
+                                    }
+                                    if (nextHighUsage != 0){
+                                        data.setHighUsage(nextHighUsage);
+                                    }
+                                    data.setMeasuredValue(result.doubleValue());
+                                    if (data.getUsage() == 0){
+                                        data.setUsage(result.doubleValue());
+                                        data.setOnlyMeasuredValue(true);
                                     }
                                     measurementDataDao.save(data);
                                     numberOfWeekDays++;
@@ -320,7 +359,6 @@ public class ReadData {
                 }
 
             }
-
             System.out.println("Interval sum count: " + intervalSumCount);
             System.out.println("Daily usage sum: " + dailyUsageCount);
             System.out.println("CASE 1: " + case1Count);
