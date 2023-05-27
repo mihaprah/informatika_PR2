@@ -7,7 +7,10 @@ import com.example.informatika.models.MeasurementData;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
@@ -41,18 +44,29 @@ public class MeasurementDataService {
         return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
     }
 
-    public Iterable<MeasurementData> getAllByCabinetByMonth(String cabinetId, String month){
+    public Iterable<MeasurementData> getAllByCabinetByMonth(String cabinetId, String date){
         Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
-        LocalDate startDate = LocalDate.parse(month);
+        LocalDate startDate = LocalDate.parse(date);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
         return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
     }
 
-    public Iterable<MeasurementData> getAllByCabinetByYear(String cabinetId, String year){
+    public Iterable<MeasurementData> getAllByCabinetByYear(String cabinetId, String date){
         Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
-        LocalDate startDate = LocalDate.parse(year);
+        LocalDate startDate = LocalDate.parse(date);
         LocalDate endDate = startDate.plusYears(1).minusDays(1);
         return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
+    }
+    public double getSumOfUsageForYear(String cabinetId, String date){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        LocalDate startDate = LocalDate.parse(date);
+        LocalDate endDate = startDate.plusYears(1).minusDays(1);
+        ArrayList<MeasurementData> data = (ArrayList<MeasurementData>) measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
+        double result = 0;
+        for(MeasurementData entry : data){
+            result += entry.getUsage();
+        }
+        return result;
     }
     public void addMeasurementData(MeasurementData newMeasurementData){
         measurementDataDao.save(newMeasurementData);

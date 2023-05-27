@@ -6,6 +6,8 @@ import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @CrossOrigin
 @RestController
 @AllArgsConstructor
@@ -36,6 +38,10 @@ public class MeasurementDataController {
     @GetMapping("/year/{cabinet_id}/{year}")
     public Iterable<MeasurementData> getByCabinetByYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("year") String year){
         return measurementDataService.getAllByCabinetByYear(cabinetId, year);
+    }
+    @GetMapping("/usage/{cabinet_id}/{date}")
+    public double getUsageAmountForYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("date") String date){
+        return measurementDataService.getSumOfUsageForYear(cabinetId, date);
     }
 
     @PostMapping
