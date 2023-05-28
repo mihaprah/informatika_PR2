@@ -3,6 +3,7 @@ import Card from "@mui/joy/Card";
 import { useEffect, useState } from "react";
 import api from "../Service/api";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface Props {
   cabinetID: string;
@@ -13,6 +14,7 @@ export default function Comparison(props: Props) {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [price, setPrice] = useState<number>(0.17);
   const [finalPrice, setFinalPrice] = useState<number>(0);
+  const [newPrice, setNewPrice] = useState<number>(0);
 
   useEffect(() => {
     const getUsage = async () => {
@@ -22,6 +24,9 @@ export default function Comparison(props: Props) {
     };
     getUsage();
   }, [year]);
+
+  const chartData = [{ oldPrice: finalPrice.toFixed(2), newPrice: newPrice }];
+
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "right" }}>
@@ -99,6 +104,18 @@ export default function Comparison(props: Props) {
             <Typography level="h6">
               <b>Graf primerjave - {year}</b>
             </Typography>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", margin: "1vh" }}>
+            <ResponsiveContainer height={220}>
+              <BarChart width={540} height={300} data={chartData}>
+                <XAxis dataKey="name" />
+                <YAxis unit="€" />
+                <RechartsTooltip />
+                <Legend />
+                <Bar dataKey="oldPrice" name="Vt/Nt obračunavanje" fill="#0077B6" />
+                <Bar dataKey="newPrice" name="15min obračunavanje" fill="#00B4D8" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </Card>
         <Card
