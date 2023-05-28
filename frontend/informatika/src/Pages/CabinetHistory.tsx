@@ -82,9 +82,9 @@ export default function CabinetHistory(props: Props) {
                     </TableCell>
                     <TableCell align="right">
                       {row.filledWithZeros === true ? (
-                        <span style={{ color: "green" }}>Pravilna</span>
+                        <span style={{ color: "#37B76A" }}>Pravilna</span>
                       ) : row.invalidFlag === true ? (
-                        <span style={{ color: "red" }}>Napačna</span>
+                        <span style={{ color: "#E45454" }}>Napačna</span>
                       ) : (
                         <span style={{ color: "#FFCC00" }}>Popravljena</span>
                       )}
@@ -120,17 +120,17 @@ export default function CabinetHistory(props: Props) {
             <h4>Status meritve:</h4>
             <ul>
               <li>
-                <span style={{ color: "green" }}>Pravilna</span> - podatki iz 15 minutnih meritev se ujemajo z dnevnimi
-                podatki.
+                <span style={{ color: "#37B76A" }}>Pravilna</span> - podatki iz 15 minutnih meritev se ujemajo z
+                dnevnimi podatki.
               </li>
               <li>
                 <span style={{ color: "#FFCC00" }}>Popravljena</span> - podatki iz 15 minutnih meritev se ne ujemajo z
                 dnevnimi podatki, zato je meritev namoščena z metodo soležnih dni.
               </li>
               <li>
-                <span style={{ color: "red" }}>Napačna</span> - podatki iz 15 minutnih meritev se ne ujemajo z dnevnimi
-                podatki, prav tako podatka ni bilo mogoče nadomestiti z metodo soležnih dni. Na voljo je podatek iz 15
-                minutnih meritev, ki pa ni preverjen.
+                <span style={{ color: "#E45454" }}>Napačna</span> - podatki iz 15 minutnih meritev se ne ujemajo z
+                dnevnimi podatki, prav tako podatka ni bilo mogoče nadomestiti z metodo soležnih dni. Na voljo je
+                podatek iz 15 minutnih meritev, ki pa ni preverjen.
               </li>
             </ul>
             <h4>Visoka in Nizka poraba</h4>

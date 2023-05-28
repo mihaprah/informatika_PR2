@@ -8,9 +8,20 @@ import Card from "@mui/joy/Card";
 import { useEffect, useState } from "react";
 import api from "../Service/api";
 import FormControl from "@mui/material/FormControl";
-import { Box, InputLabel } from "@mui/material";
+import { Box, InputLabel, Tooltip } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 interface Props {
   cabinetID: string;
@@ -26,7 +37,8 @@ export default function HomeMonth(props: Props) {
   let maxDate = "";
   let minDate = "";
   let invalidData = 0;
-  let anomalije = 0;
+  let anomaly = 0;
+  let correctedData = 0;
 
   useEffect(() => {
     const getCabinetData = async () => {
@@ -52,8 +64,8 @@ export default function HomeMonth(props: Props) {
       if (day.modifiedWithEvenDatesStrategy) {
         modified++;
       }
-      if (day.invalidFlag) {
-        invalidData++;
+      if (day.onlyMeasuredValue) {
+        anomaly++;
       }
 
       if (max < day.usage) {
@@ -66,10 +78,9 @@ export default function HomeMonth(props: Props) {
       }
     });
 
-    usage = Math.round((usage / 1000) * 100) / 100; //from kWh to MWh
-    avgUsage = Math.round((usage / data.length) * 100) / 100;
-    anomalije = invalidData + modified; //spremenjeni + napačni
-    invalidData = Math.round((invalidData / data.length) * 100 * 100) / 100;
+    usage = Number((usage / 1000).toFixed(3)); // from kWh to MWh
+    avgUsage = Number(((usage / data.length) * 1000).toFixed(2)); // from MWh to kWh
+    correctedData = Number((((modified + anomaly) / data.length) * 100).toFixed(2));
   }
 
   const minDateDate = new Date(minDate).toLocaleDateString("SI");
@@ -90,6 +101,26 @@ export default function HomeMonth(props: Props) {
       navigate("/home-year");
     }
   };
+
+  const chartData: any = [];
+  if (data) {
+    data?.forEach((entry: Measurement, index: number) => {
+      let day = {
+        name: entry.date,
+        correctValue: 0,
+        modifiedValue: 0,
+        invalidValue: 0,
+      };
+      if (entry.filledWithZeros === true) {
+        day.correctValue = Number(entry.usage.toFixed(2));
+      } else if (entry.modifiedWithEvenDatesStrategy === true) {
+        day.modifiedValue = Number(entry.usage.toFixed(2));
+      } else {
+        day.invalidValue = Number(entry.usage.toFixed(2));
+      }
+      chartData.push(day);
+    });
+  }
 
   return (
     <>
@@ -161,108 +192,147 @@ export default function HomeMonth(props: Props) {
 
       <div>
         <div style={{ display: "flex", gap: "4vh", marginTop: "6vh", justifyContent: "center" }}>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Skupna poraba
-            </Typography>
-            <Typography level="h2">
-              <b>{usage}MWh</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Št. spremenjenih podatkov
-            </Typography>
-            <Typography level="h2">
-              <b>{modified}</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Št. anomalij
-            </Typography>
-            <Typography level="h2">
-              <b>{anomalije}</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Nepravilne meritve
-            </Typography>
-            <Typography level="h2">
-              <b>{invalidData}%</b>
-            </Typography>
-          </Card>
+          <Tooltip title="Poraba čez mesec." placement="top">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Skupna poraba
+              </Typography>
+              <Typography level="h2">
+                <b>{usage} MWh</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Število nadomeščenih podatkov." placement="top">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Št. spremenjenih podatkov
+              </Typography>
+              <Typography level="h2">
+                <b>{modified}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Število mankajočih podatkov." placement="top">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Št. anomalij
+              </Typography>
+              <Typography level="h2">
+                <b>{anomaly}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Nadomeščeni in mankajoči podatki." placement="top">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Nepravilne meritve
+              </Typography>
+              <Typography level="h2">
+                <b>{correctedData}%</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+        </div>
+        <div style={{ display: "flex", gap: "4vh", marginTop: "4vh", justifyContent: "center" }}>
+          <Tooltip title="Povprečna poraba na dan čez mesec." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Povprečna poraba (dan)
+              </Typography>
+              <Typography level="h2">
+                <b>{avgUsage} kWh</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Število dni, ko je bila poraba prekoračena." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Št. prekoračitev
+              </Typography>
+              <Typography level="h2">
+                <b>0</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Dan v mesecu z največjo porabo." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Največja poraba
+              </Typography>
+              <Typography level="h2">
+                <b>{maxDateDate}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Dan v mesecu z najnižjo porabo." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Najmanjša poraba
+              </Typography>
+              <Typography level="h2">
+                <b>{minDateDate}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
         </div>
         <div style={{ display: "flex", gap: "4vh", marginTop: "4vh", justifyContent: "center" }}>
           <Card
             variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Povprečna poraba (dan)
-            </Typography>
-            <Typography level="h2">
-              <b>{avgUsage}MWh</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Št. prekoračitev
-            </Typography>
-            <Typography level="h2">
-              <b>0</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Največja poraba
-            </Typography>
-            <Typography level="h2">
-              <b>{maxDateDate}</b>
-            </Typography>
-          </Card>
-          <Card
-            variant="outlined"
-            sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
-          >
-            <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Najmanjša poraba
-            </Typography>
-            <Typography level="h2">
-              <b>{minDateDate}</b>
-            </Typography>
-          </Card>
-        </div>
-        <div style={{ display: "flex", gap: "4vh", marginTop: "6vh", justifyContent: "center" }}>
-          <Card
-            variant="outlined"
             sx={{
-              width: "70vh",
-              height: "30vh",
+              width: "142vh",
+              height: "45vh",
               backgroundColor: "background.level2",
               alignItems: "left",
               mt: 2,
             }}
-          ></Card>
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                width={500}
+                height={300}
+                data={chartData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis unit="kWh" />
+                <RechartsTooltip />
+                <Legend />
+                <Bar dataKey="correctValue" name="Pravilna meritev" stackId="a" fill="#37B76A" />
+                <Bar dataKey="modifiedValue" name="Popravljena meritev" stackId="a" fill="#FFCC00" />
+                <Bar dataKey="invalidValue" name="Napačna meritev" stackId="a" fill="#E45454" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
         </div>
       </div>
     </>

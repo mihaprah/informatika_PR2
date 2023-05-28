@@ -1,151 +1,350 @@
-import "../styles/HomeDay.css"
-import * as React from 'react';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import {useNavigate} from "react-router";
-import Typography from '@mui/joy/Typography';
-import Card from '@mui/joy/Card';
-import {useEffect, useState} from "react";
+import "../styles/HomeDay.css";
+import * as React from "react";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { useNavigate } from "react-router";
+import Typography from "@mui/joy/Typography";
+import Card from "@mui/joy/Card";
+import { useEffect, useState } from "react";
 import api from "../Service/api.tsx";
-import {Box, InputLabel} from "@mui/material";
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import { Box, InputLabel, Tooltip } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import {
+  PieChart,
+  Pie,
+  Legend,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
+import { parse } from "path";
 
 interface Props {
-    cabinetID: string;
+  cabinetID: string;
 }
 
 export default function HomeYear(props: Props) {
-    const navigate = useNavigate();
-    const [alignment, setAlignment] = React.useState('year');
-    const [data, setData] = useState<Measurement[]>([]);
-    const [year, setYear] = useState(2023);
-    let usage = 0;
-    let modified = 0;
-    let invalidData = 0;
+  const navigate = useNavigate();
+  const [alignment, setAlignment] = React.useState("year");
+  const [data, setData] = useState<Measurement[]>([]);
+  const [year, setYear] = useState(2023);
+  let usage = 0;
+  let modified = 0;
+  let anomaly = 0;
 
-    useEffect(() => {
-        const getCabinetData = async () => {
-            try {
-                const res = await api.get("/measurement/year/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
-                const cabinet = res.data;
-                setData(cabinet);
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getCabinetData();
-    }, [year])
-
-    if (data) {
-        data.forEach(day => {
-            usage += day.usage;
-
-            if (day.modifiedWithEvenDatesStrategy) {
-                modified++;
-            }
-
-            if (day.invalidFlag) {
-                invalidData++;
-            }
-        });
-    }
-    const handleChange = (
-        event: React.MouseEvent<HTMLElement>,
-        newAlignment: string,
-    ) => {
-        setAlignment(newAlignment);
+  useEffect(() => {
+    const getCabinetData = async () => {
+      try {
+        const res = await api.get("/measurement/year/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
+        const cabinet = res.data;
+        setData(cabinet);
+      } catch (error) {
+        console.log(error);
+      }
     };
+    getCabinetData();
+  }, [year]);
 
-    const changeURL = (object: any) => {
-        if (object.value === "day") {
-            navigate("/home-day");
-        } else if (object.value === "month") {
-            navigate("/home-month");
-        } else if (object.value === "year") {
-            navigate("/home-year");
-        }
+  if (data) {
+    data.forEach((day) => {
+      usage += day.usage;
+
+      if (day.modifiedWithEvenDatesStrategy) {
+        modified++;
+      }
+
+      if (day.onlyMeasuredValue) {
+        anomaly++;
+      }
+    });
+  }
+  const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+    setAlignment(newAlignment);
+  };
+
+  const changeURL = (object: any) => {
+    if (object.value === "day") {
+      navigate("/home-day");
+    } else if (object.value === "month") {
+      navigate("/home-month");
+    } else if (object.value === "year") {
+      navigate("/home-year");
     }
+  };
 
-    return <>
-        <div style={{display: "flex", justifyContent: "space-between"}}>
-            <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
-            <div style={{display: "flex"}}>
-            <Box sx={{minWidth: 120}}>
-                <FormControl>
-                    <InputLabel>Leto</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={year}
-                        label="Leto"
-                        onChange={(event) =>
-                            setYear(Number(event.target.value))
-                        }
-                        style={{height: "48px"}}
-                    >
-                        <MenuItem value={2022}>2022</MenuItem>
-                        <MenuItem value={2023}>2023</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-            <ToggleButtonGroup
-                color="primary"
-                value={alignment}
-                exclusive
-                onChange={handleChange}
-                style={{width: '300px'}}
-            >
-                <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>DAN</ToggleButton>
-                <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>MESEC</ToggleButton>
-                <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>LETO</ToggleButton>
-            </ToggleButtonGroup>
-            </div>
-        </div>
+  const chartData = [
+    { name: "Pravilne meritve", value: data.length - modified - anomaly, fill: "#37B76A" },
+    { name: "Popravljene meritve", value: modified, fill: "#FFCC00" },
+    { name: "Napačne meritve", value: anomaly, fill: "#E45454" },
+  ];
 
-        <div style={{display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center',}}>
-            <Card variant="outlined"
-                  sx={{width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center'}}>
-                <Typography level="body1" sx={{fontSize: '18px'}}>Skupna poraba</Typography>
-                <Typography level="h2">
-                    <b>{Math.round(usage / 1000)} MWh</b>
-                </Typography>
-            </Card>
-            <Card variant="outlined"
-                  sx={{width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center'}}>
-                <Typography level="body1" sx={{fontSize: '18px'}}>Povprečna poraba (dan)</Typography>
-                <Typography level="h2">
-                    <b>{Math.round((usage / 1000) / data?.length)} MWh</b>
-                </Typography>
-            </Card>
-            <Card variant="outlined"
-                  sx={{width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center'}}>
-                <Typography level="body1" sx={{fontSize: '18px'}}>Št. spremenjenih podatkov</Typography>
-                <Typography level="h2">
-                    <b>{modified}</b>
-                </Typography>
-            </Card>
-            <Card variant="outlined"
-                  sx={{width: 225, height: 85, backgroundColor: 'background.level2', alignItems: 'center'}}>
-                <Typography level="body1" sx={{fontSize: '18px'}}>Št. anomalij</Typography>
-                <Typography level="h2">
-                    <b>{modified + invalidData}</b>
-                </Typography>
-            </Card>
+  const chartData2: any = [
+    {
+      name: "Januar",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Februar",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Marec",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "April",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Maj",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Junij",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Julij",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Avgust",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "September",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "Oktober",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "November",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+    {
+      name: "December",
+      correctValue: 0,
+      modifiedValue: 0,
+      invalidValue: 0,
+    },
+  ];
+
+  return (
+    <>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
+        <div style={{ display: "flex" }}>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl>
+              <InputLabel>Leto</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={year}
+                label="Leto"
+                onChange={(event) => setYear(Number(event.target.value))}
+                style={{ height: "48px" }}
+              >
+                <MenuItem value={2022}>2022</MenuItem>
+                <MenuItem value={2023}>2023</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+            style={{ width: "300px" }}
+          >
+            <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>
+              DAN
+            </ToggleButton>
+            <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>
+              MESEC
+            </ToggleButton>
+            <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>
+              LETO
+            </ToggleButton>
+          </ToggleButtonGroup>
         </div>
-        <div style={{display: 'flex', gap: '4vh', marginTop: '6vh', justifyContent: 'center',}}>
+      </div>
+      <div style={{ display: "flex", gap: "4vh", marginTop: "6vh", justifyContent: "center" }}>
+        <div>
+          <Tooltip title="Poraba čez leto." placement="top">
             <Card
-                variant="outlined"
-                sx={{
-                    width: 559,
-                    height: 270,
-                    backgroundColor: "background.level2",
-                    alignItems: "left",
-                    mt: 2,
-                }}
+              variant="outlined"
+              sx={{
+                width: 225,
+                height: 85,
+                backgroundColor: "background.level2",
+                alignItems: "center",
+                marginBottom: "4vh",
+              }}
             >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Skupna poraba
+              </Typography>
+              <Typography level="h2">
+                <b>{Number((usage / 1000).toFixed(2))} MWh</b>
+              </Typography>
             </Card>
+          </Tooltip>
+          <Tooltip title="Povprečna poraba na dan čez leto." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Povprečna poraba (dan)
+              </Typography>
+              <Typography level="h2">
+                <b>{Number((usage / data?.length).toFixed(2))} kWh</b>
+              </Typography>
+            </Card>
+          </Tooltip>
         </div>
+        <div>
+          <Tooltip title="Število nadomeščenih podatkov." placement="top">
+            <Card
+              variant="outlined"
+              sx={{
+                width: 225,
+                height: 85,
+                backgroundColor: "background.level2",
+                alignItems: "center",
+                marginBottom: "4vh",
+              }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Št. spremenjenih podatkov
+              </Typography>
+              <Typography level="h2">
+                <b>{modified}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+          <Tooltip title="Število mankajočih podatkov." placement="bottom">
+            <Card
+              variant="outlined"
+              sx={{ width: 225, height: 85, backgroundColor: "background.level2", alignItems: "center" }}
+            >
+              <Typography level="body1" sx={{ fontSize: "18px" }}>
+                Št. anomalij
+              </Typography>
+              <Typography level="h2">
+                <b>{anomaly}</b>
+              </Typography>
+            </Card>
+          </Tooltip>
+        </div>
+        <div>
+          <Card
+            variant="outlined"
+            sx={{
+              width: 559,
+              height: 235,
+              backgroundColor: "background.level2",
+              alignItems: "left",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Typography level="h6">
+                <b>Stanje meritev - {year}</b>
+              </Typography>
+            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={600} height={600}>
+                <Pie
+                  dataKey="value"
+                  data={chartData}
+                  cx={120}
+                  cy={102}
+                  innerRadius={50}
+                  outerRadius={100}
+                  fill="#82ca9d"
+                />
+                <RechartsTooltip />
+                <Legend
+                  width={200}
+                  wrapperStyle={{
+                    top: 50,
+                    right: 50,
+                    backgroundColor: "#f5f5f5",
+                    border: "1px solid #d5d5d5",
+                    borderRadius: 3,
+                    lineHeight: "40px",
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: "4vh", marginTop: "4vh", justifyContent: "center" }}>
+        <Card
+          variant="outlined"
+          sx={{
+            width: "148vh",
+            height: "45vh",
+            backgroundColor: "background.level2",
+            alignItems: "left",
+            mt: 2,
+          }}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              width={600}
+              height={300}
+              data={chartData2}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <RechartsTooltip />
+              <Legend />
+              <Bar dataKey="pv" stackId="a" fill="#8884d8" />
+              <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
     </>
+  );
 }
