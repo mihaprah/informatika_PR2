@@ -40,4 +40,26 @@ public class IntervalDataService {
         }
         return null;
     }
+    public Iterable<IntervalData> getIntervalForOneYear(String cabinetId, String date){
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        date = date + " 00:00:00";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        Date normalDate;
+        try {
+            normalDate = simpleDateFormat.parse(date);
+            Timestamp startDate = new Timestamp(normalDate.getTime());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+
+            calendar.add(Calendar.YEAR, 1);
+            Timestamp endDate = new Timestamp(calendar.getTimeInMillis());
+
+            Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+            return intervalDataDao.findByCabinetAndTimeStampBetween(cabinet, startDate, endDate);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

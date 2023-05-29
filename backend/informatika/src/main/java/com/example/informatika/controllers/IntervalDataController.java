@@ -14,8 +14,12 @@ public class IntervalDataController {
 
     private IntervalDataService intervalDataService;
 
-    @GetMapping("/{cabinet_id}/{day}")
+    @GetMapping("/day/{cabinet_id}/{day}")
     public Iterable<IntervalData> getForOneDay(@PathVariable("cabinet_id") String cabinetId, @PathVariable("day") String day){
         return intervalDataService.getIntervalForOneDay(cabinetId, day);
+    }
+    @GetMapping("/year/{cabinet_id}/{year}")
+    public Iterable<IntervalData> getForOneYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("year") String year){
+        return intervalDataService.getIntervalForOneYear(cabinetId, year);
     }
 }

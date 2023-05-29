@@ -15,9 +15,9 @@ public class InformatikaApplication {
         ReadData readData = context.getBean(ReadData.class);
 
         // Call the read() method
-        readData.readCabinet();
-        readData.readMerilniPodatki();
-        readData.readInterval();
+//        readData.readCabinet();
+//        readData.readMerilniPodatki();
+//        readData.readInterval();
 
         // Close the application context
         //context.close();
