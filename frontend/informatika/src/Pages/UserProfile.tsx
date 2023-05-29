@@ -52,7 +52,7 @@ export default function UserProfile(props: Props) {
         });
     }
     return (
-        <div className="user-profile-container">
+        <div className="container">
             <Card
                 variant="outlined"
                 sx={{
@@ -60,7 +60,7 @@ export default function UserProfile(props: Props) {
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
-                    mr: 3,
+                    mt: 2, mr: 2
                 }}
             >
                 <Typography level="h1" sx={{fontSize: "22px"}}>
@@ -99,7 +99,7 @@ export default function UserProfile(props: Props) {
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
-                    ml: 2, // Add margin left to create spacing between cards
+                    mt: 2, mr: 2
                 }}
             >
                 <Typography level="h1" sx={{fontSize: "22px"}}>
@@ -128,135 +128,137 @@ export default function UserProfile(props: Props) {
                     </FormControl>
                 </Box>
             </Card>
-            <div className="new-row-container">
-                <Card
-                    variant="outlined"
+            <Card
+                variant="outlined"
+                sx={{
+                    width: 559,
+                    height: 350,
+                    backgroundColor: "background.level2",
+                    alignItems: "left",
+                    mt: 2, mr: 2
+                }}
+            >
+                <Typography level="h1" sx={{fontSize: "22px"}}>
+                    Splošne nastavitve
+                </Typography>
+                <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
+                    Dogovorjena poraba (kWh/mesec):
+                </Typography>
+                <TextField id="zakupljena-poraba" variant="outlined" size="small" style={{width: "300px"}}/>
+                <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
+                    Cena penalov:
+                </Typography>
+                <TextField id="cena-penalov" variant="outlined" size="small" style={{width: "300px"}}/>
+                <Button
+                    variant="contained"
                     sx={{
-                        width: 559,
-                        height: 350,
-                        backgroundColor: "background.level2",
-                        alignItems: "left",
-                        mt: 2, mr: 3// Add margin top to create spacing between rows
+                        position: "absolute",
+                        display: "block",
+                        margin: "0 auto",
+                        backgroundColor: "#023E8A",
+                        bottom: "25px",
+                        left: "190px"
                     }}
                 >
-                    <Typography level="h1" sx={{fontSize: "22px"}}>
-                        Splošne nastavitve
-                    </Typography>
-                    <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                        Dogovorjena poraba (kWh/mesec):
-                    </Typography>
-                    <TextField id="zakupljena-poraba" variant="outlined" size="small" style={{width: "300px"}}/>
-                    <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                        Cena penalov:
-                    </Typography>
-                    <TextField id="cena-penalov" variant="outlined" size="small" style={{width: "300px"}}/>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            display: "block",
-                            margin: "0 auto",
-                            mt: "9vh",
-                            backgroundColor: "#023E8A",
-                        }}
-                    >
-                        Spremeni nastavitve
-                    </Button>
-                </Card>
-                <Card
-                    variant="outlined"
-                    sx={{
-                        width: 559,
-                        height: 350,
-                        backgroundColor: "background.level2",
-                        alignItems: "left",
-                        mt: 2,
-                        ml: 2 // Add margin top to create spacing between rows
-                    }}
-                >
-                    <Typography level="h1" sx={{fontSize: "22px"}}>
-                        Nastavitve cen blokov
-                    </Typography>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <div style={{display: "flex", flexDirection: "column"}}>
-                            <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                                Višja sezona (November - Februar):
+                    Spremeni nastavitve
+                </Button>
+            </Card>
+            <Card
+                variant="outlined"
+                sx={{
+                    width: 559,
+                    height: 350,
+                    backgroundColor: "background.level2",
+                    alignItems: "left",
+                    mt: 2, mr: 2
+                }}
+            >
+                <Typography level="h1" sx={{fontSize: "22px"}}>
+                    Nastavitve cen blokov
+                </Typography>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
+                            Višja sezona (November - Februar):
+                        </Typography>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                1 -
                             </Typography>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    1 -
-                                </Typography>
-                                <TextField id="visja-sezona-blok1" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    2 -
-                                </Typography>
-                                <TextField id="visja-sezona-blok2" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    3 -
-                                </Typography>
-                                <TextField id="visja-sezona-blok3" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    4 -
-                                </Typography>
-                                <TextField id="visja-sezona-blok4" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
+                            <TextField id="visja-sezona-blok1" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
                         </div>
-                        <div style={{display: "flex", flexDirection: "column"}}>
-                            <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                                Nižja sezona (Marec - Oktober):
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                2 -
                             </Typography>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    2 -
-                                </Typography>
-                                <TextField id="nizja-sezona-blok2" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    3 -
-                                </Typography>
-                                <TextField id="nizja-sezona-blok3" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    4 -
-                                </Typography>
-                                <TextField id="nizja-sezona-blok4" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
-                            <div style={{display: "flex", marginTop: "5px"}}>
-                                <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                    5 -
-                                </Typography>
-                                <TextField id="nizja-sezona-blok5" variant="outlined" size="small"
-                                           style={{width: "150px"}}/>
-                            </div>
+                            <TextField id="visja-sezona-blok2" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                3 -
+                            </Typography>
+                            <TextField id="visja-sezona-blok3" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                4 -
+                            </Typography>
+                            <TextField id="visja-sezona-blok4" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
                         </div>
                     </div>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            display: "block",
-                            margin: "0 auto",
-                            mt: "4vh",
-                            backgroundColor: "#023E8A",
-                        }}
-                    >
-                        Spremeni nastavitve
-                    </Button>
-                </Card>
-            </div>
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
+                            Nižja sezona (Marec - Oktober):
+                        </Typography>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                2 -
+                            </Typography>
+                            <TextField id="nizja-sezona-blok2" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                3 -
+                            </Typography>
+                            <TextField id="nizja-sezona-blok3" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                4 -
+                            </Typography>
+                            <TextField id="nizja-sezona-blok4" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                5 -
+                            </Typography>
+                            <TextField id="nizja-sezona-blok5" variant="outlined" size="small"
+                                       style={{width: "150px"}}/>
+                        </div>
+                    </div>
+                </div>
+                <Button
+                    variant="contained"
+                    sx={{
+                        position: "absolute",
+                        display: "block",
+                        margin: "0 auto",
+                        backgroundColor: "#023E8A",
+                        bottom: "25px",
+
+
+                    }}
+                >
+                    Spremeni nastavitve
+                </Button>
+            </Card>
         </div>
     );
 }
