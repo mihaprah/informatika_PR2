@@ -12,7 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as dayjs from "dayjs";
 import { Tooltip } from "@mui/material";
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie } from "recharts";
 
 interface Props {
   cabinetID: string;
@@ -83,7 +83,30 @@ export default function HomeDay(props: Props) {
     }
   };
 
-  const chartData = [{ usage: dayUsage, avgUsage: avgUsage }];
+
+  const chartData = [
+    { name: "Poraba", value: dayUsage, fill: "#0077B6" },
+    { name: "Povprečna poraba", value: avgUsage, fill: "#00B4D8" }
+  ];
+
+  const selectedDateView = new Date(selectedDate).toLocaleDateString("SI");
+
+  const chartData2: any = [];
+
+  //TRENUTNO DVA TESTNA KO BO ENDPOINT PREKO NJEGA S FORZANKO NAFILAJ ARRAY
+  let hour = {
+    name: "00:00",
+    usage: 12,
+  };
+  let hour1 = {
+    name: "01:00",
+    usage: 12,
+  };
+  chartData2.push(hour)
+
+  chartData2.push(hour1)
+
+
 
   return (
     <>
@@ -179,34 +202,76 @@ export default function HomeDay(props: Props) {
             </Card>
           </Tooltip>
         </div>
+
+
+
         <div style={{ display: "flex", gap: "4vh", marginTop: "4vh", justifyContent: "center" }}>
           <Card
             variant="outlined"
             sx={{
-              width: "100vh",
-              height: "45vh",
+              width: 420,
+              height: 325,
               backgroundColor: "background.level2",
               alignItems: "left",
-              mt: 2,
             }}
           >
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <h3>Primerjava skupne porabe z povprečno porabo preteklih 10 dni - {selectedDate}</h3>
+              <h3>Primerjava skupne porabe z povprečno porabo preteklih 10 dni - {selectedDateView}</h3>
             </div>
-            <div style={{ display: "flex", justifyContent: "center", margin: "1vh" }}>
-              <ResponsiveContainer height={300}>
-                <BarChart width={540} height={300} data={chartData}>
-                  <XAxis dataKey="name" />
-                  <YAxis unit="kWh" />
-                  <RechartsTooltip />
-                  <Legend />
-                  <Bar dataKey="usage" name="Poraba" fill="#0077B6" />
-                  <Bar dataKey="avgUsage" name="Povprečna poraba" fill="#00B4D8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={600} height={600}>
+                <Pie
+                  dataKey="value"
+                  data={chartData}
+                  cx={100}
+                  cy={102}
+                  innerRadius={50}
+                  outerRadius={100}
+                  fill="#82ca9d"
+                />
+                <RechartsTooltip />
+                <Legend
+                  width={170}
+                  wrapperStyle={{
+                    top: 65,
+                    right: 0,
+                    backgroundColor: "#f5f5f5",
+                    border: "1px solid #d5d5d5",
+                    borderRadius: 3,
+                    lineHeight: "40px",
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </Card>
+
+
+          <Card
+            variant="outlined"
+            sx={{
+              width: "90vh",
+              height: 325,
+              backgroundColor: "background.level2",
+              alignItems: "left",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <h3>Dnevna poraba po urah - {selectedDateView}</h3>
+            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={540} height={300} data={chartData2}>
+                <XAxis dataKey="name" />
+                <YAxis unit="kWh" />
+                <RechartsTooltip />
+                <Legend />
+                <Bar dataKey="usage" name="Poraba" fill="#0077B6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+
         </div>
+
+
       </div>
     </>
   );
