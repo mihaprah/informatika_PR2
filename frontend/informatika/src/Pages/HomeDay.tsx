@@ -12,13 +12,24 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as dayjs from "dayjs";
 import { Tooltip } from "@mui/material";
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, PieChart, Pie } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  Legend,
+  PieChart,
+  Pie,
+} from "recharts";
 
 interface Props {
   cabinetID: string;
 }
 export default function HomeDay(props: Props) {
   const [data, setData] = useState<Measurement[]>([]);
+  const [intervalData, setIntervalData] = useState<Interval[]>([]);
   let dayUsage: number = 0;
   let pastDays: Measurement[] = [];
   let avgUsage: number = 0;
@@ -30,13 +41,21 @@ export default function HomeDay(props: Props) {
     const getCabinetData = async () => {
       try {
         const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
-        const measurementData = res.data;
-        setData(measurementData);
+        setData(res.data);
       } catch (error) {
         console.log(error);
       }
     };
+    const getIntervalData = async () => {
+      try {
+        const res = await api.get("/interval/day/" + props.cabinetID + "/" + selectedDate);
+        setIntervalData(res.data);
+      } catch (errr) {
+        console.log(errr);
+      }
+    };
     getCabinetData();
+    getIntervalData();
   }, [selectedDate]);
 
   if (data.length !== 0) {
@@ -83,30 +102,15 @@ export default function HomeDay(props: Props) {
     }
   };
 
-
   const chartData = [
     { name: "Poraba", value: dayUsage, fill: "#0077B6" },
-    { name: "Povprečna poraba", value: avgUsage, fill: "#00B4D8" }
+    { name: "Povprečna poraba", value: avgUsage, fill: "#00B4D8" },
   ];
 
   const selectedDateView = new Date(selectedDate).toLocaleDateString("SI");
 
-  const chartData2: any = [];
-
-  //TRENUTNO DVA TESTNA KO BO ENDPOINT PREKO NJEGA S FORZANKO NAFILAJ ARRAY
-  let hour = {
-    name: "00:00",
-    usage: 12,
-  };
-  let hour1 = {
-    name: "01:00",
-    usage: 12,
-  };
-  chartData2.push(hour)
-
-  chartData2.push(hour1)
-
-
+  intervalData.pop();
+  const chartData2: Interval[] = intervalData;
 
   return (
     <>
@@ -203,8 +207,6 @@ export default function HomeDay(props: Props) {
           </Tooltip>
         </div>
 
-
-
         <div style={{ display: "flex", gap: "4vh", marginTop: "4vh", justifyContent: "center" }}>
           <Card
             variant="outlined"
@@ -245,7 +247,6 @@ export default function HomeDay(props: Props) {
             </ResponsiveContainer>
           </Card>
 
-
           <Card
             variant="outlined"
             sx={{
@@ -256,22 +257,19 @@ export default function HomeDay(props: Props) {
             }}
           >
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <h3>Dnevna poraba po urah - {selectedDateView}</h3>
+              <h3>Dnevna poraba po urah (kWh) - {selectedDateView}</h3>
             </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart width={540} height={300} data={chartData2}>
-                <XAxis dataKey="name" />
-                <YAxis unit="kWh" />
+                <XAxis dataKey="" />
+                <YAxis unit="" />
                 <RechartsTooltip />
                 <Legend />
-                <Bar dataKey="usage" name="Poraba" fill="#0077B6" />
+                <Bar dataKey="hourlyUsage" name="Poraba" fill="#0077B6" />
               </BarChart>
             </ResponsiveContainer>
           </Card>
-
         </div>
-
-
       </div>
     </>
   );

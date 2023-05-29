@@ -310,6 +310,9 @@ export default function HomeMonth(props: Props) {
               mt: 2,
             }}
           >
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <h3>Poraba po dnevih (kWh) </h3>
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 width={500}
@@ -324,7 +327,7 @@ export default function HomeMonth(props: Props) {
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
-                <YAxis unit="kWh" />
+                <YAxis unit="" />
                 <RechartsTooltip />
                 <Legend />
                 <Bar dataKey="correctValue" name="Pravilna meritev" stackId="a" fill="#37B76A" />
