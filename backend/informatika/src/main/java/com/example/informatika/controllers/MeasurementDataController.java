@@ -6,7 +6,6 @@ import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 
 @CrossOrigin
 @RestController

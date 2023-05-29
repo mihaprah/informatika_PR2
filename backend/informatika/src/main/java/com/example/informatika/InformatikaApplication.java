@@ -17,6 +17,7 @@ public class InformatikaApplication {
         // Call the read() method
         readData.readCabinet();
         readData.readMerilniPodatki();
+        readData.readInterval();
 
         // Close the application context
         //context.close();

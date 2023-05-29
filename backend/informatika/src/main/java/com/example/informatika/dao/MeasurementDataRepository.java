@@ -14,5 +14,4 @@ public interface MeasurementDataRepository extends CrudRepository<MeasurementDat
     @Query("SELECT md FROM measurement_data md WHERE md.cabinet_id = ?1")
     Iterable<MeasurementData> findByCabinet(Cabinet cabinetId);
 
-
 }

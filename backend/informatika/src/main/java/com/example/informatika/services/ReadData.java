@@ -1,8 +1,10 @@
 package com.example.informatika.services;
 
 import com.example.informatika.dao.CabinetRepository;
+import com.example.informatika.dao.IntervalDataRepository;
 import com.example.informatika.dao.MeasurementDataRepository;
 import com.example.informatika.models.Cabinet;
+import com.example.informatika.models.IntervalData;
 import com.example.informatika.models.MeasurementData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -10,8 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -28,6 +32,8 @@ public class ReadData {
     CabinetRepository cabinetDao;
     @Autowired
     MeasurementDataRepository measurementDataDao;
+    @Autowired
+    IntervalDataRepository intervalDataDao;
 
     public void readMerilniPodatki() {
 //        Dynamic List of cabinet IDs
@@ -392,6 +398,108 @@ public class ReadData {
                 cabinetDao.save(cabinet);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readInterval(){
+        try {
+            String query = " SELECT DATE_TRUNC('hour', casovna_znacka) AS hour," +
+                    "       SUM(a_plus) AS hourly_usage," +
+                    "       enotni_ident_mm AS cabinet_id" +
+                        "   FROM merilni_podatki" +
+                        "   GROUP BY hour, enotni_ident_mm" +
+                        "   ORDER BY hour;";
+
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(query);
+
+            for (Map<String, Object> row : rows){
+                Timestamp timestamp = (Timestamp) row.get("hour");
+                BigDecimal hourly_usage = (BigDecimal) row.get("hourly_usage");
+                String cabinet_id = (String) row.get("cabinet_id");
+
+                Cabinet cabinet = cabinetDao.findById(cabinet_id).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+
+                LocalDate date = timestamp.toLocalDateTime().toLocalDate();
+                DayOfWeek dayOfWeek = date.getDayOfWeek();
+                int month = timestamp.getMonth() + 1; // Month 1-12
+                int hour = timestamp.getHours(); // Hour 0-23
+
+                int season = 9;
+                int timeBlock = 9;
+                int typeOfDay = 9;
+
+                String [] holidays = {"2022-01-01", "2022-01-02", "2022-02-08", "2022-04-18", "2022-04-27", "2022-05-01", "2022-05-02", "2022-06-25",
+                        "2022-08-15", "2022-10-31", "2022-10-01", "2022-12-25", "2022-12-26", "2023-01-01", "2023-01-02", "2023-02-08"};
+
+                boolean isHoliday = false;
+                for (String holiday : holidays){
+                    if (holiday.equals(date.toString())) {
+                        isHoliday = true;
+                        break;
+                    }
+                }
+//                Check season
+                if (month == 11 || month == 12 || month == 1 || month == 2){
+//                    CASE -> High season
+                    season = 0;
+//                    Check type of day
+                    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY || isHoliday){
+//                        It's a work free day
+                        typeOfDay = 1;
+//                        Check time block
+                        if (hour <= 5 || hour >= 22){
+                            timeBlock = 4;
+                        } else if (hour == 6 || hour == 14 || hour == 15 || hour == 20 || hour == 21) {
+                            timeBlock = 3;
+                        } else {
+                            timeBlock = 2;
+                        }
+                    } else {
+//                        It's a work day
+                        typeOfDay = 0;
+//                        Check time block
+                        if (hour <= 5 || hour >= 22){
+                            timeBlock = 3;
+                        } else if (hour == 6 || hour == 14 || hour == 15 || hour == 20 || hour == 21) {
+                            timeBlock = 2;
+                        } else {
+                            timeBlock = 1;
+                        }
+                    }
+
+                } else {
+//                    CASE -> Low season
+                    season = 1;
+//                    Check type of day
+                    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY || isHoliday){
+//                        It's a work free day
+                        typeOfDay = 1;
+//                        Check time block
+                        if (hour <= 5 || hour >= 22){
+                            timeBlock = 5;
+                        } else if (hour == 6 || hour == 14 || hour == 15 || hour == 20 || hour == 21) {
+                            timeBlock = 4;
+                        } else {
+                            timeBlock = 3;
+                        }
+                    } else {
+//                        It's a work day
+                        typeOfDay = 0;
+//                        Check time block
+                        if (hour <= 5 || hour >= 22){
+                            timeBlock = 4;
+                        } else if (hour == 6 || hour == 14 || hour == 15 || hour == 20 || hour == 21) {
+                            timeBlock = 3;
+                        } else {
+                            timeBlock = 2;
+                        }
+                    }
+                }
+                IntervalData data = new IntervalData(timestamp, hourly_usage.doubleValue(), typeOfDay, timeBlock, season, cabinet);
+                intervalDataDao.save(data);
+            }
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
