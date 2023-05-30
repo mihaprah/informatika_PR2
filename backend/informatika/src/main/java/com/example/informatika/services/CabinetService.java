@@ -40,6 +40,23 @@ public class CabinetService {
         updatedCabinet.setConsumerGroup(cabinet.getConsumerGroup());
         updatedCabinet.setEnergyCompany(cabinet.getEnergyCompany());
         updatedCabinet.setNumberOfPhases(cabinet.getNumberOfPhases());
+        updatedCabinet.setPriceBlockOne(cabinet.getPriceBlockOne());
+        updatedCabinet.setPriceBlockTwo(cabinet.getPriceBlockTwo());
+        updatedCabinet.setPriceBlockThree(cabinet.getPriceBlockThree());
+        updatedCabinet.setPenaltiesBlockFour(cabinet.getPenaltiesBlockFour());
+        updatedCabinet.setPriceBlockFive(cabinet.getPriceBlockFive());
+        updatedCabinet.setPenaltiesBlockOne(cabinet.getPenaltiesBlockOne());
+        updatedCabinet.setPenaltiesBlockTwo(cabinet.getPenaltiesBlockTwo());
+        updatedCabinet.setPenaltiesBlockThree(cabinet.getPenaltiesBlockThree());
+        updatedCabinet.setPenaltiesBlockFour(cabinet.getPriceBlockFour());
+        updatedCabinet.setPenaltiesBlockFive(cabinet.getPenaltiesBlockFive());
+        updatedCabinet.setAgreedPowerOne(cabinet.getAgreedPowerOne());
+        updatedCabinet.setAgreedPowerTwo(cabinet.getAgreedPowerTwo());
+        updatedCabinet.setAgreedPowerThree(cabinet.getAgreedPowerThree());
+        updatedCabinet.setAgreedPowerFour(cabinet.getAgreedPowerFour());
+        updatedCabinet.setAgreedPowerFive(cabinet.getAgreedPowerFive());
+        updatedCabinet.setHighPrice(cabinet.getHighPrice());
+        updatedCabinet.setLowPrice(cabinet.getLowPrice());
 
         cabinetDao.save(updatedCabinet);
     }

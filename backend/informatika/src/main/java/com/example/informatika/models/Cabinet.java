@@ -32,5 +32,21 @@ public class Cabinet {
     private String connectionPower; //kW
     private int numberOfPhases;
     private int consumerGroup; //2-5
-
+    private double priceBlockOne;
+    private double priceBlockTwo;
+    private double priceBlockThree;
+    private double priceBlockFour;
+    private double priceBlockFive;
+    private double penaltiesBlockOne;
+    private double penaltiesBlockTwo;
+    private double penaltiesBlockThree;
+    private double penaltiesBlockFour;
+    private double penaltiesBlockFive;
+    private double agreedPowerOne;
+    private double agreedPowerTwo;
+    private double agreedPowerThree;
+    private double agreedPowerFour;
+    private double agreedPowerFive;
+    private double highPrice;
+    private double lowPrice;
 }
