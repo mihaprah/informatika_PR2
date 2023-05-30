@@ -56,7 +56,7 @@ export default function UserProfile(props: Props) {
             <Card
                 variant="outlined"
                 sx={{
-                    width: 559,
+                    width: 600,
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
@@ -95,7 +95,7 @@ export default function UserProfile(props: Props) {
             <Card
                 variant="outlined"
                 sx={{
-                    width: 559,
+                    width: 600,
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
@@ -131,24 +131,34 @@ export default function UserProfile(props: Props) {
             <Card
                 variant="outlined"
                 sx={{
-                    width: 559,
+                    width: 600,
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
                     mt: 2, mr: 2
                 }}
             >
-                <Typography level="h1" sx={{fontSize: "22px"}}>
-                    Splošne nastavitve
+                <Typography level="h1" sx={{fontSize: "22px", mb: 1}}>
+                    Nastavitve Vt/Mt
                 </Typography>
-                <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                    Dogovorjena poraba (kWh/mesec):
-                </Typography>
-                <TextField id="zakupljena-poraba" variant="outlined" size="small" style={{width: "300px"}}/>
-                <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                    Cena penalov:
-                </Typography>
-                <TextField id="cena-penalov" variant="outlined" size="small" style={{width: "300px"}}/>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <div style={{display: "flex", marginTop: "5px", justifyContent:"space-between"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                Manjša tarifa
+                            </Typography>
+                            <TextField id="lowPrice" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                        </div>
+                        <div style={{display: "flex", marginTop: "5px", justifyContent:"space-between"}}>
+                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
+                                Višja tarifa
+                            </Typography>
+                            <TextField id="highPrice" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                        </div>
+                    </div>
+                </div>
                 <Button
                     variant="contained"
                     sx={{
@@ -157,7 +167,8 @@ export default function UserProfile(props: Props) {
                         margin: "0 auto",
                         backgroundColor: "#023E8A",
                         bottom: "25px",
-                        left: "190px"
+
+
                     }}
                 >
                     Spremeni nastavitve
@@ -166,81 +177,72 @@ export default function UserProfile(props: Props) {
             <Card
                 variant="outlined"
                 sx={{
-                    width: 559,
+                    width: 600,
                     height: 350,
                     backgroundColor: "background.level2",
                     alignItems: "left",
                     mt: 2, mr: 2
                 }}
             >
-                <Typography level="h1" sx={{fontSize: "22px"}}>
-                    Nastavitve cen blokov
+                <Typography level="h1" sx={{fontSize: "22px", mb: 1}}>
+                    Nastavitve časovnih blokov
                 </Typography>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
                     <div style={{display: "flex", flexDirection: "column"}}>
-                        <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                            Višja sezona (November - Februar):
-                        </Typography>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 1 -
                             </Typography>
-                            <TextField id="visja-sezona-blok1" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
+                            <TextField id="agreedPowerOne" variant="outlined" size="small" placeholder={"Moč (kWh)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="priceBlockOne" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="penaltiesBlockOne" variant="outlined" size="small" placeholder={"Cena penala (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 2 -
                             </Typography>
-                            <TextField id="visja-sezona-blok2" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
+                            <TextField id="agreedPowerTwo" variant="outlined" size="small" placeholder={"Moč (kWh)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="priceBlockTwo" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="penaltiesBlockTwo" variant="outlined" size="small" placeholder={"Cena penala (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 3 -
                             </Typography>
-                            <TextField id="visja-sezona-blok3" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
+                            <TextField id="agreedPowerThree" variant="outlined" size="small" placeholder={"Moč (kWh)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="priceBlockThree" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="penaltiesBlockThree" variant="outlined" size="small" placeholder={"Cena penala (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 4 -
                             </Typography>
-                            <TextField id="visja-sezona-blok4" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
-                        </div>
-                    </div>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                        <Typography level="body1" sx={{fontSize: "18px", mt: 2}}>
-                            Nižja sezona (Marec - Oktober):
-                        </Typography>
-                        <div style={{display: "flex", marginTop: "5px"}}>
-                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                2 -
-                            </Typography>
-                            <TextField id="nizja-sezona-blok2" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
-                        </div>
-                        <div style={{display: "flex", marginTop: "5px"}}>
-                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                3 -
-                            </Typography>
-                            <TextField id="nizja-sezona-blok3" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
-                        </div>
-                        <div style={{display: "flex", marginTop: "5px"}}>
-                            <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
-                                4 -
-                            </Typography>
-                            <TextField id="nizja-sezona-blok4" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
+                            <TextField id="agreedPowerFour" variant="outlined" size="small" placeholder={"Moč (kWh)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="priceBlockFour" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="penaltiesBlockFour" variant="outlined" size="small" placeholder={"Cena penala (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 5 -
                             </Typography>
-                            <TextField id="nizja-sezona-blok5" variant="outlined" size="small"
-                                       style={{width: "150px"}}/>
+                            <TextField id="agreedPowerFive" variant="outlined" size="small" placeholder={"Moč (kWh)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="priceBlockFive" variant="outlined" size="small" placeholder={"Cena (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
+                            <TextField id="penaltiesBlockFive" variant="outlined" size="small" placeholder={"Cena penala (€)"}
+                                       style={{width: "150px", marginRight: "20px"}}/>
                         </div>
                     </div>
                 </div>
