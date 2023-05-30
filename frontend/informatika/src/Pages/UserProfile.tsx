@@ -43,8 +43,7 @@ export default function UserProfile(props: Props) {
     const [data, setData] = useState<Cabinet[]>([]);
     const cabinetIDs: string[] = [];
     const [cabinetID, setCabinetID] = useState(props.cabinetID);
-    const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>();
-    const [settings, setSettings] = useState<Cabinet>(initialState);
+    const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
     const handleChangeCabinet = (e: { target: { value: any; name: any } }) => {
         //console.log(e.target.value);
         setCabinetID(e.target.value);
@@ -54,7 +53,7 @@ export default function UserProfile(props: Props) {
     const handleChangeSettings = (e) => {
         const { value, name } = e.target;
 
-        setSettings((prevState: Cabinet) => {
+        setSelectedCabinet((prevState: Cabinet) => {
             const nextState = {
                 ...prevState,
                 [name]: value,
@@ -65,33 +64,14 @@ export default function UserProfile(props: Props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(settings);
-        settings.cabinetId = props.cabinetID;
-        api.put("/cabinet/settings", settings);
+        console.log(selectedCabinet);
+        api.put("/cabinet/settings", selectedCabinet);
     };
 
     const changeCabinet = async (id: string) => {
         console.log(id);
         const res = await api.get("/cabinet/" + id);
         setSelectedCabinet(res.data);
-        settings.agreedPowerOne = res.data.agreedPowerOne;
-        settings.agreedPowerTwo = res.data.agreedPowerTwo;
-        settings.agreedPowerThree = res.data.agreedPowerThree;
-        settings.agreedPowerFour = res.data.agreedPowerFour;
-        settings.agreedPowerFive = res.data.agreedPowerFive;
-        settings.priceBlockOne = res.data.priceBlockOne;
-        settings.priceBlockTwo = res.data.priceBlockTwo;
-        settings.priceBlockThree = res.data.priceBlockThree;
-        settings.priceBlockFour = res.data.priceBlockFour;
-        settings.priceBlockFive = res.data.priceBlockFive;
-        settings.penaltiesBlockOne = res.data.penaltiesBlockOne;
-        settings.penaltiesBlockTwo = res.data.penaltiesBlockTwo;
-        settings.penaltiesBlockThree = res.data.penaltiesBlockThree;
-        settings.penaltiesBlockFour = res.data.penaltiesBlockFour;
-        settings.penaltiesBlockFive = res.data.penaltiesBlockFive;
-        settings.lowPrice = res.data.lowPrice;
-        settings.highPrice = res.data.highPrice
-        console.log(res.data);
     };
 
     useEffect(() => {
@@ -209,14 +189,14 @@ export default function UserProfile(props: Props) {
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 Manjša tarifa
                             </Typography>
-                            <TextField type={"number"} id="lowPrice" name="lowPrice" value={settings.lowPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
+                            <TextField type={"number"} id="lowPrice" name="lowPrice" value={selectedCabinet.lowPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px", justifyContent:"space-between"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 Višja tarifa
                             </Typography>
-                            <TextField type={"number"} id="highPrice" name="highPrice" value={settings.highPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
+                            <TextField type={"number"} id="highPrice" name="highPrice" value={selectedCabinet.highPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                     </div>
@@ -256,55 +236,55 @@ export default function UserProfile(props: Props) {
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 1 -
                             </Typography>
-                            <TextField type={"number"} id="agreedPowerOne" name="agreedPowerOne" value={settings.agreedPowerOne} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerOne" name="agreedPowerOne" value={selectedCabinet.agreedPowerOne} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="priceBlockOne" name="priceBlockOne" value={settings.priceBlockOne} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockOne" name="priceBlockOne" value={selectedCabinet.priceBlockOne} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="penaltiesBlockOne" name="penaltiesBlockOne" value={settings.penaltiesBlockOne} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockOne" name="penaltiesBlockOne" value={selectedCabinet.penaltiesBlockOne} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 2 -
                             </Typography>
-                            <TextField type={"number"} id="agreedPowerTwo" name="agreedPowerTwo" value={settings.agreedPowerTwo} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerTwo" name="agreedPowerTwo" value={selectedCabinet.agreedPowerTwo} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="priceBlockTwo" name="priceBlockTwo" value={settings.priceBlockTwo} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockTwo" name="priceBlockTwo" value={selectedCabinet.priceBlockTwo} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="penaltiesBlockTwo" name="penaltiesBlockTwo" value={settings.penaltiesBlockTwo} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockTwo" name="penaltiesBlockTwo" value={selectedCabinet.penaltiesBlockTwo} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 3 -
                             </Typography>
-                            <TextField type={"number"} id="agreedPowerThree" name="agreedPowerThree" value={settings.agreedPowerThree}variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerThree" name="agreedPowerThree" value={selectedCabinet.agreedPowerThree}variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="priceBlockThree" name="priceBlockThree" value={settings.priceBlockThree} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockThree" name="priceBlockThree" value={selectedCabinet.priceBlockThree} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="penaltiesBlockThree" name="penaltiesBlockThree" value={settings.penaltiesBlockThree} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockThree" name="penaltiesBlockThree" value={selectedCabinet.penaltiesBlockThree} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 4 -
                             </Typography>
-                            <TextField type={"number"} id="agreedPowerFour" name="agreedPowerFour" value={settings.agreedPowerFour} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerFour" name="agreedPowerFour" value={selectedCabinet.agreedPowerFour} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="priceBlockFour" name="priceBlockFour" value={settings.priceBlockFour} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockFour" name="priceBlockFour" value={selectedCabinet.priceBlockFour} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"}id="penaltiesBlockFour" name="penaltiesBlockFour" value={settings.penaltiesBlockFour} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"}id="penaltiesBlockFour" name="penaltiesBlockFour" value={selectedCabinet.penaltiesBlockFour} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 5 -
                             </Typography>
-                            <TextField type={"number"} id="agreedPowerFive" name="agreedPowerFive" value={settings.agreedPowerFive} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerFive" name="agreedPowerFive" value={selectedCabinet.agreedPowerFive} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="priceBlockFive" name="priceBlockFive" value={settings.priceBlockFive} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockFive" name="priceBlockFive" value={selectedCabinet.priceBlockFive} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField type={"number"} id="penaltiesBlockFive" name="penaltiesBlockFive" value={settings.penaltiesBlockFive} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockFive" name="penaltiesBlockFive" value={selectedCabinet.penaltiesBlockFive} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                     </div>
