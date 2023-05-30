@@ -33,6 +33,7 @@ export default function HomeYear(props: Props) {
   const navigate = useNavigate();
   const [alignment, setAlignment] = React.useState("year");
   const [data, setData] = useState<Measurement[]>([]);
+  const [monthData, setMonthData] = useState<any>([]);
   const [year, setYear] = useState(2023);
   let usage = 0;
   let modified = 0;
@@ -48,7 +49,18 @@ export default function HomeYear(props: Props) {
         console.log(error);
       }
     };
+    
+    const getYearMonthData = async () => {
+      try {
+        const res = await api.get("/measurement/year/month/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
+        const monthD = res.data;
+        setMonthData(monthD);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     getCabinetData();
+    getYearMonthData();
   }, [year]);
 
   if (data) {
@@ -84,80 +96,20 @@ export default function HomeYear(props: Props) {
     { name: "Napačne meritve", value: anomaly, fill: "#E45454" },
   ];
 
-  const chartData2: any = [
-    {
-      name: "Januar",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Februar",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Marec",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "April",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Maj",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Junij",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Julij",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Avgust",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "September",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "Oktober",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "November",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-    {
-      name: "December",
-      correctValue: 0,
-      modifiedValue: 0,
-      invalidValue: 0,
-    },
-  ];
+
+  const chartData2: any = []
+  if (monthData) {
+    monthData?.forEach((month: any) => {
+      let monthData = {
+        name: month.name,
+        correctValue: month.correctValue,
+        modifiedValue: month.modifiedValue,
+        invalidValue: month.invalidValue,
+      };
+      chartData2.push(monthData);
+    });
+  }
+ 
 
   return (
     <>
@@ -339,8 +291,9 @@ export default function HomeYear(props: Props) {
               <YAxis />
               <RechartsTooltip />
               <Legend />
-              <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-              <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
+              <Bar dataKey="correctValue" name="Pravilne meritve" stackId="a" fill="#37B76A" />
+              <Bar dataKey="modifiedValue" name="Popravljene meritve" stackId="a" fill="#FFCC00" />
+              <Bar dataKey="invalidValue" name="Napačne meritve" stackId="a" fill="#E45454" />
             </BarChart>
           </ResponsiveContainer>
         </Card>
