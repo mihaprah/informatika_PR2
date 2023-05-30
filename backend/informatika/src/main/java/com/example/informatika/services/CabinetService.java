@@ -32,14 +32,10 @@ public class CabinetService {
     public void addCabinet(Cabinet newCabinet){
         cabinetDao.save(newCabinet);
     }
-    public void updateCabinet(Cabinet cabinet){
+
+    public void updateCabinetSettings(Cabinet cabinet) {
         Cabinet updatedCabinet = cabinetDao.findById(cabinet.getCabinetId()).orElseThrow(() -> new IllegalCallerException("Cabinet does not exist"));
 
-        updatedCabinet.setCabinetNumber(cabinet.getCabinetNumber());
-        updatedCabinet.setConnectionPower(cabinet.getConnectionPower());
-        updatedCabinet.setConsumerGroup(cabinet.getConsumerGroup());
-        updatedCabinet.setEnergyCompany(cabinet.getEnergyCompany());
-        updatedCabinet.setNumberOfPhases(cabinet.getNumberOfPhases());
         updatedCabinet.setPriceBlockOne(cabinet.getPriceBlockOne());
         updatedCabinet.setPriceBlockTwo(cabinet.getPriceBlockTwo());
         updatedCabinet.setPriceBlockThree(cabinet.getPriceBlockThree());
@@ -57,6 +53,17 @@ public class CabinetService {
         updatedCabinet.setAgreedPowerFive(cabinet.getAgreedPowerFive());
         updatedCabinet.setHighPrice(cabinet.getHighPrice());
         updatedCabinet.setLowPrice(cabinet.getLowPrice());
+
+        cabinetDao.save(updatedCabinet);
+    }
+    public void updateCabinet(Cabinet cabinet){
+        Cabinet updatedCabinet = cabinetDao.findById(cabinet.getCabinetId()).orElseThrow(() -> new IllegalCallerException("Cabinet does not exist"));
+
+        updatedCabinet.setCabinetNumber(cabinet.getCabinetNumber());
+        updatedCabinet.setConnectionPower(cabinet.getConnectionPower());
+        updatedCabinet.setConsumerGroup(cabinet.getConsumerGroup());
+        updatedCabinet.setEnergyCompany(cabinet.getEnergyCompany());
+        updatedCabinet.setNumberOfPhases(cabinet.getNumberOfPhases());
 
         cabinetDao.save(updatedCabinet);
     }
