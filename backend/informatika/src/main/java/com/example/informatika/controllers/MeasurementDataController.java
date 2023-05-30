@@ -4,7 +4,10 @@ package com.example.informatika.controllers;
 import com.example.informatika.models.MeasurementData;
 import com.example.informatika.services.MeasurementDataService;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @CrossOrigin
@@ -41,6 +44,16 @@ public class MeasurementDataController {
     @GetMapping("/usage/{cabinet_id}/{date}")
     public double getUsageAmountForYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("date") String date){
         return measurementDataService.getSumOfUsageForYear(cabinetId, date);
+    }
+
+    @GetMapping("/lowHighUsage/{cabinet_id}/{date}")
+    public double[] getLowHighUsageAmountForYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("date") String date){
+        return measurementDataService.getSumOfLowUsageHighUsagaForYear(cabinetId, date);
+    }
+
+    @GetMapping("/year/month/{cabinet_id}/{date}")
+    public List<JSONObject> getYearPerMonths(@PathVariable("cabinet_id") String cabinetId, @PathVariable("date") String date){
+        return measurementDataService.getUsagePerMonths(cabinetId, date);
     }
 
     @PostMapping

@@ -5,12 +5,15 @@ import com.example.informatika.dao.MeasurementDataRepository;
 import com.example.informatika.models.Cabinet;
 import com.example.informatika.models.MeasurementData;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -57,6 +60,90 @@ public class MeasurementDataService {
         LocalDate endDate = startDate.plusYears(1).minusDays(1);
         return measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
     }
+
+    public List<JSONObject> getUsagePerMonths(String cabinetId, String date){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        LocalDate startDate = LocalDate.parse(date);
+        LocalDate endDate = startDate.plusYears(1).minusDays(1);
+        Iterable<MeasurementData> data = measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
+
+        List<JSONObject> yearData = new ArrayList<>();
+
+        for(int i =  1; i < 13;i++){
+            JSONObject newData = new JSONObject();
+            Month month = Month.of(i);
+            newData.put("name", month.name());
+            newData.put("correctValue", 0.00);
+            newData.put("modifiedValue", 0.00);
+            newData.put("invalidValue", 0.00);
+            yearData.add(newData);
+        }
+
+        for (MeasurementData day : data) {
+            String targetMonth = "";
+            switch (day.getDate().getMonth()) {
+                case JANUARY:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case FEBRUARY:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case MARCH:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case APRIL:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case MAY:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case JUNE:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case JULY:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case AUGUST:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case SEPTEMBER:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case OCTOBER:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case NOVEMBER:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+                case DECEMBER:
+                    targetMonth = day.getDate().getMonth().toString();
+                    break;
+            }
+
+            for (JSONObject monthData : yearData) {
+                String monthName = monthData.getAsString("name");
+                if (monthName.equals(targetMonth)) {
+                    if (day.isFilledWithZeros()) {
+                        double correctValue = (double) monthData.getAsNumber("correctValue");
+                        double newCorrectValue = correctValue + day.getUsage();
+                        monthData.put("correctValue", newCorrectValue);
+                    } else if (day.isModifiedWithEvenDatesStrategy()) {
+                        double modifiedValue = (double) monthData.getAsNumber("modifiedValue");
+                        double newModifiedValue = modifiedValue + day.getUsage();
+                        monthData.put("modifiedValue", newModifiedValue);
+                    } else if (day.isInvalidFlag()) {
+                        double invalidValue = (double) monthData.getAsNumber("invalidValue");
+                        double newInvalidValue = invalidValue + day.getUsage();
+                        monthData.put("invalidValue", newInvalidValue);
+                    }
+                    break;
+                }
+            }
+        }
+    return yearData;
+    }
+
+
     public double getSumOfUsageForYear(String cabinetId, String date){
         Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
         LocalDate startDate = LocalDate.parse(date);
@@ -68,6 +155,22 @@ public class MeasurementDataService {
         }
         return result;
     }
+
+    public double[] getSumOfLowUsageHighUsagaForYear(String cabinetId, String date){
+        Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
+        LocalDate startDate = LocalDate.parse(date);
+        LocalDate endDate = startDate.plusYears(1).minusDays(1);
+        ArrayList<MeasurementData> data = (ArrayList<MeasurementData>) measurementDataDao.findByCabinetAndDateBetween(cabinet, startDate, endDate);
+        double low = 0;
+        double high = 0;
+        for(MeasurementData entry : data){
+            low += entry.getLowUsage();
+            high += entry.getHighUsage();
+        }
+        double[] usage = {low, high};
+        return usage;
+    }
+
     public void addMeasurementData(MeasurementData newMeasurementData){
         measurementDataDao.save(newMeasurementData);
     }
