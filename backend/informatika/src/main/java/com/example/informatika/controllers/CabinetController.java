@@ -27,6 +27,10 @@ public class CabinetController {
     public void updateCabinet(@RequestBody Cabinet cabinet){
         cabinetService.updateCabinet(cabinet);
     }
+    @PutMapping("/settings")
+    public void updateCabinetSettings(@RequestBody Cabinet cabinet){
+        cabinetService.updateCabinetSettings(cabinet);
+    }
     @DeleteMapping("/{cabinet_id}")
     public void deleteCabinet(@PathVariable("cabinet_id") String id){
         cabinetService.deleteCabinet(id);
