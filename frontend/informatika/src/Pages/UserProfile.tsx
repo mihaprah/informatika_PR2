@@ -57,7 +57,7 @@ export default function UserProfile(props: Props) {
         setSettings((prevState: Cabinet) => {
             const nextState = {
                 ...prevState,
-                [name]: Number(value),
+                [name]: value,
             };
             return nextState;
         });
@@ -209,14 +209,14 @@ export default function UserProfile(props: Props) {
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 Manjša tarifa
                             </Typography>
-                            <TextField id="lowPrice" name="lowPrice" value={settings.lowPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
+                            <TextField type={"number"} id="lowPrice" name="lowPrice" value={settings.lowPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px", justifyContent:"space-between"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 Višja tarifa
                             </Typography>
-                            <TextField id="highPrice" name="highPrice" value={settings.highPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
+                            <TextField type={"number"} id="highPrice" name="highPrice" value={settings.highPrice} variant="outlined" size="small" placeholder={"Cena (€)"}  label="Cena (€)"
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                     </div>
@@ -256,55 +256,55 @@ export default function UserProfile(props: Props) {
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 1 -
                             </Typography>
-                            <TextField id="agreedPowerOne" name="agreedPowerOne" value={settings.agreedPowerOne} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerOne" name="agreedPowerOne" value={settings.agreedPowerOne} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="priceBlockOne" name="priceBlockOne" value={settings.priceBlockOne} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockOne" name="priceBlockOne" value={settings.priceBlockOne} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="penaltiesBlockOne" name="penaltiesBlockOne" value={settings.penaltiesBlockOne} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockOne" name="penaltiesBlockOne" value={settings.penaltiesBlockOne} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 2 -
                             </Typography>
-                            <TextField id="agreedPowerTwo" name="agreedPowerTwo" value={settings.agreedPowerTwo} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerTwo" name="agreedPowerTwo" value={settings.agreedPowerTwo} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="priceBlockTwo" name="priceBlockTwo" value={settings.priceBlockTwo} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockTwo" name="priceBlockTwo" value={settings.priceBlockTwo} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="penaltiesBlockTwo" name="penaltiesBlockTwo" value={settings.penaltiesBlockTwo} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockTwo" name="penaltiesBlockTwo" value={settings.penaltiesBlockTwo} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 3 -
                             </Typography>
-                            <TextField id="agreedPowerThree" name="agreedPowerThree" value={settings.agreedPowerThree}variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerThree" name="agreedPowerThree" value={settings.agreedPowerThree}variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="priceBlockThree" name="priceBlockThree" value={settings.priceBlockThree} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockThree" name="priceBlockThree" value={settings.priceBlockThree} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="penaltiesBlockThree" name="penaltiesBlockThree" value={settings.penaltiesBlockThree} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockThree" name="penaltiesBlockThree" value={settings.penaltiesBlockThree} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 4 -
                             </Typography>
-                            <TextField id="agreedPowerFour" name="agreedPowerFour" value={settings.agreedPowerFour} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerFour" name="agreedPowerFour" value={settings.agreedPowerFour} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="priceBlockFour" name="priceBlockFour" value={settings.priceBlockFour} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockFour" name="priceBlockFour" value={settings.priceBlockFour} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="penaltiesBlockFour" name="penaltiesBlockFour" value={settings.penaltiesBlockFour} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"}id="penaltiesBlockFour" name="penaltiesBlockFour" value={settings.penaltiesBlockFour} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                         <div style={{display: "flex", marginTop: "5px"}}>
                             <Typography level="body1" sx={{fontSize: "18px", mt: 1, mr: 2}}>
                                 5 -
                             </Typography>
-                            <TextField id="agreedPowerFive" name="agreedPowerFive" value={settings.agreedPowerFive} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
+                            <TextField type={"number"} id="agreedPowerFive" name="agreedPowerFive" value={settings.agreedPowerFive} variant="outlined" size="small" placeholder={"Moč (kWh)"} label={"Moč (kWh)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="priceBlockFive" name="priceBlockFive" value={settings.priceBlockFive} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
+                            <TextField type={"number"} id="priceBlockFive" name="priceBlockFive" value={settings.priceBlockFive} variant="outlined" size="small" placeholder={"Cena (€)"} label={"Cena (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
-                            <TextField id="penaltiesBlockFive" name="penaltiesBlockFive" value={settings.penaltiesBlockFive} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
+                            <TextField type={"number"} id="penaltiesBlockFive" name="penaltiesBlockFive" value={settings.penaltiesBlockFive} variant="outlined" size="small" placeholder={"Cena penala (€)"} label={"Cena penala (€)"}
                                        style={{width: "150px", marginRight: "20px", marginTop: "5px"}} onChange={handleChangeSettings}/>
                         </div>
                     </div>
