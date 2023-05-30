@@ -60,7 +60,8 @@ export default function HomeDay(props: Props) {
 
   if (data.length !== 0) {
     dayUsage = Number(data[data.length - 1].usage.toFixed(2));
-    pastDays = data.splice(0, data.length - 1);
+    pastDays = [...data];
+    pastDays.splice(pastDays.length - 1, 1);
     pastDays.forEach((day) => {
       avgUsage += day.usage;
     });
