@@ -29,6 +29,7 @@ interface Props {
 }
 export default function HomeDay(props: Props) {
   const [data, setData] = useState<Measurement[]>([]);
+  const [cabinetData, setCabinetData] = useState<Cabinet>();
   const [intervalData, setIntervalData] = useState<Interval[]>([]);
   let dayUsage: number = 0;
   let pastDays: Measurement[] = [];
@@ -38,7 +39,7 @@ export default function HomeDay(props: Props) {
   const [selectedDate, setSelectedDate] = useState("2022-02-28");
 
   useEffect(() => {
-    const getCabinetData = async () => {
+    const getMeasurementData = async () => {
       try {
         const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
         setData(res.data);
@@ -54,7 +55,16 @@ export default function HomeDay(props: Props) {
         console.log(errr);
       }
     };
+    const getCabinetData = async () => {
+      try {
+        const res = await api.get("/cabinet/" + props.cabinetID);
+        setCabinetData(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getCabinetData();
+    getMeasurementData();
     getIntervalData();
   }, [selectedDate]);
 
@@ -75,6 +85,31 @@ export default function HomeDay(props: Props) {
       status = "Pravilna";
     } else {
       status = "Popravljena";
+    }
+  }
+
+  if(intervalData.length !== 0){
+    let sumBlock1 = 0;
+    let sumBlock2 = 0;
+    let sumBlock3 = 0;
+    let sumBlock4 = 0;
+    let sumBlock5 = 0;
+
+    intervalData.map((data) => {
+      if(data.timeBlock === 1){
+        sumBlock1 += data.hourlyUsage;
+      } else if (data.timeBlock === 2){
+        sumBlock2 += data.hourlyUsage;
+      } else if (data.timeBlock === 3){
+        sumBlock3 += data.hourlyUsage;
+      } else if (data.timeBlock === 4){
+        sumBlock4 += data.hourlyUsage;
+      } else if (data.timeBlock === 5){
+        sumBlock5 += data.hourlyUsage;
+      }
+    });
+    if(sumBlock1 > cabinetData?.agreedPowerOne || sumBlock2 > cabinetData?.agreedPowerTwo || sumBlock3 > cabinetData?.agreedPowerThree || sumBlock4 > cabinetData?.agreedPowerFour || sumBlock5 > cabinetData?.agreedPowerFive){
+      overLimit = true;
     }
   }
 
