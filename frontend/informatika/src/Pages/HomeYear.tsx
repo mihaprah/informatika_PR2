@@ -49,7 +49,7 @@ export default function HomeYear(props: Props) {
         console.log(error);
       }
     };
-    
+
     const getYearMonthData = async () => {
       try {
         const res = await api.get("/measurement/year/month/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
@@ -106,10 +106,36 @@ export default function HomeYear(props: Props) {
         modifiedValue: month.modifiedValue,
         invalidValue: month.invalidValue,
       };
+      switch (monthData.name) {
+        case 'JANUARY':
+          monthData.name = 'JANUAR'
+          break;
+        case 'FEBRUARY':
+          monthData.name = 'FEBRUAR'
+          break;
+        case 'MARCH':
+          monthData.name = 'MAREC'
+          break;
+        case 'MAY':
+          monthData.name = 'MAJ'
+          break;
+        case 'JUNE':
+          monthData.name = 'JUNIJ'
+          break;
+        case 'JULY':
+          monthData.name = 'JULIJ'
+          break;
+        case 'AUGUST':
+          monthData.name = 'AVGUST'
+          break;
+        case 'OCTOBER':
+          monthData.name = 'OKTOBER'
+          break;
+      }
       chartData2.push(monthData);
     });
   }
- 
+
 
   return (
     <>
