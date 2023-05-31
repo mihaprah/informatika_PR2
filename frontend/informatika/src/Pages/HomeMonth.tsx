@@ -106,7 +106,7 @@ export default function HomeMonth(props: Props) {
   if (data) {
     data?.forEach((entry: Measurement, index: number) => {
       let day = {
-        name: entry.date,
+        name: new Date(entry.date).toLocaleDateString("en-SI"),
         correctValue: 0,
         modifiedValue: 0,
         invalidValue: 0,
