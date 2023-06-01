@@ -46,7 +46,7 @@ public class MeasurementDataController {
         return measurementDataService.getSumOfUsageForYear(cabinetId, date);
     }
 
-    @GetMapping("/lowHighUsage/{cabinet_id}/{date}")
+    @GetMapping("/low_high_usage/{cabinet_id}/{date}")
     public double[] getLowHighUsageAmountForYear(@PathVariable("cabinet_id") String cabinetId, @PathVariable("date") String date){
         return measurementDataService.getSumOfLowUsageHighUsagaForYear(cabinetId, date);
     }
