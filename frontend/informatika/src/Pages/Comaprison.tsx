@@ -13,9 +13,7 @@ interface Props {
 
 export default function Comparison(props: Props) {
   const [usage, setUsage] = useState<number>(0);
-  const [lowUsage, setLowUsage] = useState<number>(0);
-  const [highUsage, setHighUsage] = useState<number>(0);
-  const [year, setYear] = useState<number>(new Date().getFullYear() - 1);
+  const [year, setYear] = useState<number>(0);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [fixedPrice, setFixedPrice] = useState<number>(0.17);
   const [oldPrice, setOldPrice] = useState<number>(0);
@@ -33,7 +31,40 @@ export default function Comparison(props: Props) {
   let penaltiesBlockFour: number = 0;
   let penaltiesBlockFive: number = 0;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const getUsage = await api.get("/measurement/usage/" + props.cabinetID + "/" + year + "-01-01");
+        setUsage(getUsage.data);
+
+        const getCabinet = await api.get("/cabinet/" + props.cabinetID);
+        setSelectedCabinet(getCabinet.data);
+
+        const getHighLowUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+        if (getHighLowUsage.data[0] != 0 && getHighLowUsage.data[1] != 0) {
+          if (selectedCabinet.lowPrice > 0 && selectedCabinet.highPrice > 0) {
+            setOldPrice(
+              getHighLowUsage.data[0] * selectedCabinet.lowPrice + getHighLowUsage.data[1] * selectedCabinet.highPrice
+            );
+          } else {
+            setOldPrice(usage * fixedPrice);
+          }
+        } else {
+          setOldPrice(usage * fixedPrice);
+        }
+
+        const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
+        await calculateNewPrice(getIntervals.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [year]);
+
   const calculateNewPrice = (yearlyIntervalData: Interval[]) => {
+    console.log(yearlyIntervalData);
     yearlyIntervalData.forEach((interval: Interval, index: number) => {
       // Check time block
       if (interval.timeBlock === 1) {
@@ -78,10 +109,6 @@ export default function Comparison(props: Props) {
     usageBlockFive *= selectedCabinet.priceBlockFive;
 
     console.log(usageBlockOne);
-    console.log(usageBlockTwo);
-    console.log(usageBlockThree);
-    console.log(usageBlockFour);
-    console.log(usageBlockFive);
 
     setNewPrice(
       usageBlockOne +
@@ -95,66 +122,36 @@ export default function Comparison(props: Props) {
         penaltiesBlockFour +
         penaltiesBlockFive
     );
-    if (lowUsage != 0 && highUsage != 0) {
-      if (selectedCabinet.lowPrice > 0 && selectedCabinet.highPrice > 0) {
-        setOldPrice(lowUsage * selectedCabinet.lowPrice + highUsage * selectedCabinet.highPrice);
-      } else {
-        setOldPrice(usage * fixedPrice);
-      }
-    } else {
-      setOldPrice(usage * fixedPrice);
-    }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getUsage = await api.get("/measurement/usage/" + props.cabinetID + "/" + year + "-01-01");
-        setUsage(getUsage.data);
-
-        const getHighLowUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
-        setLowUsage(getHighLowUsage.data[0]);
-        setHighUsage(getHighLowUsage.data[1]);
-        console.log(getHighLowUsage.data[0]);
-        console.log(getHighLowUsage.data[1]);
-
-        const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
-        await calculateNewPrice(getIntervals.data);
-
-        const getCabinet = await api.get("/cabinet/" + props.cabinetID);
-        setSelectedCabinet(getCabinet.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [year]);
 
   const chartData = [{ oldPrice: oldPrice.toFixed(2), newPrice: newPrice.toFixed(2) }];
 
   return (
     <>
-    <div style={{display: "flex" , justifyContent: 'space-between'}}>
-    <Typography sx={{ display: "flex", justifyContent: "left" }}>
-      <b>Št. merilne omarice: {props.cabinetID}</b>
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "right" }}>
-        <FormControl>
-          <InputLabel>Leto</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Leto"
-            value={year}
-            onChange={(event) => setYear(Number(event.target.value))}
-            style={{ height: "48px", width: "90px" }}
-          >
-            <MenuItem value={2022}>2022</MenuItem>
-            <MenuItem value={2023}>2023</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography sx={{ display: "flex", justifyContent: "left" }}>
+          <b>Št. merilne omarice: {props.cabinetID}</b>
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "right" }}>
+          <FormControl>
+            <InputLabel>Leto</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Leto"
+              value={year}
+              onChange={(event) => {
+                setYear(Number(event.target.value));
+                console.log(year);
+              }}
+              style={{ height: "48px", width: "90px" }}
+            >
+              <MenuItem value={0}>Leto</MenuItem>
+              <MenuItem value={2022}>2022</MenuItem>
+              <MenuItem value={2023}>2023</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </div>
       <div className={"container"}>
         <Card

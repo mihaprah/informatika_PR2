@@ -22,14 +22,16 @@ import {
   Legend,
   PieChart,
   Pie,
+  Cell,
 } from "recharts";
+import { initialState } from "../Modules/CabinetInitState";
 
 interface Props {
   cabinetID: string;
 }
 export default function HomeDay(props: Props) {
   const [data, setData] = useState<Measurement[]>([]);
-  const [cabinetData, setCabinetData] = useState<Cabinet>();
+  const [cabinetData, setCabinetData] = useState<Cabinet>(initialState);
   const [intervalData, setIntervalData] = useState<Interval[]>([]);
   let dayUsage: number = 0;
   let pastDays: Measurement[] = [];
@@ -88,7 +90,9 @@ export default function HomeDay(props: Props) {
     }
   }
 
-  if(intervalData.length !== 0){
+  intervalData.pop();
+  const chartData2: any = [];
+  if (intervalData.length !== 0) {
     let sumBlock1 = 0;
     let sumBlock2 = 0;
     let sumBlock3 = 0;
@@ -96,19 +100,37 @@ export default function HomeDay(props: Props) {
     let sumBlock5 = 0;
 
     intervalData.map((data) => {
-      if(data.timeBlock === 1){
+      let hour = {
+        name: data.timestamp,
+        hourlyUsage: data.hourlyUsage,
+        timeBlock: data.timeBlock,
+        fill: "",
+      };
+      if (data.timeBlock === 1) {
         sumBlock1 += data.hourlyUsage;
-      } else if (data.timeBlock === 2){
+        hour.fill = "#0077B6";
+      } else if (data.timeBlock === 2) {
         sumBlock2 += data.hourlyUsage;
-      } else if (data.timeBlock === 3){
+        hour.fill = "#00B4D8";
+      } else if (data.timeBlock === 3) {
         sumBlock3 += data.hourlyUsage;
-      } else if (data.timeBlock === 4){
+        hour.fill = "#90E0EF";
+      } else if (data.timeBlock === 4) {
         sumBlock4 += data.hourlyUsage;
-      } else if (data.timeBlock === 5){
+        hour.fill = "#568C98";
+      } else if (data.timeBlock === 5) {
         sumBlock5 += data.hourlyUsage;
+        hour.fill = "#0077B6";
       }
+      chartData2.push(hour);
     });
-    if(sumBlock1 > cabinetData?.agreedPowerOne || sumBlock2 > cabinetData?.agreedPowerTwo || sumBlock3 > cabinetData?.agreedPowerThree || sumBlock4 > cabinetData?.agreedPowerFour || sumBlock5 > cabinetData?.agreedPowerFive){
+    if (
+      sumBlock1 > cabinetData?.agreedPowerOne ||
+      sumBlock2 > cabinetData?.agreedPowerTwo ||
+      sumBlock3 > cabinetData?.agreedPowerThree ||
+      sumBlock4 > cabinetData?.agreedPowerFour ||
+      sumBlock5 > cabinetData?.agreedPowerFive
+    ) {
       overLimit = true;
     }
   }
@@ -145,8 +167,16 @@ export default function HomeDay(props: Props) {
 
   const selectedDateView = new Date(selectedDate).toLocaleDateString("SI");
 
-  intervalData.pop();
-  const chartData2: Interval[] = intervalData;
+  const CustomLegend = ({ payload }: any) => {
+    return (
+      <ul style={{ display: "flex", justifyContent: "center", margin: "2vh" }}>
+        <li style={{ color: "#0077B6", marginRight: "10px" }}>Časovni blok 1 in 5</li>
+        <li style={{ color: "#00B4D8", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 2</li>
+        <li style={{ color: "#90E0EF", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 3</li>
+        <li style={{ color: "#568C98", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 4</li>
+      </ul>
+    );
+  };
 
   return (
     <>
@@ -300,8 +330,12 @@ export default function HomeDay(props: Props) {
                 <XAxis dataKey="" />
                 <YAxis unit="" />
                 <RechartsTooltip />
-                <Legend />
-                <Bar dataKey="hourlyUsage" name="Poraba" fill="#0077B6" />
+                <Legend content={<CustomLegend />} />
+                <Bar dataKey="hourlyUsage" name="Poraba">
+                  {chartData2.map((entry: any, index: number) => (
+                    <Cell key={`cell-${index}`} name={`Blok ${entry.timeBlock}`} fill={entry.fill} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </Card>
