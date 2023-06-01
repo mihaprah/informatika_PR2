@@ -73,7 +73,7 @@ export default function UserProfile(props: Props) {
       <Card
         variant="outlined"
         sx={{
-          width: 600,
+          width: 550,
           height: 350,
           backgroundColor: "background.level2",
           alignItems: "left",
@@ -113,7 +113,7 @@ export default function UserProfile(props: Props) {
       <Card
         variant="outlined"
         sx={{
-          width: 600,
+          width: 550,
           height: 350,
           backgroundColor: "background.level2",
           alignItems: "left",
@@ -150,7 +150,7 @@ export default function UserProfile(props: Props) {
       <Card
         variant="outlined"
         sx={{
-          width: 600,
+          width: 550,
           height: 350,
           backgroundColor: "background.level2",
           alignItems: "left",
@@ -216,7 +216,7 @@ export default function UserProfile(props: Props) {
       <Card
         variant="outlined"
         sx={{
-          width: 600,
+          width: 550,
           height: 350,
           backgroundColor: "background.level2",
           alignItems: "left",
@@ -240,8 +240,8 @@ export default function UserProfile(props: Props) {
                 value={selectedCabinet.agreedPowerOne}
                 variant="outlined"
                 size="small"
-                placeholder={"Moč (kWh)"}
-                label={"Moč (kWh)"}
+                placeholder={"Moč (kW)"}
+                label={"Moč (kW)"}
                 style={{ width: "150px", marginRight: "20px", marginTop: "5px" }}
                 onChange={handleChangeSettings}
               />
@@ -281,8 +281,8 @@ export default function UserProfile(props: Props) {
                 value={selectedCabinet.agreedPowerTwo}
                 variant="outlined"
                 size="small"
-                placeholder={"Moč (kWh)"}
-                label={"Moč (kWh)"}
+                placeholder={"Moč (kW)"}
+                label={"Moč (kW)"}
                 style={{ width: "150px", marginRight: "20px", marginTop: "5px" }}
                 onChange={handleChangeSettings}
               />
@@ -322,8 +322,8 @@ export default function UserProfile(props: Props) {
                 value={selectedCabinet.agreedPowerThree}
                 variant="outlined"
                 size="small"
-                placeholder={"Moč (kWh)"}
-                label={"Moč (kWh)"}
+                placeholder={"Moč (kW)"}
+                label={"Moč (kW)"}
                 style={{ width: "150px", marginRight: "20px", marginTop: "5px" }}
                 onChange={handleChangeSettings}
               />
@@ -363,8 +363,8 @@ export default function UserProfile(props: Props) {
                 value={selectedCabinet.agreedPowerFour}
                 variant="outlined"
                 size="small"
-                placeholder={"Moč (kWh)"}
-                label={"Moč (kWh)"}
+                placeholder={"Moč (kW)"}
+                label={"Moč (kW)"}
                 style={{ width: "150px", marginRight: "20px", marginTop: "5px" }}
                 onChange={handleChangeSettings}
               />
@@ -404,8 +404,8 @@ export default function UserProfile(props: Props) {
                 value={selectedCabinet.agreedPowerFive}
                 variant="outlined"
                 size="small"
-                placeholder={"Moč (kWh)"}
-                label={"Moč (kWh)"}
+                placeholder={"Moč (kW)"}
+                label={"Moč (kW)"}
                 style={{ width: "150px", marginRight: "20px", marginTop: "5px" }}
                 onChange={handleChangeSettings}
               />

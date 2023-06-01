@@ -119,6 +119,10 @@ export default function Comparison(props: Props) {
 
   return (
     <>
+    <div style={{display: "flex" , justifyContent: 'space-between'}}>
+    <Typography sx={{ display: "flex", justifyContent: "left" }}>
+      <b>Št. merilne omarice: {props.cabinetID}</b>
+      </Typography>
       <Box sx={{ display: "flex", justifyContent: "right" }}>
         <FormControl>
           <InputLabel>Leto</InputLabel>
@@ -135,6 +139,7 @@ export default function Comparison(props: Props) {
           </Select>
         </FormControl>
       </Box>
+      </div>
       <div className={"container"}>
         <Card
           variant="outlined"
