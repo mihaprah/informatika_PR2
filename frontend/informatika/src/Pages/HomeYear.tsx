@@ -108,28 +108,40 @@ export default function HomeYear(props: Props) {
       };
       switch (monthData.name) {
         case 'JANUARY':
-          monthData.name = 'JANUAR'
+          monthData.name = 'JAN'
           break;
         case 'FEBRUARY':
-          monthData.name = 'FEBRUAR'
+          monthData.name = 'FEB'
           break;
         case 'MARCH':
-          monthData.name = 'MAREC'
+          monthData.name = 'MAR'
+          break;
+        case 'APRIL':
+          monthData.name = 'APR'
           break;
         case 'MAY':
           monthData.name = 'MAJ'
           break;
         case 'JUNE':
-          monthData.name = 'JUNIJ'
+          monthData.name = 'JUN'
           break;
         case 'JULY':
-          monthData.name = 'JULIJ'
+          monthData.name = 'JUL'
           break;
         case 'AUGUST':
-          monthData.name = 'AVGUST'
+          monthData.name = 'AVG'
+          break;
+        case 'SEPTEMBER':
+          monthData.name = 'SEP'
           break;
         case 'OCTOBER':
-          monthData.name = 'OKTOBER'
+          monthData.name = 'OKT'
+          break;
+        case 'NOVEMBER':
+          monthData.name = 'NOV'
+          break;
+        case 'DECEMBER':
+          monthData.name = 'DEC'
           break;
       }
       chartData2.push(monthData);
@@ -313,7 +325,7 @@ export default function HomeYear(props: Props) {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="name"/>
               <YAxis />
               <RechartsTooltip />
               <Legend />
