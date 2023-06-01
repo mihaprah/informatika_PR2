@@ -13,9 +13,11 @@ interface Props {
 
 export default function Comparison(props: Props) {
   const [usage, setUsage] = useState<number>(0);
+  const [lowUsage, setLowUsage] = useState<number>(0);
+  const [highUsage, setHighUsage] = useState<number>(0);
   const [year, setYear] = useState<number>(new Date().getFullYear() - 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [price, setPrice] = useState<number>(0.17);
+  const [fixedPrice, setFixedPrice] = useState<number>(0.17);
   const [oldPrice, setOldPrice] = useState<number>(0);
   const [newPrice, setNewPrice] = useState<number>(0);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
@@ -93,6 +95,15 @@ export default function Comparison(props: Props) {
         penaltiesBlockFour +
         penaltiesBlockFive
     );
+    if (lowUsage != 0 && highUsage != 0) {
+      if (selectedCabinet.lowPrice > 0 && selectedCabinet.highPrice > 0) {
+        setOldPrice(lowUsage * selectedCabinet.lowPrice + highUsage * selectedCabinet.highPrice);
+      } else {
+        setOldPrice(usage * fixedPrice);
+      }
+    } else {
+      setOldPrice(usage * fixedPrice);
+    }
   };
 
   useEffect(() => {
@@ -100,7 +111,12 @@ export default function Comparison(props: Props) {
       try {
         const getUsage = await api.get("/measurement/usage/" + props.cabinetID + "/" + year + "-01-01");
         setUsage(getUsage.data);
-        setOldPrice(getUsage.data * price);
+
+        const getHighLowUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+        setLowUsage(getHighLowUsage.data[0]);
+        setHighUsage(getHighLowUsage.data[1]);
+        console.log(getHighLowUsage.data[0]);
+        console.log(getHighLowUsage.data[1]);
 
         const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
         await calculateNewPrice(getIntervals.data);
