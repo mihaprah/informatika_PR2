@@ -40,75 +40,68 @@ export default function Comparison(props: Props) {
         const getCabinet = await api.get("/cabinet/" + props.cabinetID);
         setSelectedCabinet(getCabinet.data);
 
-        const getHighLowUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
-        if (getHighLowUsage.data[0] != 0 && getHighLowUsage.data[1] != 0) {
-          if (selectedCabinet.lowPrice > 0 && selectedCabinet.highPrice > 0) {
+        const getLowHighUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+        if (getLowHighUsage.data[0] != 0 && getLowHighUsage.data[1] != 0) {
+          if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
             setOldPrice(
-              getHighLowUsage.data[0] * selectedCabinet.lowPrice + getHighLowUsage.data[1] * selectedCabinet.highPrice
+              getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
             );
           } else {
-            setOldPrice(usage * fixedPrice);
+            setOldPrice(getUsage.data * fixedPrice);
           }
         } else {
-          setOldPrice(usage * fixedPrice);
+          setOldPrice(getUsage.data * fixedPrice);
         }
 
         const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
-        await calculateNewPrice(getIntervals.data);
+        await calculateNewPrice(getIntervals.data, getCabinet.data);
       } catch (error) {
         console.log(error);
+        console.log(usage);
+        console.log(selectedCabinet);
       }
     };
-
     fetchData();
   }, [year]);
 
-  const calculateNewPrice = (yearlyIntervalData: Interval[]) => {
-    console.log(yearlyIntervalData);
+  const calculateNewPrice = (yearlyIntervalData: Interval[], cabinet: Cabinet) => {
     yearlyIntervalData.forEach((interval: Interval) => {
       // Check time block
       if (interval.timeBlock === 1) {
         usageBlockOne += interval.hourlyUsage;
         //   Check if there over the agreed limit
-        if (interval.hourlyUsage > selectedCabinet?.agreedPowerOne) {
+        if (interval.hourlyUsage > cabinet?.agreedPowerOne) {
           // Add penalties for usage over the agreed limit
-          penaltiesBlockOne +=
-            (selectedCabinet?.agreedPowerOne - interval.hourlyUsage) * selectedCabinet?.penaltiesBlockOne;
+          penaltiesBlockOne += (cabinet?.agreedPowerOne - interval.hourlyUsage) * cabinet?.penaltiesBlockOne;
         }
       } else if (interval.timeBlock === 2) {
         usageBlockTwo += interval.hourlyUsage;
-        if (interval.hourlyUsage > selectedCabinet?.agreedPowerTwo) {
-          penaltiesBlockTwo +=
-            (selectedCabinet?.agreedPowerTwo - interval.hourlyUsage) * selectedCabinet?.penaltiesBlockTwo;
+        if (interval.hourlyUsage > cabinet?.agreedPowerTwo) {
+          penaltiesBlockTwo += (cabinet?.agreedPowerTwo - interval.hourlyUsage) * cabinet?.penaltiesBlockTwo;
         }
       } else if (interval.timeBlock === 3) {
         usageBlockThree += interval.hourlyUsage;
-        if (interval.hourlyUsage > selectedCabinet?.agreedPowerThree) {
-          penaltiesBlockThree +=
-            (selectedCabinet?.agreedPowerThree - interval.hourlyUsage) * selectedCabinet?.penaltiesBlockThree;
+        if (interval.hourlyUsage > cabinet?.agreedPowerThree) {
+          penaltiesBlockThree += (cabinet?.agreedPowerThree - interval.hourlyUsage) * cabinet?.penaltiesBlockThree;
         }
       } else if (interval.timeBlock === 4) {
         usageBlockFour += interval.hourlyUsage;
-        if (interval.hourlyUsage > selectedCabinet?.agreedPowerFour) {
-          penaltiesBlockFour +=
-            (selectedCabinet?.agreedPowerFour - interval.hourlyUsage) * selectedCabinet?.penaltiesBlockFour;
+        if (interval.hourlyUsage > cabinet?.agreedPowerFour) {
+          penaltiesBlockFour += (cabinet?.agreedPowerFour - interval.hourlyUsage) * cabinet?.penaltiesBlockFour;
         }
       } else {
         usageBlockFive += interval.hourlyUsage;
-        if (interval.hourlyUsage > selectedCabinet?.agreedPowerFive) {
-          penaltiesBlockFive +=
-            (selectedCabinet?.agreedPowerFive - interval.hourlyUsage) * selectedCabinet?.penaltiesBlockFive;
+        if (interval.hourlyUsage > cabinet?.agreedPowerFive) {
+          penaltiesBlockFive += (cabinet?.agreedPowerFive - interval.hourlyUsage) * cabinet?.penaltiesBlockFive;
         }
       }
     });
     // Multiply with the price set for cabinet
-    usageBlockOne *= selectedCabinet.priceBlockOne;
-    usageBlockTwo *= selectedCabinet.priceBlockTwo;
-    usageBlockThree *= selectedCabinet.priceBlockThree;
-    usageBlockFour *= selectedCabinet.priceBlockFour;
-    usageBlockFive *= selectedCabinet.priceBlockFive;
-
-    console.log(usageBlockOne);
+    usageBlockOne *= cabinet.priceBlockOne;
+    usageBlockTwo *= cabinet.priceBlockTwo;
+    usageBlockThree *= cabinet.priceBlockThree;
+    usageBlockFour *= cabinet.priceBlockFour;
+    usageBlockFive *= cabinet.priceBlockFive;
 
     setNewPrice(
       usageBlockOne +
@@ -142,7 +135,6 @@ export default function Comparison(props: Props) {
               value={year}
               onChange={(event) => {
                 setYear(Number(event.target.value));
-                console.log(year);
               }}
               style={{ height: "48px", width: "90px" }}
             >
@@ -167,14 +159,6 @@ export default function Comparison(props: Props) {
           <Typography level="h4">
             <b>Vt/Nt način obračunavanja - {year}</b>
           </Typography>
-          {year == currentYear ? (
-            <Typography>
-              <b>Izbrano leto je še tekoče, zato podatki morda niso končni.</b>
-            </Typography>
-          ) : (
-            ""
-          )}
-
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
               Cena na mesec: <b>{(oldPrice / 12).toFixed(2)} €</b>
@@ -183,6 +167,13 @@ export default function Comparison(props: Props) {
               Cena na leto: <b>{oldPrice.toFixed(2)} €</b>
             </Typography>
           </div>
+          {year == currentYear ? (
+            <Typography sx={{ paddingTop: "1vh" }}>
+              <b>Izbrano leto je še tekoče, zato podatki morda niso končni.</b>
+            </Typography>
+          ) : (
+            ""
+          )}
         </Card>
         <Card
           variant="outlined"
@@ -198,13 +189,6 @@ export default function Comparison(props: Props) {
           <Typography level="h4">
             <b>15min intervali način obračunavanja - {year}</b>
           </Typography>
-          {year == currentYear ? (
-            <Typography>
-              <b>Izbrano leto je še tekoče, zato podatki morda niso končni.</b>
-            </Typography>
-          ) : (
-            ""
-          )}
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
               Cena na mesec: <b>{(newPrice / 12).toFixed(2)} €</b>
@@ -213,6 +197,13 @@ export default function Comparison(props: Props) {
               Cena na leto: <b>{newPrice.toFixed(2)} €</b>
             </Typography>
           </div>
+          {year == currentYear ? (
+            <Typography sx={{ paddingTop: "1vh" }}>
+              <b>Izbrano leto je še tekoče, zato podatki morda niso končni.</b>
+            </Typography>
+          ) : (
+            ""
+          )}
         </Card>
         <Card
           variant="outlined"
