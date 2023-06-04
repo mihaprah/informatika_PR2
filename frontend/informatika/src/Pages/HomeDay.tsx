@@ -153,7 +153,7 @@ export default function HomeDay(props: Props) {
 
   const changeURL = (object: any) => {
     if (object.value === "day") {
-      navigate("/home-day");
+      navigate("/");
     } else if (object.value === "month") {
       navigate("/home-month");
     } else if (object.value === "year") {

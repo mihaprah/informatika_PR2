@@ -10,7 +10,7 @@ import HomeYear from "../../Pages/HomeYear.tsx";
 import Comparison from "../../Pages/Comaprison.tsx";
 import CabinetHistory from "../../Pages/CabinetHistory.tsx";
 import UserProfile from "../../Pages/UserProfile.tsx";
-import {useState} from "react";
+import { useState } from "react";
 
 export default function MyRouter() {
   const [cabinetID, setCabinetID] = useState("5-001");
@@ -26,33 +26,33 @@ export default function MyRouter() {
       errorElement: <PageNotFound />,
       children: [
         {
-          path: "/home-day",
+          path: "/",
           element: <HomeDay cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
         {
           path: "/home-month",
-          element: <HomeMonth cabinetID={cabinetID}/>,
+          element: <HomeMonth cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
         {
           path: "/home-year",
-          element: <HomeYear cabinetID={cabinetID}/>,
+          element: <HomeYear cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
         {
           path: "/comparison",
-          element: <Comparison cabinetID={cabinetID}/>,
+          element: <Comparison cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
         {
           path: "/history",
-          element: <CabinetHistory cabinetID={cabinetID}/>,
+          element: <CabinetHistory cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
         {
           path: "/user-profile",
-          element: <UserProfile onChange={handleChange} cabinetID={cabinetID}/>,
+          element: <UserProfile onChange={handleChange} cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
       ],

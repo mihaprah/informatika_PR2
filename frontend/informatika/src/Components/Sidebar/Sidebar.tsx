@@ -22,7 +22,7 @@ const Sidebar: FunctionComponent = () => {
           <div className="zgodovina">Zgodovina</div>
         </div>
       </div>
-      <div className="home" onClick={() => navigate("/home-day")}>
+      <div className="home" onClick={() => navigate("/")}>
         <div className="background3" />
         <div className="content1">
           <img className="vector-icon1" alt="" src="/vector1.svg" />
