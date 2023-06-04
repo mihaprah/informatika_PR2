@@ -114,7 +114,7 @@ export default function HomeDay(props: Props) {
         hour.fill = "#00B4D8";
       } else if (data.timeBlock === 3) {
         sumBlock3 += data.hourlyUsage;
-        hour.fill = "#90E0EF";
+        hour.fill = "#878EBA";
       } else if (data.timeBlock === 4) {
         sumBlock4 += data.hourlyUsage;
         hour.fill = "#568C98";
@@ -173,7 +173,7 @@ export default function HomeDay(props: Props) {
       <ul style={{ display: "flex", justifyContent: "center", margin: "2vh" }}>
         <li style={{ color: "#0077B6", marginRight: "10px" }}>Časovni blok 1 in 5</li>
         <li style={{ color: "#00B4D8", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 2</li>
-        <li style={{ color: "#90E0EF", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 3</li>
+        <li style={{ color: "#878EBA", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 3</li>
         <li style={{ color: "#568C98", marginRight: "10px", marginLeft: "10px" }}>Časovni blok 4</li>
       </ul>
     );
