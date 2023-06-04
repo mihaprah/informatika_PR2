@@ -8,6 +8,9 @@ export default defineConfig({
     host: true,
     strictPort: true,
     port: 3000,
-    open: "/home-day",
+    open: "/",
+  },
+  build: {
+    chunkSizeWarningLimit: 1200,
   },
 });
