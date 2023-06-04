@@ -25,7 +25,7 @@ export default function UserProfile(props: Props) {
     props.onChange(e.target.value);
     changeCabinet(e.target.value);
   };
-  const handleChangeSettings = (e) => {
+  const handleChangeSettings = (e: any) => {
     const { value, name } = e.target;
 
     setSelectedCabinet((prevState: Cabinet) => {
@@ -37,7 +37,7 @@ export default function UserProfile(props: Props) {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     console.log(selectedCabinet);
     api.put("/cabinet/settings", selectedCabinet);

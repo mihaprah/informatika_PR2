@@ -33,6 +33,7 @@ export default function CabinetHistory(props: Props) {
   }, []);
 
   const handleChangePage = (event: any, newPage: SetStateAction<number>) => {
+    event;
     setPage(newPage);
   };
 

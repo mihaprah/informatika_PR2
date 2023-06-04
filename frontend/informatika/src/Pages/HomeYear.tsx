@@ -23,7 +23,6 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { parse } from "path";
 
 interface Props {
   cabinetID: string;
@@ -58,7 +57,7 @@ export default function HomeYear(props: Props) {
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     getCabinetData();
     getYearMonthData();
   }, [year]);
@@ -77,6 +76,7 @@ export default function HomeYear(props: Props) {
     });
   }
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+    event;
     setAlignment(newAlignment);
   };
 
@@ -96,8 +96,7 @@ export default function HomeYear(props: Props) {
     { name: "Napačne meritve", value: anomaly, fill: "#E45454" },
   ];
 
-
-  const chartData2: any = []
+  const chartData2: any = [];
   if (monthData) {
     monthData?.forEach((month: any) => {
       let monthData = {
@@ -107,47 +106,46 @@ export default function HomeYear(props: Props) {
         invalidValue: month.invalidValue,
       };
       switch (monthData.name) {
-        case 'JANUARY':
-          monthData.name = 'JAN'
+        case "JANUARY":
+          monthData.name = "JAN";
           break;
-        case 'FEBRUARY':
-          monthData.name = 'FEB'
+        case "FEBRUARY":
+          monthData.name = "FEB";
           break;
-        case 'MARCH':
-          monthData.name = 'MAR'
+        case "MARCH":
+          monthData.name = "MAR";
           break;
-        case 'APRIL':
-          monthData.name = 'APR'
+        case "APRIL":
+          monthData.name = "APR";
           break;
-        case 'MAY':
-          monthData.name = 'MAJ'
+        case "MAY":
+          monthData.name = "MAJ";
           break;
-        case 'JUNE':
-          monthData.name = 'JUN'
+        case "JUNE":
+          monthData.name = "JUN";
           break;
-        case 'JULY':
-          monthData.name = 'JUL'
+        case "JULY":
+          monthData.name = "JUL";
           break;
-        case 'AUGUST':
-          monthData.name = 'AVG'
+        case "AUGUST":
+          monthData.name = "AVG";
           break;
-        case 'SEPTEMBER':
-          monthData.name = 'SEP'
+        case "SEPTEMBER":
+          monthData.name = "SEP";
           break;
-        case 'OCTOBER':
-          monthData.name = 'OKT'
+        case "OCTOBER":
+          monthData.name = "OKT";
           break;
-        case 'NOVEMBER':
-          monthData.name = 'NOV'
+        case "NOVEMBER":
+          monthData.name = "NOV";
           break;
-        case 'DECEMBER':
-          monthData.name = 'DEC'
+        case "DECEMBER":
+          monthData.name = "DEC";
           break;
       }
       chartData2.push(monthData);
     });
   }
-
 
   return (
     <>
@@ -325,7 +323,7 @@ export default function HomeYear(props: Props) {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name"/>
+              <XAxis dataKey="name" />
               <YAxis />
               <RechartsTooltip />
               <Legend />

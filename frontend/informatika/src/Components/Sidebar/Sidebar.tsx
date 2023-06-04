@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent } from "react";
 import "../../styles/Sidebar.css";
 import { useNavigate } from "react-router";
 const Sidebar: FunctionComponent = () => {

@@ -14,7 +14,6 @@ import MenuItem from "@mui/material/MenuItem";
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -36,7 +35,6 @@ export default function HomeMonth(props: Props) {
   let modified = 0;
   let maxDate = "";
   let minDate = "";
-  let invalidData = 0;
   let anomaly = 0;
   let correctedData = 0;
 
@@ -52,8 +50,6 @@ export default function HomeMonth(props: Props) {
     };
     getCabinetData();
   }, [month, year]);
-
-  //console.log(data)
 
   if (data) {
     let max = -1;
@@ -89,6 +85,7 @@ export default function HomeMonth(props: Props) {
   const navigate = useNavigate();
   const [alignment, setAlignment] = React.useState("month");
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+    event;
     setAlignment(newAlignment);
   };
 
@@ -104,7 +101,7 @@ export default function HomeMonth(props: Props) {
 
   const chartData: any = [];
   if (data) {
-    data?.forEach((entry: Measurement, index: number) => {
+    data?.forEach((entry: Measurement) => {
       let day = {
         name: new Date(entry.date).toLocaleDateString("en-SI"),
         correctValue: 0,

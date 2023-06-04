@@ -13,13 +13,13 @@ interface Props {
 
 export default function Comparison(props: Props) {
   const [usage, setUsage] = useState<number>(0);
-  const [year, setYear] = useState<number>(0);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [fixedPrice, setFixedPrice] = useState<number>(0.17);
+  const [year, setYear] = useState<number>(2022);
   const [oldPrice, setOldPrice] = useState<number>(0);
   const [newPrice, setNewPrice] = useState<number>(0);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
 
+  let currentYear = new Date().getFullYear();
+  let fixedPrice: number = 0.17;
   let usageBlockOne: number = 0;
   let usageBlockTwo: number = 0;
   let usageBlockThree: number = 0;
@@ -65,7 +65,7 @@ export default function Comparison(props: Props) {
 
   const calculateNewPrice = (yearlyIntervalData: Interval[]) => {
     console.log(yearlyIntervalData);
-    yearlyIntervalData.forEach((interval: Interval, index: number) => {
+    yearlyIntervalData.forEach((interval: Interval) => {
       // Check time block
       if (interval.timeBlock === 1) {
         usageBlockOne += interval.hourlyUsage;
@@ -146,7 +146,6 @@ export default function Comparison(props: Props) {
               }}
               style={{ height: "48px", width: "90px" }}
             >
-              <MenuItem value={0}>Leto</MenuItem>
               <MenuItem value={2022}>2022</MenuItem>
               <MenuItem value={2023}>2023</MenuItem>
             </Select>

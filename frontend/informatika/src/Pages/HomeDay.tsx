@@ -138,6 +138,7 @@ export default function HomeDay(props: Props) {
   const navigate = useNavigate();
   const [alignment, setAlignment] = React.useState("day");
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
+    event;
     setAlignment(newAlignment);
   };
 
@@ -167,7 +168,7 @@ export default function HomeDay(props: Props) {
 
   const selectedDateView = new Date(selectedDate).toLocaleDateString("SI");
 
-  const CustomLegend = ({ payload }: any) => {
+  const CustomLegend = () => {
     return (
       <ul style={{ display: "flex", justifyContent: "center", margin: "2vh" }}>
         <li style={{ color: "#0077B6", marginRight: "10px" }}>Časovni blok 1 in 5</li>
