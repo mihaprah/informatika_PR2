@@ -1,6 +1,6 @@
 import Typography from "@mui/joy/Typography";
 import Card from "@mui/joy/Card";
-import { TextField, Button, InputLabel, Box } from "@mui/material";
+import { TextField, Button, InputLabel, Box, Dialog } from "@mui/material";
 import "../styles/UserProfile.css";
 import { useEffect, useState } from "react";
 import api from "../Service/api.tsx";
@@ -19,8 +19,9 @@ export default function UserProfile(props: Props) {
   const cabinetIDs: string[] = [];
   const [cabinetID, setCabinetID] = useState(props.cabinetID);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const handleChangeCabinet = (e: { target: { value: any; name: any } }) => {
-    //console.log(e.target.value);
     setCabinetID(e.target.value);
     props.onChange(e.target.value);
     changeCabinet(e.target.value);
@@ -39,7 +40,7 @@ export default function UserProfile(props: Props) {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log(selectedCabinet);
+    setOpenDialog(true);
     api.put("/cabinet/settings", selectedCabinet);
   };
 
@@ -450,6 +451,26 @@ export default function UserProfile(props: Props) {
           Spremeni nastavitve
         </Button>
       </Card>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <Box sx={{ p: 2, width: "400px", height: "100px" }}>
+          <Typography gutterBottom>Nastavitve so bile uspešno spremenjene!</Typography>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Button
+              onClick={() => setOpenDialog(false)}
+              variant="contained"
+              sx={{
+                mr: 1,
+                backgroundColor: "#023E8A",
+                "&:hover": {
+                  backgroundColor: "#023E8A",
+                },
+              }}
+            >
+              Zapri
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
     </div>
   );
 }
