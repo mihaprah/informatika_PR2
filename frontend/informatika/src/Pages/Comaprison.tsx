@@ -19,7 +19,7 @@ export default function Comparison(props: Props) {
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
 
   let currentYear = new Date().getFullYear();
-  let fixedPrice: number = 0.17;
+  let fixedPrice: number = 0.1299;
   let usageBlockOne: number = 0;
   let usageBlockTwo: number = 0;
   let usageBlockThree: number = 0;
@@ -41,11 +41,16 @@ export default function Comparison(props: Props) {
         setSelectedCabinet(getCabinet.data);
 
         const getLowHighUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+        // Check if low and high data exists
         if (getLowHighUsage.data[0] != 0 && getLowHighUsage.data[1] != 0) {
-          if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
-            setOldPrice(
-              getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
-            );
+          // Check if it is the same as normal usage (50kWh difference allowed)
+          if (getLowHighUsage.data[0] + getLowHighUsage.data[1] + 50 > getUsage.data) {
+            // Check if cabinet data is set for low and high usage
+            if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
+              setOldPrice(
+                getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
+              );
+            }
           } else {
             setOldPrice(getUsage.data * fixedPrice);
           }
@@ -96,6 +101,7 @@ export default function Comparison(props: Props) {
         }
       }
     });
+    console.log(usageBlockOne + usageBlockTwo + usageBlockThree + usageBlockFour + usageBlockFive);
     // Multiply with the price set for cabinet
     usageBlockOne *= cabinet.priceBlockOne;
     usageBlockTwo *= cabinet.priceBlockTwo;
