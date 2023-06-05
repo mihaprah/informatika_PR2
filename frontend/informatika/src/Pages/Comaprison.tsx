@@ -167,10 +167,10 @@ export default function Comparison(props: Props) {
           </Typography>
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
-              Cena na mesec: <b>{(oldPrice / 12).toFixed(2)} €</b>
+              Cena na mesec: <b>{(oldPrice / 12).toFixed(2).replace('.', ',')} €</b>
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Cena na leto: <b>{oldPrice.toFixed(2)} €</b>
+              Cena na leto: <b>{oldPrice.toFixed(2).replace('.', ',')} €</b>
             </Typography>
           </div>
           {year == currentYear ? (
@@ -197,10 +197,10 @@ export default function Comparison(props: Props) {
           </Typography>
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
-              Cena na mesec: <b>{(newPrice / 12).toFixed(2)} €</b>
+              Cena na mesec: <b>{(newPrice / 12).toFixed(2).replace('.', ',')} €</b>
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Cena na leto: <b>{newPrice.toFixed(2)} €</b>
+              Cena na leto: <b>{newPrice.toFixed(2).replace('.', ',')} €</b>
             </Typography>
           </div>
           {year == currentYear ? (
@@ -263,21 +263,21 @@ export default function Comparison(props: Props) {
               {oldPrice > newPrice ? (
                 <Typography sx={{ color: "#37B76A" }}>
                   {" "}
-                  - {(Math.abs(oldPrice - newPrice) / 12).toFixed(2)} €
+                  - {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace('.', ',')} €
                 </Typography>
               ) : (
                 <Typography sx={{ color: "#E45454" }}>
                   {" "}
-                  + {(Math.abs(oldPrice - newPrice) / 12).toFixed(2)} €
+                  + {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace('.', ',')} €
                 </Typography>
               )}
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px", fontWeight: "bold" }}>
               Na leto:
               {oldPrice > newPrice ? (
-                <Typography sx={{ color: "#37B76A" }}> - {Math.abs(oldPrice - newPrice).toFixed(2)} €</Typography>
+                <Typography sx={{ color: "#37B76A" }}> - {Math.abs(oldPrice - newPrice).toFixed(2).replace('.', ',')} €</Typography>
               ) : (
-                <Typography sx={{ color: "#E45454" }}> + {Math.abs(oldPrice - newPrice).toFixed(2)} €</Typography>
+                <Typography sx={{ color: "#E45454" }}> + {Math.abs(oldPrice - newPrice).toFixed(2).replace('.', ',')} €</Typography>
               )}
             </Typography>
           </div>

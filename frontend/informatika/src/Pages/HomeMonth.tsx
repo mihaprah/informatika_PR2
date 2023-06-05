@@ -196,7 +196,7 @@ export default function HomeMonth(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{usage.toFixed(2)} MWh</b>
+                <b>{usage.toFixed(2).replace('.', ',')} MWh</b>
               </Typography>
             </Card>
           </Tooltip>
@@ -235,7 +235,7 @@ export default function HomeMonth(props: Props) {
                 Nepravilne meritve
               </Typography>
               <Typography level="h2">
-                <b>{correctedData}%</b>
+                <b>{correctedData.toLocaleString()}%</b>
               </Typography>
             </Card>
           </Tooltip>
@@ -250,7 +250,7 @@ export default function HomeMonth(props: Props) {
                 Povprečna poraba (dan)
               </Typography>
               <Typography level="h2">
-                <b>{avgUsage} kWh</b>
+                <b>{avgUsage.toLocaleString()} kWh</b>
               </Typography>
             </Card>
           </Tooltip>
