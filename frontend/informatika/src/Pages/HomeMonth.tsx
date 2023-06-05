@@ -198,7 +198,7 @@ export default function HomeMonth(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{usage} MWh</b>
+                <b>{usage.toFixed(2)} MWh</b>
               </Typography>
             </Card>
           </Tooltip>

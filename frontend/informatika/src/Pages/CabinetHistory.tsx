@@ -91,12 +91,20 @@ export default function CabinetHistory(props: Props) {
                       )}
                     </TableCell>
 
-                    <TableCell align="right">{row.usage}</TableCell>
+                    <TableCell align="right">{row.usage.toFixed(2)}</TableCell>
                     <TableCell align="right">
-                      {row.highUsage != 0 ? row.highUsage : row.lowUsage != 0 ? row.highUsage : "Podatek ni na voljo"}
+                      {row.highUsage != 0
+                        ? row.highUsage.toFixed(2)
+                        : row.lowUsage != 0
+                        ? row.highUsage.toFixed(2)
+                        : "Podatek ni na voljo"}
                     </TableCell>
                     <TableCell align="right">
-                      {row.lowUsage != 0 ? row.lowUsage : row.highUsage != 0 ? row.lowUsage : "Podatek ni na voljo"}
+                      {row.lowUsage != 0
+                        ? row.lowUsage.toFixed(2)
+                        : row.highUsage != 0
+                        ? row.lowUsage.toFixed(2)
+                        : "Podatek ni na voljo"}
                     </TableCell>
                   </TableRow>
                 ))}
