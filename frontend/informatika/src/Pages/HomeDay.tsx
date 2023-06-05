@@ -166,7 +166,7 @@ export default function HomeDay(props: Props) {
     { name: "Povprečna poraba", value: avgUsage, fill: "#00B4D8" },
   ];
 
-  const selectedDateView = new Date(selectedDate).toLocaleDateString("SI");
+  const selectedDateView = new Date(selectedDate).toLocaleDateString("sl-SI");
 
   const CustomLegend = () => {
     return (
@@ -185,7 +185,7 @@ export default function HomeDay(props: Props) {
         <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Datum" defaultValue={dayjs("2023-02-28") as any} onChange={handleDateChange} />
+            <DatePicker format='DD.MM.YYYY' label="Datum" defaultValue={dayjs("2023-02-28") as any} onChange={handleDateChange} />
           </LocalizationProvider>
           <ToggleButtonGroup
             color="primary"

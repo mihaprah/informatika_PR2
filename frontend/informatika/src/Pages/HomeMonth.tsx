@@ -79,8 +79,8 @@ export default function HomeMonth(props: Props) {
     correctedData = Number((((modified + anomaly) / data.length) * 100).toFixed(2));
   }
 
-  const minDateDate = new Date(minDate).toLocaleDateString("SI");
-  const maxDateDate = new Date(maxDate).toLocaleDateString("SI");
+  const minDateDate = new Date(minDate).toLocaleDateString("sl-SI");
+  const maxDateDate = new Date(maxDate).toLocaleDateString("sl-SI");
 
   const navigate = useNavigate();
   const [alignment, setAlignment] = React.useState("month");
@@ -103,7 +103,7 @@ export default function HomeMonth(props: Props) {
   if (data) {
     data?.forEach((entry: Measurement) => {
       let day = {
-        name: new Date(entry.date).toLocaleDateString("en-SI"),
+        name: new Date(entry.date).toLocaleDateString("sl-SI"),
         correctValue: 0,
         modifiedValue: 0,
         invalidValue: 0,

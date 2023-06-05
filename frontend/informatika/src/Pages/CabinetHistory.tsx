@@ -79,7 +79,7 @@ export default function CabinetHistory(props: Props) {
                 {rowsToDisplay.map((row) => (
                   <TableRow key={row.date} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell component="th" scope="row">
-                      {new Date(row.date).toLocaleDateString("en-GB")}
+                      {new Date(row.date).toLocaleDateString("sl-SI")}
                     </TableCell>
                     <TableCell align="right">
                       {row.filledWithZeros === true ? (
