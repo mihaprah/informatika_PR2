@@ -6,6 +6,8 @@ import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
 import "../styles/Settings.css";
 import { initialState } from "../Modules/CabinetInitState";
+import {useNavigate} from "react-router";
+import { auth } from '../firebase';
 
 interface Props {
   cabinetID: string;
@@ -17,6 +19,7 @@ export default function Comparison(props: Props) {
   const [oldPrice, setOldPrice] = useState<number>(0);
   const [newPrice, setNewPrice] = useState<number>(0);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
+  const navigate = useNavigate();
 
   let currentYear = new Date().getFullYear();
   let fixedPrice: number = 0.1299;
@@ -32,41 +35,45 @@ export default function Comparison(props: Props) {
   let penaltiesBlockFive: number = 0;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getUsage = await api.get("/measurement/usage/" + props.cabinetID + "/" + year + "-01-01");
-        setUsage(getUsage.data);
+    if(auth.currentUser == null){
+      navigate("/login");
+    } else {
+      const fetchData = async () => {
+        try {
+          const getUsage = await api.get("/measurement/usage/" + props.cabinetID + "/" + year + "-01-01");
+          setUsage(getUsage.data);
 
-        const getCabinet = await api.get("/cabinet/" + props.cabinetID);
-        setSelectedCabinet(getCabinet.data);
+          const getCabinet = await api.get("/cabinet/" + props.cabinetID);
+          setSelectedCabinet(getCabinet.data);
 
-        const getLowHighUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
-        // Check if low and high data exists
-        if (getLowHighUsage.data[0] != 0 && getLowHighUsage.data[1] != 0) {
-          // Check if it is the same as normal usage (50kWh difference allowed)
-          if (getLowHighUsage.data[0] + getLowHighUsage.data[1] + 50 > getUsage.data) {
-            // Check if cabinet data is set for low and high usage
-            if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
-              setOldPrice(
-                getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
-              );
+          const getLowHighUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+          // Check if low and high data exists
+          if (getLowHighUsage.data[0] != 0 && getLowHighUsage.data[1] != 0) {
+            // Check if it is the same as normal usage (50kWh difference allowed)
+            if (getLowHighUsage.data[0] + getLowHighUsage.data[1] + 50 > getUsage.data) {
+              // Check if cabinet data is set for low and high usage
+              if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
+                setOldPrice(
+                    getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
+                );
+              }
+            } else {
+              setOldPrice(getUsage.data * fixedPrice);
             }
           } else {
             setOldPrice(getUsage.data * fixedPrice);
           }
-        } else {
-          setOldPrice(getUsage.data * fixedPrice);
-        }
 
-        const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
-        await calculateNewPrice(getIntervals.data, getCabinet.data);
-      } catch (error) {
-        console.log(error);
-        console.log(usage);
-        console.log(selectedCabinet);
-      }
-    };
-    fetchData();
+          const getIntervals = await api.get("/interval/year/" + props.cabinetID + "/" + year + "-01-01");
+          await calculateNewPrice(getIntervals.data, getCabinet.data);
+        } catch (error) {
+          console.log(error);
+          console.log(usage);
+          console.log(selectedCabinet);
+        }
+      };
+      fetchData();
+    }
   }, [year]);
 
   const calculateNewPrice = (yearlyIntervalData: Interval[], cabinet: Cabinet) => {

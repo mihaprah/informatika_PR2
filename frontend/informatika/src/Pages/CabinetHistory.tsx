@@ -9,6 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
+import { auth } from '../firebase';
+import {useNavigate} from "react-router";
 
 interface Props {
   cabinetID: string;
@@ -17,19 +19,23 @@ export default function CabinetHistory(props: Props) {
   const [data, setData] = useState<Measurement[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getCabinetData = async () => {
-      try {
-        const res = await api.get("/measurement/" + props.cabinetID);
-        const cabinet = res.data;
-        setData(cabinet);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getCabinetData();
+    if(auth.currentUser == null){
+      navigate("/login");
+    } else {
+      const getCabinetData = async () => {
+        try {
+          const res = await api.get("/measurement/" + props.cabinetID);
+          const cabinet = res.data;
+          setData(cabinet);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCabinetData();
+    }
   }, []);
 
   const handleChangePage = (event: any, newPage: SetStateAction<number>) => {

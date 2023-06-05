@@ -50,7 +50,7 @@ export default function MyRouter() {
           errorElement: <PageNotFound />,
         },
         {
-          path: "/user-profile",
+          path: "/settings",
           element: <Settings onChange={handleChange} cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },

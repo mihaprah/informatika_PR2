@@ -20,6 +20,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { auth } from '../firebase';
 
 interface Props {
   cabinetID: string;
@@ -38,16 +39,20 @@ export default function HomeMonth(props: Props) {
   let correctedData = 0;
 
   useEffect(() => {
-    const getCabinetData = async () => {
-      try {
-        const res = await api.get("/measurement/month/" + props.cabinetID + "/" + year + "-" + month + "-01");
-        const cabinet = res.data;
-        setData(cabinet);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCabinetData();
+    if(auth.currentUser == null){
+      navigate("/login");
+    } else {
+      const getCabinetData = async () => {
+        try {
+          const res = await api.get("/measurement/month/" + props.cabinetID + "/" + year + "-" + month + "-01");
+          const cabinet = res.data;
+          setData(cabinet);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCabinetData();
+    }
   }, [month, year]);
 
   if (data) {

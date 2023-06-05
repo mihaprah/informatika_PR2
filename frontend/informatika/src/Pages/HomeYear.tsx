@@ -22,6 +22,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import {auth} from "../firebase.ts";
 
 interface Props {
   cabinetID: string;
@@ -38,27 +39,31 @@ export default function HomeYear(props: Props) {
   let anomaly = 0;
 
   useEffect(() => {
-    const getCabinetData = async () => {
-      try {
-        const res = await api.get("/measurement/year/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
-        const cabinet = res.data;
-        setData(cabinet);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    if(auth.currentUser == null){
+      navigate("/login");
+    } else {
+      const getCabinetData = async () => {
+        try {
+          const res = await api.get("/measurement/year/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
+          const cabinet = res.data;
+          setData(cabinet);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-    const getYearMonthData = async () => {
-      try {
-        const res = await api.get("/measurement/year/month/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
-        const monthD = res.data;
-        setMonthData(monthD);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCabinetData();
-    getYearMonthData();
+      const getYearMonthData = async () => {
+        try {
+          const res = await api.get("/measurement/year/month/" + props.cabinetID + "/" + year + "-01-01"); //hardcoded
+          const monthD = res.data;
+          setMonthData(monthD);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCabinetData();
+      getYearMonthData();
+    }
   }, [year]);
 
   if (data) {

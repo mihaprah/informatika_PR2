@@ -10,6 +10,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { Tooltip } from "@mui/material";
+import { auth } from '../firebase';
 
 import {
   BarChart,
@@ -40,33 +41,37 @@ export default function HomeDay(props: Props) {
   const [selectedDate, setSelectedDate] = useState("2022-02-28");
 
   useEffect(() => {
-    const getMeasurementData = async () => {
-      try {
-        const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
-        setData(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const getIntervalData = async () => {
-      try {
-        const res = await api.get("/interval/day/" + props.cabinetID + "/" + selectedDate);
-        setIntervalData(res.data);
-      } catch (errr) {
-        console.log(errr);
-      }
-    };
-    const getCabinetData = async () => {
-      try {
-        const res = await api.get("/cabinet/" + props.cabinetID);
-        setCabinetData(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCabinetData();
-    getMeasurementData();
-    getIntervalData();
+    if(auth.currentUser == null){
+      navigate("/login");
+    } else {
+      const getMeasurementData = async () => {
+        try {
+          const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
+          setData(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      const getIntervalData = async () => {
+        try {
+          const res = await api.get("/interval/day/" + props.cabinetID + "/" + selectedDate);
+          setIntervalData(res.data);
+        } catch (errr) {
+          console.log(errr);
+        }
+      };
+      const getCabinetData = async () => {
+        try {
+          const res = await api.get("/cabinet/" + props.cabinetID);
+          setCabinetData(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCabinetData();
+      getMeasurementData();
+      getIntervalData();
+    }
   }, [selectedDate]);
 
   if (data.length !== 0) {

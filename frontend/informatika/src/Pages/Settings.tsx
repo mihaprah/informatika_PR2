@@ -8,6 +8,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { initialState } from "../Modules/CabinetInitState.tsx";
+import {auth} from "../firebase.ts";
+import {useNavigate} from "react-router";
 
 interface Props {
   onChange: (id: string) => void;
@@ -20,6 +22,7 @@ export default function Settings(props: Props) {
   const [cabinetID, setCabinetID] = useState(props.cabinetID);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet>(initialState);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChangeCabinet = (e: { target: { value: any; name: any } }) => {
     setCabinetID(e.target.value);
@@ -51,17 +54,21 @@ export default function Settings(props: Props) {
   };
 
   useEffect(() => {
-    const getCabinetData = async () => {
-      try {
-        const res = await api.get("/cabinet");
-        const cabinets = res.data;
-        setData(cabinets);
-      } catch (error) {
-        console.log(error);
+      if(auth.currentUser == null){
+          navigate("/login");
+      } else {
+          const getCabinetData = async () => {
+              try {
+                  const res = await api.get("/cabinet");
+                  const cabinets = res.data;
+                  setData(cabinets);
+              } catch (error) {
+                  console.log(error);
+              }
+          };
+          getCabinetData();
+          changeCabinet(props.cabinetID);
       }
-    };
-    getCabinetData();
-    changeCabinet(props.cabinetID);
   }, [cabinetID]);
 
   if (data.length !== 0) {
