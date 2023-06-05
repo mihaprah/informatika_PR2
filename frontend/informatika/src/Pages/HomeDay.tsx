@@ -89,8 +89,8 @@ export default function HomeDay(props: Props) {
     }
   }
 
-  intervalData.pop();
   const chartData2: any = [];
+
   if (intervalData.length !== 0) {
     let sumBlock1 = 0;
     let sumBlock2 = 0;
@@ -184,7 +184,12 @@ export default function HomeDay(props: Props) {
         <b>Pregled meritev - št. merilne omarice: {props.cabinetID}</b>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker format='DD.MM.YYYY' label="Datum" defaultValue={dayjs("2023-02-28") as any} onChange={handleDateChange} />
+            <DatePicker
+              format="DD.MM.YYYY"
+              label="Datum"
+              defaultValue={dayjs("2023-02-28") as any}
+              onChange={handleDateChange}
+            />
           </LocalizationProvider>
           <ToggleButtonGroup
             color="primary"
@@ -193,13 +198,13 @@ export default function HomeDay(props: Props) {
             onChange={handleChange}
             style={{ fontFamily: "Inter", width: "300px", float: "right", marginLeft: "20px" }}
           >
-            <ToggleButton style={{width: "100px"}} value="day" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="day" onClick={() => changeURL(event?.target)}>
               DAN
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="month" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="month" onClick={() => changeURL(event?.target)}>
               MESEC
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="year" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="year" onClick={() => changeURL(event?.target)}>
               LETO
             </ToggleButton>
           </ToggleButtonGroup>
@@ -216,7 +221,7 @@ export default function HomeDay(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{dayUsage} kWh</b>
+                <b>{dayUsage.toFixed(2)} kWh</b>
               </Typography>
             </Card>
           </Tooltip>
