@@ -91,19 +91,19 @@ export default function CabinetHistory(props: Props) {
                       )}
                     </TableCell>
 
-                    <TableCell align="right">{row.usage.toFixed(2)}</TableCell>
+                    <TableCell align="right">{row.usage.toFixed(2).replace('.', ',')}</TableCell>
                     <TableCell align="right">
                       {row.highUsage != 0
-                        ? row.highUsage.toFixed(2)
+                        ? row.highUsage.toFixed(2).replace('.', ',')
                         : row.lowUsage != 0
-                        ? row.highUsage.toFixed(2)
+                        ? row.highUsage.toFixed(2).replace('.', ',')
                         : "Podatek ni na voljo"}
                     </TableCell>
                     <TableCell align="right">
                       {row.lowUsage != 0
-                        ? row.lowUsage.toFixed(2)
+                        ? row.lowUsage.toFixed(2).replace('.', ',')
                         : row.highUsage != 0
-                        ? row.lowUsage.toFixed(2)
+                        ? row.lowUsage.toFixed(2).replace('.', ',')
                         : "Podatek ni na voljo"}
                     </TableCell>
                   </TableRow>

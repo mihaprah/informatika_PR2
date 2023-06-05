@@ -216,7 +216,7 @@ export default function HomeDay(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{dayUsage} kWh</b>
+                <b>{dayUsage.toLocaleString()} kWh</b>
               </Typography>
             </Card>
           </Tooltip>
@@ -229,7 +229,7 @@ export default function HomeDay(props: Props) {
                 Povprečna poraba (10 dni)
               </Typography>
               <Typography level="h2">
-                <b>{avgUsage} kWh</b>
+                <b>{avgUsage.toLocaleString()} kWh</b>
               </Typography>
             </Card>
           </Tooltip>
