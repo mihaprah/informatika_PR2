@@ -9,7 +9,7 @@ const Sidebar: FunctionComponent = () => {
       <div className="comparison" onClick={() => navigate("/comparison")}>
         <div className="background1" />
         <div className="content">
-          <img className="clip-path-group" alt="" src="/clip-path-group.svg" />
+          <img className="clip-path-group" alt="" src="/comparison-icon.svg" />
           <div className="zgodovina">
             <p className="primerjava">Primerjava</p>
           </div>
@@ -18,14 +18,14 @@ const Sidebar: FunctionComponent = () => {
       <div className="history" onClick={() => navigate("/history")}>
         <div className="background1" />
         <div className="content1">
-          <img className="vector-icon" alt="" src="/vector.svg" />
+          <img className="vector-icon" alt="" src="/history-icon.svg" />
           <div className="zgodovina">Zgodovina</div>
         </div>
       </div>
       <div className="home" onClick={() => navigate("/")}>
         <div className="background3" />
         <div className="content1">
-          <img className="vector-icon1" alt="" src="/vector1.svg" />
+          <img className="vector-icon1" alt="" src="/home-icon.svg" />
           <div className="zgodovina">Domov</div>
         </div>
       </div>
