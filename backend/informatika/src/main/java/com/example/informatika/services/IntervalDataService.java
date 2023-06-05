@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,7 +34,11 @@ public class IntervalDataService {
             Timestamp endDate = new Timestamp(calendar.getTimeInMillis());
 
             Cabinet cabinet = cabinetDao.findById(cabinetId).orElseThrow(() -> new RuntimeException("Cabinet does not exist"));
-            return intervalDataDao.findByCabinetAndTimeStampBetween(cabinet, startDate, endDate);
+            ArrayList<IntervalData> allResults = (ArrayList<IntervalData>) intervalDataDao.findByCabinetAndTimeStampBetween(cabinet, startDate, endDate);
+            if(!allResults.isEmpty()){
+                allResults.remove(allResults.size() - 1);
+            }
+            return (Iterable<IntervalData>) allResults;
 
         } catch (Exception e){
             e.printStackTrace();
