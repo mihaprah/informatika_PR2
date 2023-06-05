@@ -2,3 +2,5 @@
 backend/informatika/src/main/resources/application.properties
 backend/.idea/workspace.xml
 backend/.idea/misc.xml
+backend/informatika/src/main/resources/application.properties
+frontend/informatika/.env
