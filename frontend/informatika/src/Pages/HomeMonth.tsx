@@ -1,4 +1,3 @@
-import "../styles/HomeDay.css";
 import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -133,7 +132,6 @@ export default function HomeMonth(props: Props) {
                 value={year}
                 label="Leto"
                 onChange={(event) => setYear(Number(event.target.value))}
-                style={{ height: "48px" }}
               >
                 <MenuItem value={2022}>2022</MenuItem>
                 <MenuItem value={2023}>2023</MenuItem>
@@ -149,7 +147,7 @@ export default function HomeMonth(props: Props) {
                 value={month}
                 label="Leto"
                 onChange={(event) => setMonth(event.target.value)}
-                style={{ height: "48px" }}
+
               >
                 <MenuItem value={"01"}>Januar</MenuItem>
                 <MenuItem value={"02"}>Februar</MenuItem>
@@ -172,15 +170,15 @@ export default function HomeMonth(props: Props) {
             value={alignment}
             exclusive
             onChange={handleChange}
-            style={{ width: "300px", float: "right" }}
+            style={{ fontFamily: "Inter", width: "300px", float: "right", marginLeft: "20px" }}
           >
-            <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="day" onClick={() => changeURL(event?.target)}>
               DAN
             </ToggleButton>
-            <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="month" onClick={() => changeURL(event?.target)}>
               MESEC
             </ToggleButton>
-            <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="year" onClick={() => changeURL(event?.target)}>
               LETO
             </ToggleButton>
           </ToggleButtonGroup>

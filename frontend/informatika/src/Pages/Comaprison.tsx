@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import api from "../Service/api";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
-import "../styles/UserProfile.css";
+import "../styles/Settings.css";
 import { initialState } from "../Modules/CabinetInitState";
 
 interface Props {

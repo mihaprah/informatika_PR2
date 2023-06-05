@@ -1,4 +1,3 @@
-import "../styles/HomeDay.css";
 import * as React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -194,13 +193,13 @@ export default function HomeDay(props: Props) {
             onChange={handleChange}
             style={{ fontFamily: "Inter", width: "300px", float: "right", marginLeft: "20px" }}
           >
-            <ToggleButton className={"button"} value="day" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="day" onClick={() => changeURL(event?.target)}>
               DAN
             </ToggleButton>
-            <ToggleButton className={"button"} value="month" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="month" onClick={() => changeURL(event?.target)}>
               MESEC
             </ToggleButton>
-            <ToggleButton className={"button"} value="year" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{width: "100px"}} value="year" onClick={() => changeURL(event?.target)}>
               LETO
             </ToggleButton>
           </ToggleButtonGroup>
