@@ -173,13 +173,13 @@ export default function HomeYear(props: Props) {
             onChange={handleChange}
             style={{ fontFamily: "Inter", width: "300px", float: "right", marginLeft: "20px" }}
           >
-            <ToggleButton  style={{width: "100px"}} value="day" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="day" onClick={() => changeURL(event?.target)}>
               DAN
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="month" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="month" onClick={() => changeURL(event?.target)}>
               MESEC
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="year" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="year" onClick={() => changeURL(event?.target)}>
               LETO
             </ToggleButton>
           </ToggleButtonGroup>
@@ -202,7 +202,12 @@ export default function HomeYear(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{Number((usage / 1000).toFixed(2)).toLocaleString()} MWh</b>
+                <b>
+                  {Number((usage / 1000).toFixed(2))
+                    .toLocaleString()
+                    .replace(".", ",")}{" "}
+                  MWh
+                </b>
               </Typography>
             </Card>
           </Tooltip>
@@ -215,7 +220,12 @@ export default function HomeYear(props: Props) {
                 Povprečna poraba (dan)
               </Typography>
               <Typography level="h2">
-                <b>{Number((usage / data?.length).toFixed(2)).toLocaleString()} kWh</b>
+                <b>
+                  {Number((usage / data?.length).toFixed(2))
+                    .toLocaleString()
+                    .replace(".", ",")}{" "}
+                  kWh
+                </b>
               </Typography>
             </Card>
           </Tooltip>

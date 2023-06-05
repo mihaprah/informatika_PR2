@@ -73,7 +73,7 @@ export default function HomeMonth(props: Props) {
       }
     });
 
-    usage = Number((usage / 1000).toFixed(3)); // from kWh to MWh
+    usage = Number((usage / 1000).toFixed(2)); // from kWh to MWh
     avgUsage = Number(((usage / data.length) * 1000).toFixed(2)); // from MWh to kWh
     correctedData = Number((((modified + anomaly) / data.length) * 100).toFixed(2));
   }
@@ -147,7 +147,6 @@ export default function HomeMonth(props: Props) {
                 value={month}
                 label="Leto"
                 onChange={(event) => setMonth(event.target.value)}
-
               >
                 <MenuItem value={"01"}>Januar</MenuItem>
                 <MenuItem value={"02"}>Februar</MenuItem>
@@ -172,13 +171,13 @@ export default function HomeMonth(props: Props) {
             onChange={handleChange}
             style={{ fontFamily: "Inter", width: "300px", float: "right", marginLeft: "20px" }}
           >
-            <ToggleButton style={{width: "100px"}} value="day" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="day" onClick={() => changeURL(event?.target)}>
               DAN
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="month" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="month" onClick={() => changeURL(event?.target)}>
               MESEC
             </ToggleButton>
-            <ToggleButton style={{width: "100px"}} value="year" onClick={() => changeURL(event?.target)}>
+            <ToggleButton style={{ width: "100px" }} value="year" onClick={() => changeURL(event?.target)}>
               LETO
             </ToggleButton>
           </ToggleButtonGroup>
@@ -196,7 +195,7 @@ export default function HomeMonth(props: Props) {
                 Skupna poraba
               </Typography>
               <Typography level="h2">
-                <b>{usage.toFixed(2).replace('.', ',')} MWh</b>
+                <b>{usage.toFixed(2).replace(".", ",")} MWh</b>
               </Typography>
             </Card>
           </Tooltip>
@@ -235,7 +234,7 @@ export default function HomeMonth(props: Props) {
                 Nepravilne meritve
               </Typography>
               <Typography level="h2">
-                <b>{correctedData.toLocaleString()}%</b>
+                <b>{correctedData.toLocaleString().replace(".", ",")}%</b>
               </Typography>
             </Card>
           </Tooltip>
@@ -250,7 +249,7 @@ export default function HomeMonth(props: Props) {
                 Povprečna poraba (dan)
               </Typography>
               <Typography level="h2">
-                <b>{avgUsage.toLocaleString()} kWh</b>
+                <b>{avgUsage.toLocaleString().replace(".", ",")} kWh</b>
               </Typography>
             </Card>
           </Tooltip>
