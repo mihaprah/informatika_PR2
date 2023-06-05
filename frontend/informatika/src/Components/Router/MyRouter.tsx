@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import TemplatePage from "../../Pages/TemplatePage";
 import PageNotFound from "../../Pages/PageNotFound.tsx";
 import HomeDay from "../../Pages/HomeDay.tsx";
+import Login from "../../Pages/Login.tsx";
 import HomeMonth from "../../Pages/HomeMonth.tsx";
 import HomeYear from "../../Pages/HomeYear.tsx";
 import Comparison from "../../Pages/Comaprison.tsx";
@@ -53,7 +54,12 @@ export default function MyRouter() {
           element: <Settings onChange={handleChange} cabinetID={cabinetID} />,
           errorElement: <PageNotFound />,
         },
+
       ],
+    },{
+      path: "/login",
+      element: <Login/>,
+      errorElement: <PageNotFound />,
     },
     {
       path: "/*",
