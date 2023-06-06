@@ -29,9 +29,6 @@ public class CabinetService {
     public Cabinet getById(String id){
         return cabinetDao.findById(id).orElseThrow(() -> new IllegalCallerException("Cabient does not exist"));
     }
-    public void addCabinet(Cabinet newCabinet){
-        cabinetDao.save(newCabinet);
-    }
 
     public void updateCabinetSettings(Cabinet cabinet) {
         Cabinet updatedCabinet = cabinetDao.findById(cabinet.getCabinetId()).orElseThrow(() -> new IllegalCallerException("Cabinet does not exist"));
@@ -66,8 +63,5 @@ public class CabinetService {
         updatedCabinet.setNumberOfPhases(cabinet.getNumberOfPhases());
 
         cabinetDao.save(updatedCabinet);
-    }
-    public void deleteCabinet(String id){
-        cabinetDao.deleteById(id);
     }
 }

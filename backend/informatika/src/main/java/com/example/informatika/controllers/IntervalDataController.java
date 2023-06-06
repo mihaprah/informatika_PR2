@@ -3,7 +3,6 @@ package com.example.informatika.controllers;
 import com.example.informatika.models.IntervalData;
 import com.example.informatika.services.IntervalDataService;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin

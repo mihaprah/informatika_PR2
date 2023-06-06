@@ -56,18 +56,4 @@ public class MeasurementDataController {
         return measurementDataService.getUsagePerMonths(cabinetId, date);
     }
 
-    @PostMapping
-    public void saveMeasurementData(@RequestBody MeasurementData data){
-        measurementDataService.addMeasurementData(data);
-    }
-
-    @PutMapping
-    public void updateMeasurementData(@RequestBody MeasurementData data){
-        measurementDataService.updateMeasurementData(data);
-    }
-
-    @DeleteMapping("/{measurement_id}")
-    public void deleteMeasurementData(@PathVariable("measurement_id") Long id){
-        measurementDataService.deleteMeasurementData(id);
-    }
 }

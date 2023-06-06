@@ -28,10 +28,10 @@ public class Cabinet {
     private String cabinetId; //5-001
 
     private String cabinetNumber; // UNKN99999991
-    private String energyCompany; //dis
+    private String energyCompany; // dis
     private String connectionPower; //kW
-    private int numberOfPhases;
-    private int consumerGroup; //2-5
+    private int numberOfPhases; // 1-3
+    private int consumerGroup; // 2-5
     private double priceBlockOne;
     private double priceBlockTwo;
     private double priceBlockThree;

@@ -19,20 +19,12 @@ public class CabinetController {
     public Cabinet getById(@PathVariable("cabinet_id") String id){
         return cabinetService.getById(id);
     }
-    @PostMapping
-    public void saveCabinet(@RequestBody Cabinet cabinet){
-        cabinetService.addCabinet(cabinet);
-    }
     @PutMapping
     public void updateCabinet(@RequestBody Cabinet cabinet){
         cabinetService.updateCabinet(cabinet);
     }
     @PutMapping("/settings")
-    public void updateCabinetSettings(@RequestBody Cabinet cabinet){
+    public void updateCabinetSettings(@RequestBody Cabinet cabinet) {
         cabinetService.updateCabinetSettings(cabinet);
-    }
-    @DeleteMapping("/{cabinet_id}")
-    public void deleteCabinet(@PathVariable("cabinet_id") String id){
-        cabinetService.deleteCabinet(id);
     }
 }

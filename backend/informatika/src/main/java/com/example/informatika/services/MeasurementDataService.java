@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -169,24 +167,6 @@ public class MeasurementDataService {
         }
         double[] usage = {low, high};
         return usage;
-    }
-
-    public void addMeasurementData(MeasurementData newMeasurementData){
-        measurementDataDao.save(newMeasurementData);
-    }
-    public void updateMeasurementData(MeasurementData measurementData){
-        MeasurementData updatedData = measurementDataDao.findById(measurementData.getId()).orElseThrow(() -> new IllegalCallerException("Cabinet does not exist"));
-
-        updatedData.setCabinet(measurementData.getCabinet());
-        updatedData.setDate(measurementData.getDate());
-        updatedData.setRegister(measurementData.getRegister());
-        updatedData.setUsage(measurementData.getUsage());
-
-        measurementDataDao.save(updatedData);
-    }
-
-    public void deleteMeasurementData(Long id){
-        measurementDataDao.deleteById(id);
     }
 
 }

@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -133,16 +132,6 @@ public class ReadData {
             }
 
 
-
-            int intervalSumCount = 0;
-            int dailyUsageCount = 0;
-            int case1Count = 0;
-            int case2Count = 0;
-            int case1CountInvalid = 0;
-            int numberOfHolidaysSaturdaysSundays = 0;
-            int numberOfWeekDays = 0;
-            int invalidPastWeekValue = 0;
-
             for(int j = 0; j < intervalSumRows.size(); j++){
                 Map<String, Object> intervalRow = intervalSumRows.get(j);
                 String enotniIdent = (String) intervalRow.get("enotni_ident_mm");
@@ -152,11 +141,6 @@ public class ReadData {
                 Map<String, Object> dailyRow = dailyUsageRows.get(j);
                 String cabinet_id = (String) dailyRow.get("cabinet_id");
                 Date current_date = (Date) dailyRow.get("current_date");
-                BigDecimal current_value = (BigDecimal) dailyRow.get("current_value");
-                BigDecimal current_value_24 = (BigDecimal) dailyRow.get("current_value_24");
-                Date next_date = (Date) dailyRow.get("next_date");
-                BigDecimal next_value = (BigDecimal) dailyRow.get("next_value");
-                BigDecimal next_value_24 = (BigDecimal) dailyRow.get("next_value_24");
                 BigDecimal subtraction = (BigDecimal) dailyRow.get("subtraction");
                 BigDecimal subtraction_24 = (BigDecimal) dailyRow.get("subtraction_24");
                 BigDecimal visokaPoraba = (BigDecimal) dailyRow.get("visokaPoraba");
@@ -181,7 +165,6 @@ public class ReadData {
                         double checkDivison = result.doubleValue()/dailyValue.doubleValue();
                         if (checkDivison > 1){
 //                            CASE 1 -> sum of interval is bigger then the daily value. Add flag invalid
-
                             MeasurementData data = new MeasurementData(currentDate, 0.0, cabinet);
                             data.setInvalidFlag(true);
                             data.setMeasuredValue(result.doubleValue());
@@ -190,15 +173,12 @@ public class ReadData {
                                 data.setOnlyMeasuredValue(true);
                             }
                             measurementDataDao.save(data);
-                            case1CountInvalid++;
                         } else {
                             double divisionResult = (((result.doubleValue() / dailyValue.doubleValue())*100) - 100);
                             double absoluteResult = Math.abs(divisionResult);
 
                             if (absoluteResult <= 2){
             //                    CASE 1 -> ralika manj kot 2% (mankajoče podatke zapišemo z 0)
-    //                            System.out.println("CASE 1 -> Date: " + date + " , Cabient ID: " + cabinet_id + ", Division res: " + absoluteResult);
-
                                 MeasurementData data = new MeasurementData(currentDate, dailyValue.doubleValue(), cabinet);
                                 data.setFilledWithZeros(true);
                                 if (visokaPoraba != null){
@@ -213,10 +193,8 @@ public class ReadData {
                                     data.setOnlyMeasuredValue(true);
                                 }
                                 measurementDataDao.save(data);
-                                case1Count++;
                             } else {
             //                    CASE 2 -> razlika več kot 2% (metoda instoležnih dni)
-    //                            System.out.println("CASE 2 -> Date: " + date + " , Cabinet ID: " + cabinet_id + ", Division res: " + absoluteResult);
                                 DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
                                 String [] holidays = {"2022-01-01", "2022-01-02", "2022-02-08", "2022-04-18", "2022-04-27", "2022-05-01", "2022-05-02", "2022-06-25",
                                         "2022-08-15", "2022-10-31", "2022-10-01", "2022-12-25", "2022-12-26", "2023-01-01", "2023-01-02", "2023-02-08"};
@@ -271,7 +249,6 @@ public class ReadData {
 
                                     if (nextTrueValue == 0){
                                         data.setInvalidFlag(true);
-                                        invalidPastWeekValue++;
                                     } else {
                                         data.setModifiedWithEvenDatesStrategy(true);
                                     }
@@ -287,7 +264,6 @@ public class ReadData {
                                         data.setOnlyMeasuredValue(true);
                                     }
                                     measurementDataDao.save(data);
-                                    numberOfHolidaysSaturdaysSundays++;
                                 } else {
 //                                    Date is a work day
                                     for(LocalDate week : weeks){
@@ -332,7 +308,6 @@ public class ReadData {
                                     MeasurementData data = new MeasurementData(currentDate, nextTrueValue, cabinet);
                                     if (nextTrueValue == 0){
                                         data.setInvalidFlag(true);
-                                        invalidPastWeekValue++;
                                     } else {
                                         data.setModifiedWithEvenDatesStrategy(true);
                                     }
@@ -348,31 +323,14 @@ public class ReadData {
                                         data.setOnlyMeasuredValue(true);
                                     }
                                     measurementDataDao.save(data);
-                                    numberOfWeekDays++;
                                 }
 
-                                case2Count++;
                             }
 
-                            intervalSumCount++;
-                            dailyUsageCount++;
                         }
-                    } else {
-//                        TODO -> write some way to handle exception
                     }
-                } else {
-//                    TODO -> write some way to handle exception
                 }
-
             }
-            System.out.println("Interval sum count: " + intervalSumCount);
-            System.out.println("Daily usage sum: " + dailyUsageCount);
-            System.out.println("CASE 1: " + case1Count);
-            System.out.println("CASE 2: " + case2Count);
-            System.out.println("CASE 1 INVALID: " + case1CountInvalid);
-            System.out.println("Number of Holidays, Sundays and Saturdays: " + numberOfHolidaysSaturdaysSundays);
-            System.out.println("Number of week days: " + numberOfWeekDays);
-            System.out.println("Invalid past weeks values: " + invalidPastWeekValue);
         } catch (Exception e) {
             e.printStackTrace();
         }
