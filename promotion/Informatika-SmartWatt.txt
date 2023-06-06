@@ -1,0 +1,32 @@
+Informatika - SmartWatt
+
+Rešitev vizualizira 15-minutne odčitke porabe električne energije ter omogoča izračun ter primerjavo novega načina obračunavanja.
+
+Leto izdelave: 2023
+
+Avtorji:
+Miha Prah
+Matija Krsnik
+Anže Golob
+
+
+Domača stran: https://informatika-97440.web.app
+Koda: https://github.com/mihaprah/informatika_PR2
+
+Kategorizacija: informacijska rešitev, spletna aplikacija
+
+Oznake: React, TypeScript, PostgreSQL, Java, Springboot, REST, IterativniRazvoj, GitHub, Docker, Railway, Firebase
+
+
+Program za pregled, prikaz in obdelavo podatkov povezanih z porabo eletrične energije, ki temelji na 15 minutnih meritvah.
+Ključne funkcionalnosti: 
+- Obdeleva prejetih podatkov
+	Nadomeščanje mankajočih vrednosti
+	Preverjanje ustreznosti 15 minutnih meritev
+	Izračun potrebnih vrednosti
+- Prikaz zbranih podatkov
+	Prikaz porabe za posamezno omarico
+	Prikaz število zabeležih anomalij
+	Prikaz števila mankajočih podatkov
+- Primerjava cen električne energije
+Način obračunavanja z Vt/Nt proti načinu z 15 min odčitki in časovnimi bloki
