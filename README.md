@@ -60,29 +60,29 @@ Pridobivanje podatkov o merilnih omaricah.
 - `JSON` objekt naslednje oblike
 ```json
 {
-  "cabinetId": "{String}",
-  "cabinetNumber": "{String}",
-  "energyCompany": "{int}",
-  "connectionPower": "{int}",
-  "numberOfPhases": "{int}",
-  "consumerGroup": "{int}",
-  "priceBlockOne": "{double},
-  "priceBlockTwo": "{double},
-  "priceBlockThree": "{double},
-  "priceBlockFour": "{double},
-  "priceBlockFive": "{double},
-  "penaltiesBlockOne": "{double},
-  "penaltiesBlockTwo": "{double},
-  "penaltiesBlockThree": "{double},
-  "penaltiesBlockFour": "{double},
-  "penaltiesBlockFice": "{double},
-  "agreedPowerOne": "{double},
-  "agreedPowerTwo": "{double},
-  "agreedPowerThree": "{double},
-  "agreedPowerFour": "{double},
-  "agreedPowerFive": "{double},
-  "highPrice": "{double},
-  "lowPrice": "{double}
+  "cabinetId": {String},
+  "cabinetNumber": {String},
+  "energyCompany": {int},
+  "connectionPower": {int},
+  "numberOfPhases": {int},
+  "consumerGroup": {int},
+  "priceBlockOne": {double},
+  "priceBlockTwo": {double},
+  "priceBlockThree": {double},
+  "priceBlockFour": {double},
+  "priceBlockFive": {double},
+  "penaltiesBlockOne": {double},
+  "penaltiesBlockTwo": {double},
+  "penaltiesBlockThree": {double},
+  "penaltiesBlockFour": {double},
+  "penaltiesBlockFice": {double},
+  "agreedPowerOne": {double},
+  "agreedPowerTwo": {double},
+  "agreedPowerThree": {double},
+  "agreedPowerFour": {double},
+  "agreedPowerFive": {double},
+  "highPrice": {double},
+  "lowPrice": {double}
 }
 ```
 
@@ -91,29 +91,29 @@ Pridobivanje podatkov o merilnih omaricah.
 - Request body ima naslednjo obliko `JSON`
 ```json
 {
-  "cabinetId": "{String}",
-  "cabinetNumber": "{String}",
-  "energyCompany": "{int}",
-  "connectionPower": "{int}",
-  "numberOfPhases": "{int}",
-  "consumerGroup": "{int}",
-  "priceBlockOne": "{double},
-  "priceBlockTwo": "{double},
-  "priceBlockThree": "{double},
-  "priceBlockFour": "{double},
-  "priceBlockFive": "{double},
-  "penaltiesBlockOne": "{double},
-  "penaltiesBlockTwo": "{double},
-  "penaltiesBlockThree": "{double},
-  "penaltiesBlockFour": "{double},
-  "penaltiesBlockFice": "{double},
-  "agreedPowerOne": "{double},
-  "agreedPowerTwo": "{double},
-  "agreedPowerThree": "{double},
-  "agreedPowerFour": "{double},
-  "agreedPowerFive": "{double},
-  "highPrice": "{double},
-  "lowPrice": "{double}
+  "cabinetId": {String},
+  "cabinetNumber": {String},
+  "energyCompany": {int},
+  "connectionPower": {int},
+  "numberOfPhases": {int},
+  "consumerGroup": {int},
+  "priceBlockOne": {double},
+  "priceBlockTwo": {double},
+  "priceBlockThree": {double},
+  "priceBlockFour": {double},
+  "priceBlockFive": {double},
+  "penaltiesBlockOne": {double},
+  "penaltiesBlockTwo": {double},
+  "penaltiesBlockThree": {double},
+  "penaltiesBlockFour": {double},
+  "penaltiesBlockFice": {double},
+  "agreedPowerOne": {double},
+  "agreedPowerTwo": {double},
+  "agreedPowerThree": {double},
+  "agreedPowerFour": {double},
+  "agreedPowerFive": {double},
+  "highPrice": {double},
+  "lowPrice": {double}
 }
 ```
 - Ne vrača ničesar
@@ -233,7 +233,7 @@ Pridobivanje podatkov o dnevnih meritvah za vse omarice.
 - Vrne število porabljene energije za eno merilno omarico za določeno leto
 ```JSON
 {
-  usage {Double}
+  "usage": {Double}
 }
 ```
 ### 15 MIN INTERVALI
