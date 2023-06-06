@@ -1,11 +1,9 @@
 # Informatika - Smart Watt
 <p align="center">
-  <img src="https://github.com/mihaprah/informatika_PR2/assets/116807398/ea5ef793-75f8-4632-9ce4-307f6c11d588" alt="INFORMATIKA">
+  <img src="https://github.com/mihaprah/informatika_PR2/assets/116807398/5d64edfc-01b5-4ab7-9e53-5b793e4d6385" alt="INFORMATIKA">
 </p>
 
 **<p align="center">Program za pregled, prikaz in obdelavo podatkov povezanih z porabo eletrične energije, ki temelji na 15 minutnih meritvah.</p>**
-
-(https://github.com/mihaprah/informatika_PR2/assets/116807398/fb472c0d-fd49-4c40-8d49-050f5c3aa250)
 
 ## Ključne funkcionalnosti
 - Obdeleva prejetih podatkov
@@ -37,8 +35,8 @@ Program obdela prejete podatke, jih primerja z drugimi prejetimi podatki in na p
 <img width="1680" alt="Home-month" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/b93b4320-c2bb-4a11-a98b-eda3c48ac123">
 <img width="1680" alt="Home-year" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/d739a605-3819-4a58-b6d2-8428f7fe7ebc">
 <img width="1680" alt="History" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/8b478ffb-0832-49c1-a95c-54a8a9513723">
-<img width="1680" alt="Comparison" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/2ebe2ca0-263e-4bcb-99b5-8bfe92cdab67">
-<img width="1680" alt="Settings" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/98ea97b6-6197-45aa-9395-c4b82c00bc00">
+<img width="1680" alt="Comparison" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/f0484851-5a74-4137-af7d-d88df1f5211d">
+<img width="1680" alt="Settings" src="https://github.com/mihaprah/informatika_PR2/assets/116807398/0993a1ab-95b5-41cc-b69e-f6b524488572">
 
 ## Zunanje odvisnosti
 ### Recharts
@@ -275,7 +273,7 @@ Pridobivanje podatkov povezanih z 15 min intervali
 ``` 
 
 ## Namestitev programa
-Celotna aplikacija je razdeljena na `backend`, ki vsebuje vse potebno za obdelavo podatkov, ter tudi API vmesnik. Drugi del aplikacije se nahaja v `frontend` mapi, kjer je React aplikacija za prikaz podatkov. Tako Springboot `backend`, kot tudi Postgres `podatkovna baza` sta nameščena, pri ponudniku gostovanja [Railway](https://railway.app). Aplikacija gostoju na platformi [Firebase](https://informatika-97440.web.app). Dostop do spletne aplikacije je omejen z uporabniškim imenom in geslom.
+Celotna aplikacija je razdeljena na `backend`, ki vsebuje vse potebno za obdelavo podatkov, ter tudi API vmesnik. Drugi del aplikacije se nahaja v `frontend` mapi, kjer je React aplikacija za prikaz podatkov. Tako Springboot `backend`, kot tudi Postgres `podatkovna baza` sta nameščena, pri ponudniku gostovanja [Railway](https://railway.app). Aplikacija gostoju na platformi [Firebase in je na voljo na tej povezavi](https://informatika-97440.web.app). Dostop do spletne aplikacije je omejen z uporabniškim imenom in geslom.
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/mihaprah/informatika_PR2) ![GitHub repo file count](https://img.shields.io/github/directory-file-count/mihaprah/informatika_PR2) ![GitHub repo size](https://img.shields.io/github/repo-size/mihaprah/informatika_PR2)
 
