@@ -9,8 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
-import { auth } from '../firebase';
-import {useNavigate} from "react-router";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router";
 
 interface Props {
   cabinetID: string;
@@ -22,7 +22,7 @@ export default function CabinetHistory(props: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(auth.currentUser == null){
+    if (auth.currentUser == null) {
       navigate("/login");
     } else {
       const getCabinetData = async () => {
@@ -97,19 +97,19 @@ export default function CabinetHistory(props: Props) {
                       )}
                     </TableCell>
 
-                    <TableCell align="right">{row.usage.toFixed(2).replace('.', ',')}</TableCell>
+                    <TableCell align="right">{row.usage.toFixed(2).replace(".", ",")}</TableCell>
                     <TableCell align="right">
                       {row.highUsage != 0
-                        ? row.highUsage.toFixed(2).replace('.', ',')
+                        ? row.highUsage.toFixed(2).replace(".", ",")
                         : row.lowUsage != 0
-                        ? row.highUsage.toFixed(2).replace('.', ',')
+                        ? row.highUsage.toFixed(2).replace(".", ",")
                         : "Podatek ni na voljo"}
                     </TableCell>
                     <TableCell align="right">
                       {row.lowUsage != 0
-                        ? row.lowUsage.toFixed(2).replace('.', ',')
+                        ? row.lowUsage.toFixed(2).replace(".", ",")
                         : row.highUsage != 0
-                        ? row.lowUsage.toFixed(2).replace('.', ',')
+                        ? row.lowUsage.toFixed(2).replace(".", ",")
                         : "Podatek ni na voljo"}
                     </TableCell>
                   </TableRow>
@@ -140,7 +140,7 @@ export default function CabinetHistory(props: Props) {
               </li>
               <li>
                 <span style={{ color: "#FFCC00" }}>Popravljena</span> - podatki iz 15 minutnih meritev se ne ujemajo z
-                dnevnimi podatki, zato je meritev namoščena z metodo soležnih dni.
+                dnevnimi podatki, zato je meritev nadomeščena z metodo soležnih dni.
               </li>
               <li>
                 <span style={{ color: "#E45454" }}>Napačna</span> - podatki iz 15 minutnih meritev se ne ujemajo z

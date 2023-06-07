@@ -1,9 +1,19 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+
 export default function PageNotFound() {
-    return (
-      <>
-        <div>
-          <h3>404 page not found</h3>
-        </div>
-      </>
-    );
-  }
+  let navigate = useNavigate();
+  useEffect(() => {
+    const redirectTimeout = setTimeout(() => {
+      navigate("/");
+    }, 3000);
+  }, []);
+
+  return (
+    <>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <h3>404 Iskana stran ne obstaja, preusmerjanje domov ...</h3>
+      </div>
+    </>
+  );
+}

@@ -20,7 +20,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { auth } from '../firebase';
+import { auth } from "../firebase";
 
 interface Props {
   cabinetID: string;
@@ -37,9 +37,10 @@ export default function HomeMonth(props: Props) {
   let minDate = "";
   let anomaly = 0;
   let correctedData = 0;
+  let countOverLimit = 0;
 
   useEffect(() => {
-    if(auth.currentUser == null){
+    if (auth.currentUser == null) {
       navigate("/login");
     } else {
       const getCabinetData = async () => {
@@ -104,6 +105,7 @@ export default function HomeMonth(props: Props) {
   };
 
   const chartData: any = [];
+
   if (data) {
     data?.forEach((entry: Measurement) => {
       let day = {
@@ -267,7 +269,7 @@ export default function HomeMonth(props: Props) {
                 Št. prekoračitev
               </Typography>
               <Typography level="h2">
-                <b>0</b>
+                <b>{countOverLimit}</b>
               </Typography>
             </Card>
           </Tooltip>

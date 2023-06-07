@@ -10,7 +10,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { Tooltip } from "@mui/material";
-import { auth } from '../firebase';
+import { auth } from "../firebase";
 
 import {
   BarChart,
@@ -41,36 +41,24 @@ export default function HomeDay(props: Props) {
   const [selectedDate, setSelectedDate] = useState("2022-02-28");
 
   useEffect(() => {
-    if(auth.currentUser == null){
+    if (auth.currentUser == null) {
       navigate("/login");
     } else {
-      const getMeasurementData = async () => {
+      const fetchData = async () => {
         try {
-          const res = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
-          setData(res.data);
+          const getMeasurementData = await api.get("/measurement/day/" + props.cabinetID + "/" + selectedDate);
+          setData(getMeasurementData.data);
+
+          const getIntervalData = await api.get("/interval/day/" + props.cabinetID + "/" + selectedDate);
+          setIntervalData(getIntervalData.data);
+
+          const getCabinetData = await api.get("/cabinet/" + props.cabinetID);
+          setCabinetData(getCabinetData.data);
         } catch (error) {
           console.log(error);
         }
       };
-      const getIntervalData = async () => {
-        try {
-          const res = await api.get("/interval/day/" + props.cabinetID + "/" + selectedDate);
-          setIntervalData(res.data);
-        } catch (errr) {
-          console.log(errr);
-        }
-      };
-      const getCabinetData = async () => {
-        try {
-          const res = await api.get("/cabinet/" + props.cabinetID);
-          setCabinetData(res.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getCabinetData();
-      getMeasurementData();
-      getIntervalData();
+      fetchData();
     }
   }, [selectedDate]);
 

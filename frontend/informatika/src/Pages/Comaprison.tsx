@@ -6,8 +6,8 @@ import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from "recharts";
 import "../styles/Settings.css";
 import { initialState } from "../Modules/CabinetInitState";
-import {useNavigate} from "react-router";
-import { auth } from '../firebase';
+import { useNavigate } from "react-router";
+import { auth } from "../firebase";
 
 interface Props {
   cabinetID: string;
@@ -35,7 +35,7 @@ export default function Comparison(props: Props) {
   let penaltiesBlockFive: number = 0;
 
   useEffect(() => {
-    if(auth.currentUser == null){
+    if (auth.currentUser == null) {
       navigate("/login");
     } else {
       const fetchData = async () => {
@@ -46,7 +46,9 @@ export default function Comparison(props: Props) {
           const getCabinet = await api.get("/cabinet/" + props.cabinetID);
           setSelectedCabinet(getCabinet.data);
 
-          const getLowHighUsage = await api.get("/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01");
+          const getLowHighUsage = await api.get(
+            "/measurement/low_high_usage/" + props.cabinetID + "/" + year + "-01-01"
+          );
           // Check if low and high data exists
           if (getLowHighUsage.data[0] != 0 && getLowHighUsage.data[1] != 0) {
             // Check if it is the same as normal usage (50kWh difference allowed)
@@ -54,7 +56,8 @@ export default function Comparison(props: Props) {
               // Check if cabinet data is set for low and high usage
               if (getCabinet.data.lowPrice > 0 && getCabinet.data.highPrice > 0) {
                 setOldPrice(
-                    getLowHighUsage.data[0] * getCabinet.data.lowPrice + getLowHighUsage.data[1] * getCabinet.data.highPrice
+                  getLowHighUsage.data[0] * getCabinet.data.lowPrice +
+                    getLowHighUsage.data[1] * getCabinet.data.highPrice
                 );
               }
             } else {
@@ -84,27 +87,27 @@ export default function Comparison(props: Props) {
         //   Check if there over the agreed limit
         if (interval.hourlyUsage > cabinet?.agreedPowerOne) {
           // Add penalties for usage over the agreed limit
-          penaltiesBlockOne += (cabinet?.agreedPowerOne - interval.hourlyUsage) * cabinet?.penaltiesBlockOne;
+          penaltiesBlockOne += cabinet?.penaltiesBlockOne;
         }
       } else if (interval.timeBlock === 2) {
         usageBlockTwo += interval.hourlyUsage;
         if (interval.hourlyUsage > cabinet?.agreedPowerTwo) {
-          penaltiesBlockTwo += (cabinet?.agreedPowerTwo - interval.hourlyUsage) * cabinet?.penaltiesBlockTwo;
+          penaltiesBlockTwo += cabinet?.penaltiesBlockTwo;
         }
       } else if (interval.timeBlock === 3) {
         usageBlockThree += interval.hourlyUsage;
         if (interval.hourlyUsage > cabinet?.agreedPowerThree) {
-          penaltiesBlockThree += (cabinet?.agreedPowerThree - interval.hourlyUsage) * cabinet?.penaltiesBlockThree;
+          penaltiesBlockThree += cabinet?.penaltiesBlockThree;
         }
       } else if (interval.timeBlock === 4) {
         usageBlockFour += interval.hourlyUsage;
         if (interval.hourlyUsage > cabinet?.agreedPowerFour) {
-          penaltiesBlockFour += (cabinet?.agreedPowerFour - interval.hourlyUsage) * cabinet?.penaltiesBlockFour;
+          penaltiesBlockFour += cabinet?.penaltiesBlockFour;
         }
       } else {
         usageBlockFive += interval.hourlyUsage;
         if (interval.hourlyUsage > cabinet?.agreedPowerFive) {
-          penaltiesBlockFive += (cabinet?.agreedPowerFive - interval.hourlyUsage) * cabinet?.penaltiesBlockFive;
+          penaltiesBlockFive += cabinet?.penaltiesBlockFive;
         }
       }
     });
@@ -174,10 +177,10 @@ export default function Comparison(props: Props) {
           </Typography>
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
-              Cena na mesec: <b>{(oldPrice / 12).toFixed(2).replace('.', ',')} €</b>
+              Cena na mesec: <b>{(oldPrice / 12).toFixed(2).replace(".", ",")} €</b>
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Cena na leto: <b>{oldPrice.toFixed(2).replace('.', ',')} €</b>
+              Cena na leto: <b>{oldPrice.toFixed(2).replace(".", ",")} €</b>
             </Typography>
           </div>
           {year == currentYear ? (
@@ -204,10 +207,10 @@ export default function Comparison(props: Props) {
           </Typography>
           <div style={{ paddingLeft: "2vh", marginTop: "2vh" }}>
             <Typography level="body1" sx={{ fontSize: "18px", marginBottom: "3vh" }}>
-              Cena na mesec: <b>{(newPrice / 12).toFixed(2).replace('.', ',')} €</b>
+              Cena na mesec: <b>{(newPrice / 12).toFixed(2).replace(".", ",")} €</b>
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px" }}>
-              Cena na leto: <b>{newPrice.toFixed(2).replace('.', ',')} €</b>
+              Cena na leto: <b>{newPrice.toFixed(2).replace(".", ",")} €</b>
             </Typography>
           </div>
           {year == currentYear ? (
@@ -270,21 +273,35 @@ export default function Comparison(props: Props) {
               {oldPrice > newPrice ? (
                 <Typography sx={{ color: "#37B76A" }}>
                   {" "}
-                  - {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace('.', ',')} €
+                  - {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace(".", ",")} €
                 </Typography>
               ) : (
                 <Typography sx={{ color: "#E45454" }}>
                   {" "}
-                  + {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace('.', ',')} €
+                  + {(Math.abs(oldPrice - newPrice) / 12).toFixed(2).replace(".", ",")} €
                 </Typography>
               )}
             </Typography>
             <Typography level="body1" sx={{ fontSize: "18px", fontWeight: "bold" }}>
               Na leto:
               {oldPrice > newPrice ? (
-                <Typography sx={{ color: "#37B76A" }}> - {Math.abs(oldPrice - newPrice).toFixed(2).replace('.', ',')} €</Typography>
+                <Typography sx={{ color: "#37B76A" }}>
+                  {" "}
+                  -{" "}
+                  {Math.abs(oldPrice - newPrice)
+                    .toFixed(2)
+                    .replace(".", ",")}{" "}
+                  €
+                </Typography>
               ) : (
-                <Typography sx={{ color: "#E45454" }}> + {Math.abs(oldPrice - newPrice).toFixed(2).replace('.', ',')} €</Typography>
+                <Typography sx={{ color: "#E45454" }}>
+                  {" "}
+                  +{" "}
+                  {Math.abs(oldPrice - newPrice)
+                    .toFixed(2)
+                    .replace(".", ",")}{" "}
+                  €
+                </Typography>
               )}
             </Typography>
           </div>

@@ -1,14 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
-    timeout: 30000,
-    headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-
-    },
-
+  baseURL: "https://informatikapr2-production.up.railway.app",
+  timeout: 30000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 export default api;
