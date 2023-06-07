@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 export default function PageNotFound() {
   let navigate = useNavigate();
   useEffect(() => {
-    const redirectTimeout = setTimeout(() => {
+    setTimeout(() => {
       navigate("/");
     }, 3000);
   }, []);
